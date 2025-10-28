@@ -6,10 +6,10 @@ export const Hero = () => {
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
       <div className="container px-4 py-20 text-center relative z-10">
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
-          אתגר אהרוני | טכנאי מחשבים וייעוץ טכנולוגי
+          ייעוץ טכנולוגי מתקדם לעסקים וארגונים
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-          פתרונות IT מתקדמים לעסקים וארגונים - אמינות, מקצועיות, זמינות
+        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+          ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
         </p>
         <Button 
           size="lg"
@@ -18,7 +18,7 @@ export const Hero = () => {
         >
           <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
             <MessageCircle className="ml-2 h-5 w-5" />
-            שלח הודעת וואטסאפ
+            התייעצו איתנו
           </a>
         </Button>
       </div>
