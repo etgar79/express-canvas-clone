@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Bot, FileText } from "lucide-react";
+import logo from "@/assets/logo.avif";
 
 export const Header = () => {
   return (
@@ -30,9 +31,12 @@ export const Header = () => {
             </a>
           </Button>
         </div>
-        <h1 className="text-xl md:text-2xl font-bold text-primary">
-          Tech Therapy Computers
-        </h1>
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="Tech Therapy Computers" className="h-10 w-10 md:h-12 md:w-12" />
+          <h1 className="text-xl md:text-2xl font-bold text-primary">
+            Tech Therapy Computers
+          </h1>
+        </div>
       </div>
     </header>
   );
