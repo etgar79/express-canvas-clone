@@ -1,1 +1,4 @@
 project_id = "pzjkrotlikvopslpdvof"
+
+[functions.send-visitor-email]
+verify_jwt = false
