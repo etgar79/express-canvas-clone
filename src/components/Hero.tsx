@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
-import woodBg from "@/assets/wood-bg-light.jpg";
+import woodBg from "@/assets/wood-silver.jpg";
 
 export const Hero = () => {
   return (
@@ -61,22 +61,10 @@ export const Hero = () => {
       </div>
       <div className="container px-4 py-20 text-center relative z-10">
         <div className="inline-block px-8 py-6 mb-4 rounded-2xl" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
-            background: 'var(--gradient-metallic)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            filter: 'drop-shadow(0 2px 4px rgba(255,255,255,0.3))'
-          }}>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in text-foreground">
             ייעוץ טכנולוגי מתקדם לעסקים וארגונים
           </h1>
-          <p className="text-xl md:text-2xl mb-0 max-w-3xl mx-auto leading-relaxed" style={{ 
-            background: 'var(--gradient-metallic)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            filter: 'drop-shadow(0 1px 2px rgba(255,255,255,0.2))'
-          }}>
+          <p className="text-xl md:text-2xl mb-0 max-w-3xl mx-auto leading-relaxed text-foreground/90">
           ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
           </p>
         </div>
