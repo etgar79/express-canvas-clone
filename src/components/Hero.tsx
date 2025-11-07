@@ -98,7 +98,7 @@ export const Hero = () => {
             backgroundClip: 'text',
             filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.5)) drop-shadow(0 0 40px rgba(255,255,255,0.3))'
           }}>
-            הטכנולוגיה שלך עובדת עליך - או שאתה עובד עליה?
+            אנחנו כאן לתמוך, להדריך ולהטמיע את הטכנולוגיה בעסק שלך
           </h1>
           <div className="text-xl md:text-2xl mb-4 max-w-3xl mx-auto leading-relaxed min-h-[120px] flex items-center justify-center" style={{ 
             background: 'linear-gradient(135deg, hsl(0 0% 95%) 0%, hsl(0 0% 85%) 50%, hsl(0 0% 95%) 100%)',
