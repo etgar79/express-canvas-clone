@@ -109,7 +109,7 @@ export const Hero = () => {
           }}>
             <span>
               מלווים אתכם בכל שלב - מאפיון הצורך ועד הטמעה מלאה של{" "}
-              <span key={currentWord} className="inline-block animate-typewriter font-bold">
+              <span key={currentWord} className="inline-block animate-lightning-strike font-bold">
                 {words[currentWord]}
               </span>
               {" "}בעסק שלכם
@@ -118,7 +118,7 @@ export const Hero = () => {
         </div>
         <Button
           size="lg"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-bounce-subtle"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-bounce-slow"
           asChild
         >
           <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
