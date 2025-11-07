@@ -9,73 +9,78 @@ export const Hero = () => {
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }}>
-      {/* Lightning effects - realistic branching bolts */}
+      {/* Lightning effects - flowing along wood grain (vertical) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Lightning 1 - Complex branching */}
-        <svg className="absolute top-[10%] left-[15%] w-64 h-96 opacity-0 animate-pulse" style={{ animationDuration: '0.1s', animationIterationCount: '2', animationDelay: '0s' }}>
-          <path d="M 30 10 L 32 25 L 35 45 L 33 65 L 38 95 L 35 125 L 40 160" stroke="rgba(255,255,255,0.95)" strokeWidth="2.5" fill="none" filter="drop-shadow(0 0 12px rgba(255,255,255,0.9)) drop-shadow(0 0 25px rgba(180,220,255,0.7))" />
-          <path d="M 32 30 L 40 35 L 48 38 L 55 42" stroke="rgba(255,255,255,0.75)" strokeWidth="1.5" fill="none" filter="drop-shadow(0 0 8px rgba(255,255,255,0.7))" />
-          <path d="M 35 50 L 28 55 L 22 58 L 18 63" stroke="rgba(255,255,255,0.7)" strokeWidth="1.3" fill="none" filter="drop-shadow(0 0 6px rgba(255,255,255,0.6))" />
-          <path d="M 38 100 L 45 105 L 50 112" stroke="rgba(255,255,255,0.68)" strokeWidth="1.2" fill="none" />
-          <path d="M 35 130 L 28 135 L 20 142" stroke="rgba(255,255,255,0.65)" strokeWidth="1.1" fill="none" />
-          <path d="M 48 42 L 52 48 L 56 55" stroke="rgba(255,255,255,0.6)" strokeWidth="0.9" fill="none" />
+        {/* Lightning 1 - Vertical flow along wood grain */}
+        <svg className="absolute top-0 left-[12%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.08s', animationIterationCount: '2', animationDelay: '0s' }}>
+          <path d="M 1 0 L 1.2 80 L 0.8 160 L 1.3 240 L 0.7 320 L 1.1 400 L 0.9 480 L 1.2 560" stroke="rgba(255,255,255,0.9)" strokeWidth="2" fill="none" filter="drop-shadow(0 0 15px rgba(255,255,255,0.95)) drop-shadow(0 0 30px rgba(180,220,255,0.8))" />
+          <path d="M 1.2 100 L 2.5 110 L 3.8 120" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" fill="none" filter="drop-shadow(0 0 8px rgba(255,255,255,0.7))" />
+          <path d="M 0.8 200 L -0.5 210 L -1.2 220" stroke="rgba(255,255,255,0.65)" strokeWidth="1" fill="none" filter="drop-shadow(0 0 6px rgba(255,255,255,0.6))" />
+          <path d="M 1.3 350 L 2.2 360 L 3 370" stroke="rgba(255,255,255,0.68)" strokeWidth="1.1" fill="none" />
         </svg>
         
         {/* Lightning 2 */}
-        <svg className="absolute top-[20%] right-[20%] w-56 h-80 opacity-0 animate-pulse" style={{ animationDuration: '0.12s', animationIterationCount: '3', animationDelay: '3s' }}>
-          <path d="M 25 8 L 28 30 L 30 55 L 32 80 L 35 110" stroke="rgba(255,255,255,0.92)" strokeWidth="2.2" fill="none" filter="drop-shadow(0 0 10px rgba(255,255,255,0.85)) drop-shadow(0 0 20px rgba(180,220,255,0.65))" />
-          <path d="M 28 35 L 35 38 L 42 42 L 48 46" stroke="rgba(255,255,255,0.72)" strokeWidth="1.4" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.65))" />
-          <path d="M 30 60 L 24 65 L 18 70" stroke="rgba(255,255,255,0.68)" strokeWidth="1.2" fill="none" />
-          <path d="M 32 85 L 38 90 L 43 96" stroke="rgba(255,255,255,0.65)" strokeWidth="1.1" fill="none" />
-          <path d="M 42 44 L 46 50 L 50 58" stroke="rgba(255,255,255,0.6)" strokeWidth="0.85" fill="none" />
+        <svg className="absolute top-0 left-[28%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.09s', animationIterationCount: '3', animationDelay: '3s' }}>
+          <path d="M 1 0 L 0.9 90 L 1.1 180 L 0.8 270 L 1.2 360 L 0.95 450 L 1.05 540" stroke="rgba(255,255,255,0.88)" strokeWidth="2.1" fill="none" filter="drop-shadow(0 0 14px rgba(255,255,255,0.9)) drop-shadow(0 0 28px rgba(180,220,255,0.75))" />
+          <path d="M 0.9 120 L -0.3 130 L -1 140" stroke="rgba(255,255,255,0.68)" strokeWidth="1.15" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.65))" />
+          <path d="M 1.2 380 L 2.3 390 L 3.1 400" stroke="rgba(255,255,255,0.66)" strokeWidth="1.05" fill="none" />
         </svg>
         
         {/* Lightning 3 */}
-        <svg className="absolute top-[40%] left-[35%] w-52 h-88 opacity-0 animate-pulse" style={{ animationDuration: '0.11s', animationIterationCount: '2', animationDelay: '6s' }}>
-          <path d="M 22 5 L 25 28 L 27 52 L 30 78 L 32 105" stroke="rgba(255,255,255,0.9)" strokeWidth="2.3" fill="none" filter="drop-shadow(0 0 11px rgba(255,255,255,0.88)) drop-shadow(0 0 22px rgba(180,220,255,0.68))" />
-          <path d="M 25 32 L 32 36 L 38 40 L 44 45" stroke="rgba(255,255,255,0.7)" strokeWidth="1.35" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.6))" />
-          <path d="M 27 58 L 20 62 L 14 68" stroke="rgba(255,255,255,0.66)" strokeWidth="1.15" fill="none" />
-          <path d="M 30 82 L 36 88 L 41 95" stroke="rgba(255,255,255,0.63)" strokeWidth="1.05" fill="none" />
+        <svg className="absolute top-0 right-[35%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.07s', animationIterationCount: '2', animationDelay: '6s' }}>
+          <path d="M 1 0 L 1.1 85 L 0.9 170 L 1.2 255 L 0.85 340 L 1.15 425 L 0.95 510" stroke="rgba(255,255,255,0.92)" strokeWidth="2.2" fill="none" filter="drop-shadow(0 0 16px rgba(255,255,255,0.92)) drop-shadow(0 0 32px rgba(180,220,255,0.82))" />
+          <path d="M 1.1 110 L 2.4 120 L 3.5 130" stroke="rgba(255,255,255,0.72)" strokeWidth="1.25" fill="none" filter="drop-shadow(0 0 8px rgba(255,255,255,0.68))" />
+          <path d="M 0.85 300 L -0.4 310 L -1.1 320" stroke="rgba(255,255,255,0.67)" strokeWidth="1.1" fill="none" />
         </svg>
         
         {/* Lightning 4 */}
-        <svg className="absolute top-[60%] right-[30%] w-60 h-92 opacity-0 animate-pulse" style={{ animationDuration: '0.13s', animationIterationCount: '3', animationDelay: '9s' }}>
-          <path d="M 28 6 L 30 32 L 33 58 L 35 86 L 38 118" stroke="rgba(255,255,255,0.94)" strokeWidth="2.4" fill="none" filter="drop-shadow(0 0 12px rgba(255,255,255,0.9)) drop-shadow(0 0 24px rgba(180,220,255,0.7))" />
-          <path d="M 30 38 L 38 42 L 45 46 L 52 51" stroke="rgba(255,255,255,0.74)" strokeWidth="1.45" fill="none" filter="drop-shadow(0 0 8px rgba(255,255,255,0.68))" />
-          <path d="M 33 64 L 26 68 L 20 74" stroke="rgba(255,255,255,0.69)" strokeWidth="1.25" fill="none" />
-          <path d="M 35 92 L 42 98 L 48 105" stroke="rgba(255,255,255,0.66)" strokeWidth="1.15" fill="none" />
-          <path d="M 45 48 L 50 54 L 55 62" stroke="rgba(255,255,255,0.62)" strokeWidth="0.95" fill="none" />
+        <svg className="absolute top-0 right-[18%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.085s', animationIterationCount: '3', animationDelay: '9s' }}>
+          <path d="M 1 0 L 0.95 88 L 1.05 176 L 0.92 264 L 1.08 352 L 0.98 440 L 1.02 528" stroke="rgba(255,255,255,0.91)" strokeWidth="2.15" fill="none" filter="drop-shadow(0 0 15px rgba(255,255,255,0.93)) drop-shadow(0 0 30px rgba(180,220,255,0.78))" />
+          <path d="M 0.95 130 L -0.2 140 L -0.9 150" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.66))" />
+          <path d="M 1.08 370 L 2.1 380 L 2.9 390" stroke="rgba(255,255,255,0.69)" strokeWidth="1.12" fill="none" />
         </svg>
         
         {/* Lightning 5 */}
-        <svg className="absolute top-[30%] left-[55%] w-58 h-86 opacity-0 animate-pulse" style={{ animationDuration: '0.1s', animationIterationCount: '2', animationDelay: '12s' }}>
-          <path d="M 26 7 L 29 30 L 31 54 L 34 80 L 36 108" stroke="rgba(255,255,255,0.91)" strokeWidth="2.25" fill="none" filter="drop-shadow(0 0 11px rgba(255,255,255,0.87)) drop-shadow(0 0 21px rgba(180,220,255,0.67))" />
-          <path d="M 29 35 L 36 39 L 42 43 L 48 48" stroke="rgba(255,255,255,0.71)" strokeWidth="1.4" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.64))" />
-          <path d="M 31 60 L 24 64 L 18 70" stroke="rgba(255,255,255,0.67)" strokeWidth="1.2" fill="none" />
-          <path d="M 34 85 L 40 91 L 45 98" stroke="rgba(255,255,255,0.64)" strokeWidth="1.1" fill="none" />
+        <svg className="absolute top-0 left-[45%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.075s', animationIterationCount: '2', animationDelay: '12s' }}>
+          <path d="M 1 0 L 1.05 82 L 0.95 164 L 1.1 246 L 0.9 328 L 1.03 410 L 0.97 492" stroke="rgba(255,255,255,0.89)" strokeWidth="2.05" fill="none" filter="drop-shadow(0 0 14px rgba(255,255,255,0.91)) drop-shadow(0 0 28px rgba(180,220,255,0.76))" />
+          <path d="M 1.05 140 L 2.2 150 L 3.2 160" stroke="rgba(255,255,255,0.71)" strokeWidth="1.18" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.67))" />
+          <path d="M 0.9 310 L -0.3 320 L -1 330" stroke="rgba(255,255,255,0.68)" strokeWidth="1.08" fill="none" />
+        </svg>
+        
+        {/* Lightning 6 */}
+        <svg className="absolute top-0 right-[8%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.08s', animationIterationCount: '2', animationDelay: '15s' }}>
+          <path d="M 1 0 L 0.97 86 L 1.03 172 L 0.94 258 L 1.06 344 L 0.99 430 L 1.01 516" stroke="rgba(255,255,255,0.9)" strokeWidth="2.08" fill="none" filter="drop-shadow(0 0 15px rgba(255,255,255,0.92)) drop-shadow(0 0 29px rgba(180,220,255,0.77))" />
+          <path d="M 0.97 115 L -0.25 125 L -0.95 135" stroke="rgba(255,255,255,0.69)" strokeWidth="1.16" fill="none" filter="drop-shadow(0 0 7px rgba(255,255,255,0.65))" />
+        </svg>
+        
+        {/* Lightning 7 */}
+        <svg className="absolute top-0 left-[65%] w-2 h-full opacity-0 animate-pulse" style={{ animationDuration: '0.09s', animationIterationCount: '3', animationDelay: '18s' }}>
+          <path d="M 1 0 L 1.04 84 L 0.96 168 L 1.09 252 L 0.91 336 L 1.02 420 L 0.98 504" stroke="rgba(255,255,255,0.88)" strokeWidth="2.12" fill="none" filter="drop-shadow(0 0 14px rgba(255,255,255,0.9)) drop-shadow(0 0 27px rgba(180,220,255,0.74))" />
+          <path d="M 1.09 270 L 2.15 280 L 3 290" stroke="rgba(255,255,255,0.7)" strokeWidth="1.14" fill="none" />
         </svg>
       </div>
       <div className="container px-4 py-20 text-center relative z-10">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
-          background: 'var(--gradient-metallic)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          textShadow: '0 0 30px rgba(255,255,255,0.3), 0 0 60px rgba(255,255,255,0.2)',
-          filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 20px rgba(255,255,255,0.3))'
-        }}>
-          ייעוץ טכנולוגי מתקדם לעסקים וארגונים
-        </h1>
-        <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{ 
-          background: 'var(--gradient-metallic)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4)) drop-shadow(0 0 15px rgba(255,255,255,0.2))'
-        }}>
+        <div className="inline-block px-8 py-6 mb-4 rounded-2xl" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
+            background: 'var(--gradient-metallic)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter: 'drop-shadow(0 2px 4px rgba(255,255,255,0.3))'
+          }}>
+            ייעוץ טכנולוגי מתקדם לעסקים וארגונים
+          </h1>
+          <p className="text-xl md:text-2xl mb-0 max-w-3xl mx-auto leading-relaxed" style={{ 
+            background: 'var(--gradient-metallic)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter: 'drop-shadow(0 1px 2px rgba(255,255,255,0.2))'
+          }}>
           ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
-        </p>
-        <Button 
+          </p>
+        </div>
+        <Button
           size="lg"
           className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           asChild
