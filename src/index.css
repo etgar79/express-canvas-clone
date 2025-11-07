@@ -38,7 +38,7 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
     
-    --gradient-hero: linear-gradient(135deg, hsl(220 25% 15%) 0%, hsl(220 20% 25%) 25%, hsl(220 18% 20%) 50%, hsl(220 22% 28%) 75%, hsl(220 20% 22%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220 35% 35%) 0%, hsl(220 30% 45%) 25%, hsl(220 28% 38%) 50%, hsl(220 32% 48%) 75%, hsl(220 30% 40%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 98%) 0%, hsl(0 0% 88%) 50%, hsl(0 0% 95%) 100%);
     --gradient-metallic: linear-gradient(110deg, hsl(0 0% 65%) 0%, hsl(0 0% 98%) 5%, hsl(0 0% 70%) 10%, hsl(0 0% 100%) 15%, hsl(0 0% 72%) 20%, hsl(0 0% 98%) 25%, hsl(0 0% 75%) 30%, hsl(0 0% 100%) 35%, hsl(0 0% 73%) 40%, hsl(0 0% 98%) 45%, hsl(0 0% 76%) 50%, hsl(0 0% 100%) 55%, hsl(0 0% 74%) 60%, hsl(0 0% 98%) 65%, hsl(0 0% 77%) 70%, hsl(0 0% 100%) 75%, hsl(0 0% 75%) 80%, hsl(0 0% 98%) 85%, hsl(0 0% 78%) 90%, hsl(0 0% 100%) 95%, hsl(0 0% 76%) 100%);
     --gradient-gold: linear-gradient(110deg, hsl(45 70% 45%) 0%, hsl(48 85% 65%) 10%, hsl(45 75% 50%) 20%, hsl(48 90% 70%) 30%, hsl(45 72% 52%) 40%, hsl(48 88% 68%) 50%, hsl(45 74% 54%) 60%, hsl(48 90% 70%) 70%, hsl(45 73% 53%) 80%, hsl(48 87% 66%) 90%, hsl(45 75% 55%) 100%);
@@ -92,7 +92,7 @@ All colors MUST be HSL.
     --input: 25 10% 25%;
     --ring: 0 0% 80%;
     
-    --gradient-hero: linear-gradient(135deg, hsl(220 20% 18%) 0%, hsl(220 18% 28%) 25%, hsl(220 16% 22%) 50%, hsl(220 19% 30%) 75%, hsl(220 18% 24%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220 30% 28%) 0%, hsl(220 28% 38%) 25%, hsl(220 26% 32%) 50%, hsl(220 29% 40%) 75%, hsl(220 28% 34%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 18%) 0%, hsl(0 0% 28%) 50%, hsl(0 0% 22%) 100%);
     --gradient-metallic: linear-gradient(110deg, hsl(0 0% 55%) 0%, hsl(0 0% 92%) 5%, hsl(0 0% 60%) 10%, hsl(0 0% 95%) 15%, hsl(0 0% 62%) 20%, hsl(0 0% 90%) 25%, hsl(0 0% 65%) 30%, hsl(0 0% 95%) 35%, hsl(0 0% 63%) 40%, hsl(0 0% 90%) 45%, hsl(0 0% 66%) 50%, hsl(0 0% 95%) 55%, hsl(0 0% 64%) 60%, hsl(0 0% 90%) 65%, hsl(0 0% 67%) 70%, hsl(0 0% 95%) 75%, hsl(0 0% 65%) 80%, hsl(0 0% 90%) 85%, hsl(0 0% 68%) 90%, hsl(0 0% 95%) 95%, hsl(0 0% 66%) 100%);
     --gradient-gold: linear-gradient(110deg, hsl(45 60% 35%) 0%, hsl(48 75% 55%) 10%, hsl(45 65% 40%) 20%, hsl(48 80% 60%) 30%, hsl(45 62% 42%) 40%, hsl(48 78% 58%) 50%, hsl(45 64% 44%) 60%, hsl(48 80% 60%) 70%, hsl(45 63% 43%) 80%, hsl(48 77% 56%) 90%, hsl(45 65% 45%) 100%);
