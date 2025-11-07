@@ -108,11 +108,11 @@ export const Hero = () => {
             filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.3))'
           }}>
             <span>
-              נשחרר אותך מהעומס הטכנולוגי עם{" "}
+              מלווים אתכם בכל שלב - מאפיון הצורך ועד הטמעה מלאה של{" "}
               <span key={currentWord} className="inline-block animate-typewriter font-bold">
                 {words[currentWord]}
               </span>
-              {" "}מתקדמת - בדיוק בשבילך
+              {" "}בעסק שלכם
             </span>
           </div>
         </div>
@@ -123,7 +123,7 @@ export const Hero = () => {
         >
           <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
             <MessageCircle className="ml-2 h-5 w-5" />
-            בוא נדבר על העסק שלך
+            נשמח לשמוע על הצרכים שלכם
           </a>
         </Button>
       </div>
