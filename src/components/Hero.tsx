@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import logo from "@/assets/logo.png";
 
 export const Hero = () => {
   const [currentWord, setCurrentWord] = useState(0);
@@ -17,6 +18,15 @@ export const Hero = () => {
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ 
       background: 'var(--gradient-hero)'
     }}>
+      {/* Logo as background */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
+        <img 
+          src={logo} 
+          alt="" 
+          className="w-[500px] h-auto object-contain"
+        />
+      </div>
+      
       {/* Lightning effects - dramatic bolts like in photo */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Lightning 1 - Main bolt left side */}
