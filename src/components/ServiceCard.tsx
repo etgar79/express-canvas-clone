@@ -22,9 +22,12 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
     >
       <div className={`relative h-full w-full transition-all duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
         {/* Front */}
-        <Card className="absolute inset-0 p-8 text-center flex flex-col items-center justify-center border-0 [backface-visibility:hidden]" style={{ background: 'var(--gradient-card)' }}>
+        <Card className="absolute inset-0 p-8 text-center flex flex-col items-center justify-center border border-primary/10 [backface-visibility:hidden] transition-all duration-300" style={{ background: 'var(--gradient-card)' }}>
           <div className="mb-6 flex justify-center">
-            <div className="p-4 bg-primary/10 rounded-full animate-bounce-subtle">
+            <div className="p-4 rounded-2xl animate-bounce-subtle" style={{
+              background: 'linear-gradient(135deg, hsl(var(--tech-blue) / 0.1) 0%, hsl(var(--tech-purple) / 0.1) 100%)',
+              boxShadow: '0 4px 16px hsl(var(--primary) / 0.1)'
+            }}>
               <Icon className="h-12 w-12 text-primary" />
             </div>
           </div>
@@ -35,17 +38,22 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
         </Card>
 
         {/* Back */}
-        <Card className="absolute inset-0 p-8 flex flex-col justify-between border-0 [backface-visibility:hidden] [transform:rotateY(180deg)]" style={{ background: 'var(--gradient-card-hover)' }}>
+        <Card className="absolute inset-0 p-8 flex flex-col justify-between border border-primary/20 [backface-visibility:hidden] [transform:rotateY(180deg)] transition-all duration-300" style={{ background: 'var(--gradient-card-hover)' }}>
           <div>
             <div className="mb-4 flex justify-center">
-              <div className="p-3 bg-primary/10 rounded-full">
+              <div className="p-3 rounded-xl" style={{
+                background: 'linear-gradient(135deg, hsl(var(--tech-blue) / 0.15) 0%, hsl(var(--tech-purple) / 0.15) 100%)'
+              }}>
                 <Icon className="h-8 w-8 text-primary" />
               </div>
             </div>
             <p className="text-muted-foreground leading-relaxed text-sm mb-4">{description}</p>
           </div>
           {benefit && (
-            <div className="flex items-center gap-2 justify-center p-3 bg-primary/5 rounded-lg border border-primary/20">
+            <div className="flex items-center gap-2 justify-center p-3 rounded-xl border" style={{
+              background: 'linear-gradient(135deg, hsl(var(--tech-blue) / 0.05) 0%, hsl(var(--tech-purple) / 0.05) 100%)',
+              borderColor: 'hsl(var(--primary) / 0.2)'
+            }}>
               <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
               <span className="text-sm font-semibold text-primary">{benefit}</span>
             </div>
