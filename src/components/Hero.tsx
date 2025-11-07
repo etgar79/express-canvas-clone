@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
-import woodBg from "@/assets/wood-professional.jpg";
+import woodBg from "@/assets/wood-elegant.jpg";
 
 export const Hero = () => {
   return (
