@@ -93,11 +93,11 @@ export const Hero = () => {
           boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
         }}>
           {/* Logo as background behind text */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15 rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25 rounded-3xl overflow-hidden">
             <img 
               src={logo} 
               alt="" 
-              className="w-[400px] h-auto object-contain"
+              className="w-full h-auto object-contain px-8"
             />
           </div>
           
