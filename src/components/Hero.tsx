@@ -109,7 +109,7 @@ export const Hero = () => {
           }}>
             <span>
               מלווים אתכם בכל שלב - מאפיון הצורך ועד הטמעה מלאה של{" "}
-              <span key={currentWord} className="inline-block animate-lightning-strike font-bold">
+              <span key={currentWord} className="inline-block animate-word-slide-up font-bold">
                 {words[currentWord]}
               </span>
               {" "}בעסק שלכם

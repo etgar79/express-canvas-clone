@@ -90,7 +90,7 @@ export default {
         "bounce-slow": "bounce-slow 4s ease-in-out infinite",
         "wave": "wave 15s ease-in-out infinite",
         "typewriter": "typewriter 0.5s ease-in-out",
-        "lightning-strike": "lightning-strike 0.8s ease-out",
+        "word-slide-up": "word-slide-up 0.6s ease-out",
       },
       keyframes: {
         ...{
@@ -144,24 +144,14 @@ export default {
             transform: "translateY(0)",
           },
         },
-        "lightning-strike": {
+        "word-slide-up": {
           "0%": { 
             opacity: "0",
-            transform: "translateX(-30px) scale(0.8)",
-            filter: "brightness(3) blur(2px)",
-          },
-          "20%": { 
-            opacity: "1",
-            filter: "brightness(2) blur(1px)",
-          },
-          "40%": { 
-            transform: "translateX(0) scale(1)",
-            filter: "brightness(1.5) blur(0px)",
+            transform: "translateY(20px)",
           },
           "100%": { 
             opacity: "1",
-            transform: "translateX(0) scale(1)",
-            filter: "brightness(1) blur(0px)",
+            transform: "translateY(0)",
           },
         },
       },
