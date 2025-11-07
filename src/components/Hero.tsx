@@ -1,7 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export const Hero = () => {
+  const [currentWord, setCurrentWord] = useState(0);
+  const words = ["אוטומציה", "בינה מלאכותית", "יעילות", "חדשנות"];
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % words.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ 
       background: 'var(--gradient-hero)'
@@ -87,26 +98,32 @@ export const Hero = () => {
             backgroundClip: 'text',
             filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.5)) drop-shadow(0 0 40px rgba(255,255,255,0.3))'
           }}>
-            ייעוץ טכנולוגי מתקדם לעסקים וארגונים
+            הטכנולוגיה שלך עובדת עליך - או שאתה עובד עליה?
           </h1>
-          <p className="text-xl md:text-2xl mb-0 max-w-3xl mx-auto leading-relaxed" style={{ 
+          <div className="text-xl md:text-2xl mb-4 max-w-3xl mx-auto leading-relaxed min-h-[120px] flex items-center justify-center" style={{ 
             background: 'linear-gradient(135deg, hsl(0 0% 95%) 0%, hsl(0 0% 85%) 50%, hsl(0 0% 95%) 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
             filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.3))'
           }}>
-          ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
-          </p>
+            <span>
+              נשחרר אותך מהעומס הטכנולוגי עם{" "}
+              <span key={currentWord} className="inline-block animate-typewriter font-bold">
+                {words[currentWord]}
+              </span>
+              {" "}מתקדמת - בדיוק בשבילך
+            </span>
+          </div>
         </div>
         <Button
           size="lg"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-bounce-subtle"
           asChild
         >
           <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
             <MessageCircle className="ml-2 h-5 w-5" />
-            התייעצו איתנו
+            בוא נדבר על העסק שלך
           </a>
         </Button>
       </div>

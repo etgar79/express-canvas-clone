@@ -86,7 +86,9 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.8s ease-out",
         "bounce": "bounce 3s ease-in-out infinite",
+        "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
         "wave": "wave 15s ease-in-out infinite",
+        "typewriter": "typewriter 0.5s ease-in-out",
       },
       keyframes: {
         ...{
@@ -121,6 +123,20 @@ export default {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
+        },
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        "typewriter": {
+          "0%": { 
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          "100%": { 
+            opacity: "1",
+            transform: "translateY(0)",
+          },
         },
       },
     },
