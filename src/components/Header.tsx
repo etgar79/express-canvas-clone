@@ -10,14 +10,13 @@ export const Header = () => {
           <Button 
             variant="default" 
             size="default" 
-            className="font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-bounce"
+            className="font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
             style={{
-              background: 'var(--gradient-metallic)',
-              backgroundSize: '200% 100%',
-              color: 'hsl(0 0% 10%)',
-              textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-              boxShadow: '0 8px 24px rgba(200, 200, 200, 0.6), 0 0 40px rgba(255, 255, 255, 0.4), inset 0 1px 0 rgba(255,255,255,0.6)',
-              border: '1px solid rgba(255,255,255,0.3)'
+              background: 'linear-gradient(135deg, hsl(210 100% 55%) 0%, hsl(250 90% 60%) 100%)',
+              color: 'hsl(0 0% 100%)',
+              textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              boxShadow: '0 8px 24px rgba(59, 130, 246, 0.5), 0 0 40px rgba(147, 51, 234, 0.3)',
+              border: '1px solid rgba(255,255,255,0.2)'
             }}
             asChild
           >
