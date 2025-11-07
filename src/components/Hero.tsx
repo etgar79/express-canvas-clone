@@ -4,17 +4,16 @@ import { MessageCircle } from "lucide-react";
 export const Hero = () => {
   return (
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
-      {/* Sparkle effects */}
+      {/* Lightning streak effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[15%] left-[20%] w-1 h-1 bg-white/80 rounded-full animate-pulse" style={{ boxShadow: '0 0 10px 2px rgba(255,255,255,0.6)' }}></div>
-        <div className="absolute top-[25%] right-[25%] w-1 h-1 bg-white/70 rounded-full animate-pulse" style={{ animationDelay: '0.5s', boxShadow: '0 0 8px 2px rgba(255,255,255,0.5)' }}></div>
-        <div className="absolute top-[40%] left-[15%] w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '1s', boxShadow: '0 0 6px 1px rgba(255,255,255,0.4)' }}></div>
-        <div className="absolute top-[60%] right-[30%] w-1 h-1 bg-white/75 rounded-full animate-pulse" style={{ animationDelay: '1.5s', boxShadow: '0 0 10px 2px rgba(255,255,255,0.5)' }}></div>
-        <div className="absolute top-[35%] left-[40%] w-0.5 h-0.5 bg-white/65 rounded-full animate-pulse" style={{ animationDelay: '2s', boxShadow: '0 0 8px 1px rgba(255,255,255,0.4)' }}></div>
-        <div className="absolute top-[70%] left-[35%] w-1 h-1 bg-white/70 rounded-full animate-pulse" style={{ animationDelay: '2.5s', boxShadow: '0 0 10px 2px rgba(255,255,255,0.5)' }}></div>
-        <div className="absolute top-[50%] right-[20%] w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '3s', boxShadow: '0 0 6px 1px rgba(255,255,255,0.3)' }}></div>
-        <div className="absolute top-[20%] left-[50%] w-1 h-1 bg-white/80 rounded-full animate-pulse" style={{ animationDelay: '0.7s', boxShadow: '0 0 10px 2px rgba(255,255,255,0.6)' }}></div>
-        <div className="absolute top-[80%] right-[40%] w-0.5 h-0.5 bg-white/65 rounded-full animate-pulse" style={{ animationDelay: '1.2s', boxShadow: '0 0 8px 1px rgba(255,255,255,0.4)' }}></div>
+        {/* Diagonal lightning streaks */}
+        <div className="absolute top-[10%] left-[15%] w-32 h-0.5 bg-gradient-to-r from-transparent via-white/70 to-transparent rotate-45 animate-pulse" style={{ boxShadow: '0 0 20px 3px rgba(255,255,255,0.5)', animationDuration: '3s' }}></div>
+        <div className="absolute top-[30%] right-[20%] w-24 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent -rotate-45 animate-pulse" style={{ boxShadow: '0 0 15px 2px rgba(255,255,255,0.4)', animationDelay: '1s', animationDuration: '2.5s' }}></div>
+        <div className="absolute top-[50%] left-[25%] w-28 h-0.5 bg-gradient-to-r from-transparent via-white/65 to-transparent rotate-12 animate-pulse" style={{ boxShadow: '0 0 18px 3px rgba(255,255,255,0.45)', animationDelay: '2s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-[65%] right-[30%] w-20 h-0.5 bg-gradient-to-r from-transparent via-white/70 to-transparent -rotate-30 animate-pulse" style={{ boxShadow: '0 0 20px 3px rgba(255,255,255,0.5)', animationDelay: '0.5s', animationDuration: '2.8s' }}></div>
+        <div className="absolute top-[40%] left-[40%] w-16 h-0.5 bg-gradient-to-r from-transparent via-white/55 to-transparent rotate-60 animate-pulse" style={{ boxShadow: '0 0 12px 2px rgba(255,255,255,0.35)', animationDelay: '1.5s', animationDuration: '3.2s' }}></div>
+        <div className="absolute top-[75%] left-[35%] w-26 h-0.5 bg-gradient-to-r from-transparent via-white/68 to-transparent -rotate-15 animate-pulse" style={{ boxShadow: '0 0 18px 3px rgba(255,255,255,0.48)', animationDelay: '2.5s', animationDuration: '3s' }}></div>
+        <div className="absolute top-[20%] right-[35%] w-22 h-0.5 bg-gradient-to-r from-transparent via-white/62 to-transparent rotate-25 animate-pulse" style={{ boxShadow: '0 0 16px 2px rgba(255,255,255,0.42)', animationDelay: '3s', animationDuration: '2.7s' }}></div>
       </div>
       <div className="container px-4 py-20 text-center relative z-10">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
@@ -22,7 +21,8 @@ export const Hero = () => {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
-          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+          textShadow: '0 0 30px rgba(255,255,255,0.3), 0 0 60px rgba(255,255,255,0.2)',
+          filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 20px rgba(255,255,255,0.3))'
         }}>
           ייעוץ טכנולוגי מתקדם לעסקים וארגונים
         </h1>
@@ -31,7 +31,7 @@ export const Hero = () => {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
-          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
+          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4)) drop-shadow(0 0 15px rgba(255,255,255,0.2))'
         }}>
           ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
         </p>
