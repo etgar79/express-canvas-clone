@@ -10,7 +10,13 @@ export const Header = () => {
           <Button 
             variant="default" 
             size="default" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            style={{
+              background: 'var(--gradient-gold)',
+              color: 'hsl(0 0% 10%)',
+              textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+              boxShadow: '0 4px 12px rgba(200, 150, 50, 0.4), 0 0 20px rgba(200, 150, 50, 0.2)'
+            }}
             asChild
           >
             <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
