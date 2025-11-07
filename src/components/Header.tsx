@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Bot, FileText } from "lucide-react";
-import logo from "@/assets/logo.avif";
+import logo from "@/assets/logo.png";
 
 export const Header = () => {
   return (
