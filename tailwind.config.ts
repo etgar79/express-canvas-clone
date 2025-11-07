@@ -90,7 +90,7 @@ export default {
         "bounce-slow": "bounce-slow 4s ease-in-out infinite",
         "wave": "wave 15s ease-in-out infinite",
         "typewriter": "typewriter 0.5s ease-in-out",
-        "word-slide-up": "word-slide-up 0.6s ease-out",
+        "word-slide-up": "word-slide-up 0.9s ease-out",
       },
       keyframes: {
         ...{
