@@ -86,6 +86,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.8s ease-out",
         "bounce": "bounce 2s infinite",
+        "wave": "wave 3s ease-in-out infinite",
       },
       keyframes: {
         ...{
@@ -115,6 +116,11 @@ export default {
             opacity: "1",
             transform: "translateY(0)",
           },
+        },
+        "wave": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
         },
       },
     },

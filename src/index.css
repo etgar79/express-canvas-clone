@@ -42,6 +42,7 @@ All colors MUST be HSL.
     --gradient-card: linear-gradient(145deg, hsl(0 0% 98%) 0%, hsl(0 0% 88%) 50%, hsl(0 0% 95%) 100%);
     --gradient-metallic: linear-gradient(110deg, hsl(0 0% 60%) 0%, hsl(0 0% 95%) 8%, hsl(0 0% 65%) 16%, hsl(0 0% 98%) 24%, hsl(0 0% 70%) 32%, hsl(0 0% 92%) 40%, hsl(0 0% 75%) 48%, hsl(0 0% 98%) 56%, hsl(0 0% 72%) 64%, hsl(0 0% 95%) 72%, hsl(0 0% 68%) 80%, hsl(0 0% 90%) 88%, hsl(0 0% 75%) 100%);
     --gradient-gold: linear-gradient(110deg, hsl(45 70% 45%) 0%, hsl(48 85% 65%) 10%, hsl(45 75% 50%) 20%, hsl(48 90% 70%) 30%, hsl(45 72% 52%) 40%, hsl(48 88% 68%) 50%, hsl(45 74% 54%) 60%, hsl(48 90% 70%) 70%, hsl(45 73% 53%) 80%, hsl(48 87% 66%) 90%, hsl(45 75% 55%) 100%);
+    --gradient-wave: linear-gradient(90deg, hsl(0 0% 75%) 0%, hsl(140 60% 50%) 25%, hsl(0 0% 85%) 50%, hsl(140 65% 55%) 75%, hsl(0 0% 75%) 100%);
     --metallic-silver: 0 0% 85%;
     --metallic-gold: 45 75% 55%;
 
@@ -95,6 +96,7 @@ All colors MUST be HSL.
     --gradient-card: linear-gradient(145deg, hsl(0 0% 18%) 0%, hsl(0 0% 28%) 50%, hsl(0 0% 22%) 100%);
     --gradient-metallic: linear-gradient(110deg, hsl(0 0% 50%) 0%, hsl(0 0% 88%) 8%, hsl(0 0% 55%) 16%, hsl(0 0% 92%) 24%, hsl(0 0% 60%) 32%, hsl(0 0% 85%) 40%, hsl(0 0% 65%) 48%, hsl(0 0% 92%) 56%, hsl(0 0% 62%) 64%, hsl(0 0% 88%) 72%, hsl(0 0% 58%) 80%, hsl(0 0% 82%) 88%, hsl(0 0% 65%) 100%);
     --gradient-gold: linear-gradient(110deg, hsl(45 60% 35%) 0%, hsl(48 75% 55%) 10%, hsl(45 65% 40%) 20%, hsl(48 80% 60%) 30%, hsl(45 62% 42%) 40%, hsl(48 78% 58%) 50%, hsl(45 64% 44%) 60%, hsl(48 80% 60%) 70%, hsl(45 63% 43%) 80%, hsl(48 77% 56%) 90%, hsl(45 65% 45%) 100%);
+    --gradient-wave: linear-gradient(90deg, hsl(0 0% 65%) 0%, hsl(140 50% 45%) 25%, hsl(0 0% 75%) 50%, hsl(140 55% 50%) 75%, hsl(0 0% 65%) 100%);
     --metallic-silver: 0 0% 75%;
     --metallic-gold: 45 65% 45%;
     --sidebar-background: 0 0% 15%;
