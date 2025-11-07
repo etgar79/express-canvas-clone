@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
-import woodBg from "@/assets/wood-silver.jpg";
+import woodBg from "@/assets/wood-professional.jpg";
 
 export const Hero = () => {
   return (
@@ -60,11 +60,28 @@ export const Hero = () => {
         </svg>
       </div>
       <div className="container px-4 py-20 text-center relative z-10">
-        <div className="inline-block px-8 py-6 mb-4 rounded-2xl" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in text-foreground">
+        <div className="inline-block px-12 py-8 mb-4 rounded-3xl border-2" style={{ 
+          background: 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%)',
+          backdropFilter: 'blur(15px)',
+          borderColor: 'rgba(255,255,255,0.2)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+        }}>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
+            background: 'var(--gradient-metallic)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.5)) drop-shadow(0 0 40px rgba(255,255,255,0.3))'
+          }}>
             ייעוץ טכנולוגי מתקדם לעסקים וארגונים
           </h1>
-          <p className="text-xl md:text-2xl mb-0 max-w-3xl mx-auto leading-relaxed text-foreground/90">
+          <p className="text-xl md:text-2xl mb-0 max-w-3xl mx-auto leading-relaxed" style={{ 
+            background: 'linear-gradient(135deg, hsl(0 0% 95%) 0%, hsl(0 0% 85%) 50%, hsl(0 0% 95%) 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.3))'
+          }}>
           ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
           </p>
         </div>
