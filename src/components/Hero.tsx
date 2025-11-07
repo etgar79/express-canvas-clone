@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
-import woodBg from "@/assets/wood-elegant.jpg";
 
 export const Hero = () => {
   return (
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ 
-      backgroundImage: `url(${woodBg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
+      background: 'var(--gradient-hero)'
     }}>
       {/* Lightning effects - flowing along wood grain (vertical) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
