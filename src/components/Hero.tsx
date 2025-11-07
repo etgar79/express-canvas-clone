@@ -18,15 +18,6 @@ export const Hero = () => {
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ 
       background: 'var(--gradient-hero)'
     }}>
-      {/* Logo as background */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
-        <img 
-          src={logo} 
-          alt="" 
-          className="w-[500px] h-auto object-contain"
-        />
-      </div>
-      
       {/* Lightning effects - dramatic bolts like in photo */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Lightning 1 - Main bolt left side */}
@@ -95,13 +86,22 @@ export const Hero = () => {
         </svg>
       </div>
       <div className="container px-4 py-20 text-center relative z-10">
-        <div className="inline-block px-12 py-8 mb-4 rounded-3xl border-2" style={{ 
+        <div className="relative inline-block px-12 py-8 mb-4 rounded-3xl border-2" style={{ 
           background: 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%)',
           backdropFilter: 'blur(15px)',
           borderColor: 'rgba(255,255,255,0.2)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
         }}>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
+          {/* Logo as background behind text */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15 rounded-3xl overflow-hidden">
+            <img 
+              src={logo} 
+              alt="" 
+              className="w-[400px] h-auto object-contain"
+            />
+          </div>
+          
+          <h1 className="relative text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{
             background: 'var(--gradient-metallic)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -110,7 +110,7 @@ export const Hero = () => {
           }}>
             אנחנו כאן לתמוך, להדריך ולהטמיע את הטכנולוגיה בעסק שלך
           </h1>
-          <div className="text-xl md:text-2xl mb-4 max-w-3xl mx-auto leading-relaxed min-h-[120px] flex items-center justify-center" style={{ 
+          <div className="relative text-xl md:text-2xl mb-4 max-w-3xl mx-auto leading-relaxed min-h-[120px] flex items-center justify-center" style={{ 
             background: 'linear-gradient(135deg, hsl(0 0% 95%) 0%, hsl(0 0% 85%) 50%, hsl(0 0% 95%) 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
