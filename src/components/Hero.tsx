@@ -5,10 +5,22 @@ export const Hero = () => {
   return (
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
       <div className="container px-4 py-20 text-center relative z-10">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ 
+          background: 'var(--gradient-metallic)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+        }}>
           ייעוץ טכנולוגי מתקדם לעסקים וארגונים
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{ 
+          background: 'var(--gradient-metallic)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
+        }}>
           ממנפים בינה מלאכותית, אוטומציה והטמעת מערכות חכמות כדי להפוך את התהליכים בארגון שלך ליעילים ורווחיים יותר – בשירות אישי המותאם בדיוק לצרכים שלך
         </p>
         <Button 
