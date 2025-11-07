@@ -10,7 +10,7 @@ export const Header = () => {
           <Button 
             variant="default" 
             size="default" 
-            className="font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-wave"
+            className="font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-wave animate-bounce"
             style={{
               background: 'var(--gradient-wave)',
               backgroundSize: '200% 100%',

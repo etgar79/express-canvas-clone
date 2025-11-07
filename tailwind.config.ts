@@ -86,7 +86,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.8s ease-out",
         "bounce": "bounce 2s infinite",
-        "wave": "wave 3s ease-in-out infinite",
+        "wave": "wave 15s ease-in-out infinite",
       },
       keyframes: {
         ...{
