@@ -4,6 +4,16 @@ import { MessageCircle } from "lucide-react";
 export const Hero = () => {
   return (
     <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
+      {/* Flash overlay effects synchronized with lightning */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-white opacity-0 animate-pulse" style={{ animationDuration: '0.15s', animationIterationCount: '3', animationDelay: '0s' }}></div>
+        <div className="absolute inset-0 bg-white opacity-0 animate-pulse" style={{ animationDuration: '0.12s', animationIterationCount: '2', animationDelay: '1.5s' }}></div>
+        <div className="absolute inset-0 bg-white opacity-0 animate-pulse" style={{ animationDuration: '0.18s', animationIterationCount: '4', animationDelay: '3s' }}></div>
+        <div className="absolute inset-0 bg-white opacity-0 animate-pulse" style={{ animationDuration: '0.14s', animationIterationCount: '2', animationDelay: '4.5s' }}></div>
+        <div className="absolute inset-0 bg-white opacity-0 animate-pulse" style={{ animationDuration: '0.16s', animationIterationCount: '3', animationDelay: '6s' }}></div>
+        <div className="absolute inset-0 bg-white opacity-0 animate-pulse" style={{ animationDuration: '0.13s', animationIterationCount: '2', animationDelay: '7.5s' }}></div>
+      </div>
+      
       {/* Lightning effects - animated electric bolts */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Lightning bolt 1 */}
