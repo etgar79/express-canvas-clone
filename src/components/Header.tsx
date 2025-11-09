@@ -41,28 +41,52 @@ export const Header = () => {
             </a>
           </Button>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full blur-md" style={{
+        <div className="flex items-center gap-5">
+          <div className="relative group">
+            {/* Glowing background effect */}
+            <div className="absolute inset-0 rounded-2xl blur-2xl transition-all duration-500 group-hover:blur-3xl" style={{
               background: 'var(--gradient-tech)',
-              opacity: 0.3
+              opacity: 0.4,
+              transform: 'scale(1.2)'
             }}></div>
-            <img 
-              src={logo} 
-              alt="Tech Therapy Computers לוגו" 
-              className="h-12 w-12 md:h-14 md:w-14 relative z-10 rounded-full shadow-lg"
-            />
+            
+            {/* Animated border */}
+            <div className="absolute inset-0 rounded-2xl animate-pulse" style={{
+              background: 'linear-gradient(135deg, hsl(210 100% 55% / 0.3), hsl(250 90% 60% / 0.3))',
+              padding: '2px'
+            }}></div>
+            
+            {/* Logo */}
+            <div className="relative z-10 p-2 rounded-2xl backdrop-blur-sm" style={{
+              background: 'linear-gradient(135deg, hsl(var(--background) / 0.8) 0%, hsl(220 20% 94% / 0.8) 100%)',
+              border: '1px solid hsl(var(--primary) / 0.2)'
+            }}>
+              <img 
+                src={logo} 
+                alt="Tech Therapy Computers לוגו" 
+                className="h-14 w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 rounded-xl shadow-2xl transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight" style={{
+          
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl md:text-2xl lg:text-4xl font-extrabold leading-tight tracking-tight transition-all duration-300 hover:scale-105" style={{
               background: 'var(--gradient-tech)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 40px rgba(59, 130, 246, 0.3)'
+            }}>
+              Tech Therapy Computers
+            </h1>
+            <p className="text-xs md:text-sm lg:text-base font-semibold" style={{
+              background: 'linear-gradient(90deg, hsl(210 100% 55%) 0%, hsl(250 90% 60%) 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
             }}>
-              Tech Therapy Computers
-            </h1>
-            <p className="text-xs md:text-sm text-muted-foreground">ליווי טכנולוגי מקצועי</p>
+              ✨ ליווי טכנולוגי מקצועי ומתקדם
+            </p>
           </div>
         </div>
       </div>

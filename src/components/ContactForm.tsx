@@ -47,15 +47,15 @@ export const ContactForm = () => {
       window.open(`https://wa.me/972545368629?text=${whatsappMessage}`, '_blank');
       
       toast({
-        title: "ההודעה נשלחה בהצלחה!",
-        description: "ניצור איתך קשר בהקדם האפשרי",
+        title: "✅ ההודעה נשלחה בהצלחה!",
+        description: "תודה שפנית אלינו. ניצור איתך קשר בהקדם האפשרי 💬",
       });
       
       form.reset();
     } catch (error) {
       toast({
-        title: "שגיאה בשליחת ההודעה",
-        description: "אנא נסה שוב מאוחר יותר",
+        title: "❌ שגיאה בשליחת ההודעה",
+        description: "אנא נסה שוב מאוחר יותר או צור קשר בוואטסאפ ישירות",
         variant: "destructive",
       });
     }
