@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { About } from "@/components/About";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -39,6 +40,7 @@ const Index = () => {
         <About />
       </main>
       <WhatsAppFloat />
+      <AccessibilityMenu />
     </div>
   );
 };

@@ -23,6 +23,12 @@ const handler = async (req: Request): Promise<Response> => {
     const visitorData: VisitorData = await req.json();
     console.log("Received visitor data:", visitorData);
 
+    // Get visitor IP address
+    const ip = req.headers.get('x-forwarded-for') || 
+               req.headers.get('x-real-ip') || 
+               req.headers.get('cf-connecting-ip') || 
+               'לא ידוע';
+
     // Parse user agent to get browser and OS info
     const ua = visitorData.userAgent;
     let browser = "Unknown";
@@ -91,6 +97,11 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="info-row">
             <div class="label">🌍 שפה:</div>
             <div class="value">${visitorData.language}</div>
+          </div>
+
+          <div class="info-row">
+            <div class="label">🌐 כתובת IP:</div>
+            <div class="value">${ip}</div>
           </div>
 
           <div class="info-row">

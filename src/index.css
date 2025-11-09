@@ -123,3 +123,20 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Accessibility Styles */
+.high-contrast {
+  filter: contrast(1.5);
+}
+
+.highlight-links a,
+.highlight-links button {
+  outline: 3px solid hsl(var(--primary)) !important;
+  outline-offset: 2px;
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
