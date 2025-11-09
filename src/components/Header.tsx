@@ -41,16 +41,29 @@ export const Header = () => {
             </a>
           </Button>
         </div>
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="Tech Therapy Computers" className="h-10 w-10 md:h-12 md:w-12" />
-          <h1 className="text-xl md:text-2xl font-bold" style={{
-            background: 'var(--gradient-tech)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}>
-            Tech Therapy Computers
-          </h1>
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full blur-md" style={{
+              background: 'var(--gradient-tech)',
+              opacity: 0.3
+            }}></div>
+            <img 
+              src={logo} 
+              alt="Tech Therapy Computers לוגו" 
+              className="h-12 w-12 md:h-14 md:w-14 relative z-10 rounded-full shadow-lg"
+            />
+          </div>
+          <div>
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight" style={{
+              background: 'var(--gradient-tech)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Tech Therapy Computers
+            </h1>
+            <p className="text-xs md:text-sm text-muted-foreground">ליווי טכנולוגי מקצועי</p>
+          </div>
         </div>
       </div>
     </header>

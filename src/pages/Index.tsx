@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { About } from "@/components/About";
+import { Contact } from "@/components/Contact";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import { useEffect } from "react";
@@ -38,6 +39,7 @@ const Index = () => {
         <Hero />
         <Services />
         <About />
+        <Contact />
       </main>
       <WhatsAppFloat />
       <AccessibilityMenu />
