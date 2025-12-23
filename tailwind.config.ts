@@ -50,6 +50,9 @@ export default {
         'tech-blue': "hsl(var(--tech-blue))",
         'tech-purple': "hsl(var(--tech-purple))",
         'tech-cyan': "hsl(var(--tech-cyan))",
+        'glow-cyan': "hsl(var(--glow-cyan))",
+        'glow-purple': "hsl(var(--glow-purple))",
+        'glow-pink': "hsl(var(--glow-pink))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
