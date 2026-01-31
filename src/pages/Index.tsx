@@ -36,7 +36,9 @@ const Index = () => {
     <div className="min-h-screen" dir="rtl">
       <Header />
       <main className="pt-[72px]">
-        <Hero />
+        <section id="hero">
+          <Hero />
+        </section>
         <Services />
         <About />
         <Contact />

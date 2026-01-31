@@ -30,35 +30,32 @@ export const About = () => {
   ];
 
   return (
-    <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(220 20% 94%) 100%)' }}>
+    <section id="about" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
       {/* Decorative gradient orbs */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
         {/* About Section */}
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={{
-            background: 'var(--gradient-tech)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white" style={{
+            textShadow: '0 0 30px hsl(190 100% 42% / 0.4)'
           }}>
             הגישה שלנו
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
+          <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-6">
             אנחנו מאמינים שטכנולוגיה צריכה לשרת את העסק - לא להיפך. לכן אנחנו לא מוכרים פתרונות מדף, 
             אלא מלווים אתכם בכל שלב: מהבנת הצורך, דרך בחירת הכלים המתאימים, ועד הטמעה מלאה והדרכה.
           </p>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
+          <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-6">
             עם ניסיון של למעלה מ-10 שנים בעבודה עם עסקים בכל הגדלים, אנחנו יודעים שכל ארגון הוא ייחודי.
             לכן אנחנו מקשיבים, מבינים, ומתאימים את הפתרון בדיוק לצרכים שלכם - תוך שמירה על קשר צמוד ותמיכה מלאה.
           </p>
           <div className="inline-block p-6 rounded-2xl mt-8" style={{
-            background: 'linear-gradient(135deg, hsl(var(--tech-blue) / 0.05) 0%, hsl(var(--tech-purple) / 0.05) 100%)',
-            borderLeft: '4px solid hsl(var(--primary))'
+            background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.1) 0%, hsl(260 80% 55% / 0.1) 100%)',
+            borderRight: '4px solid hsl(var(--primary))'
           }}>
-            <p className="text-xl md:text-2xl font-semibold text-foreground italic">
+            <p className="text-xl md:text-2xl font-semibold text-white italic">
               "אנחנו כאן כדי שהטכנולוגיה תעבוד בשבילכם - בליווי אישי ומקצועי"
             </p>
           </div>
@@ -66,31 +63,28 @@ export const About = () => {
 
         {/* Why Choose Us Section */}
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{
-            background: 'var(--gradient-tech)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
+          <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white" style={{
+            textShadow: '0 0 20px hsl(190 100% 42% / 0.3)'
           }}>
             למה לבחור בנו?
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {advantages.map((advantage, index) => (
-              <Card key={index} className="p-6 hover:shadow-xl transition-all duration-300 border border-primary/10 group" style={{ background: 'var(--gradient-card)' }}>
+              <Card key={index} className="p-6 hover:shadow-xl transition-all duration-300 border border-primary/20 group" style={{ background: 'var(--gradient-card)' }}>
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300" style={{
-                    background: 'linear-gradient(135deg, hsl(var(--tech-blue) / 0.1) 0%, hsl(var(--tech-purple) / 0.1) 100%)'
+                    background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.15) 0%, hsl(260 80% 55% / 0.15) 100%)'
                   }}>
                     <advantage.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-xl font-bold text-foreground">{advantage.title}</h4>
+                      <h4 className="text-xl font-bold text-white">{advantage.title}</h4>
                       <span className="text-sm font-bold text-primary px-3 py-1 rounded-full" style={{
-                        background: 'linear-gradient(135deg, hsl(var(--tech-blue) / 0.1) 0%, hsl(var(--tech-purple) / 0.1) 100%)'
+                        background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.15) 0%, hsl(260 80% 55% / 0.15) 100%)'
                       }}>{advantage.stat}</span>
                     </div>
-                    <p className="text-muted-foreground leading-relaxed">{advantage.description}</p>
+                    <p className="text-white/70 leading-relaxed">{advantage.description}</p>
                   </div>
                 </div>
               </Card>
@@ -101,10 +95,10 @@ export const About = () => {
         {/* CTA Section */}
         <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-2xl border" style={{ 
           background: 'var(--gradient-card)',
-          borderColor: 'hsl(var(--primary) / 0.2)'
+          borderColor: 'hsl(190 100% 42% / 0.3)'
         }}>
-          <h4 className="text-2xl font-bold mb-4 text-foreground">נשמח לשמוע עליכם</h4>
-          <p className="text-lg text-muted-foreground mb-6">
+          <h4 className="text-2xl font-bold mb-4 text-white">נשמח לשמוע עליכם</h4>
+          <p className="text-lg text-white/70 mb-6">
             צרו קשר לשיחת היכרות ללא התחייבות - נשמח להבין את הצרכים שלכם ולראות איך אנחנו יכולים לעזור
           </p>
           <a 
@@ -113,7 +107,8 @@ export const About = () => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg text-white"
             style={{
-              background: 'var(--gradient-tech)'
+              background: 'var(--gradient-button)',
+              boxShadow: '0 8px 24px hsl(190 100% 42% / 0.4)'
             }}
           >
             <MessageCircle className="h-5 w-5" />
