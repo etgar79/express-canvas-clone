@@ -137,6 +137,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Heebo', sans-serif;
   }
 }
 
@@ -171,5 +172,56 @@ All colors MUST be HSL.
 
 .toaster [data-sonner-toast] {
   animation: toast-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  font-family: inherit;
+  font-family: 'Heebo', sans-serif;
+}
+
+/* Scroll Reveal Animations */
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-reveal-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scroll-reveal-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.scroll-reveal {
+  animation: scroll-reveal 0.8s ease-out forwards;
+}
+
+.scroll-reveal-left {
+  animation: scroll-reveal-left 0.8s ease-out forwards;
+}
+
+.scroll-reveal-right {
+  animation: scroll-reveal-right 0.8s ease-out forwards;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
 }

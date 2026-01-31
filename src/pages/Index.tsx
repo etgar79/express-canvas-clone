@@ -2,7 +2,10 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { About } from "@/components/About";
+import { Testimonials } from "@/components/Testimonials";
+import { FAQ } from "@/components/FAQ";
 import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import { useEffect } from "react";
@@ -41,8 +44,11 @@ const Index = () => {
         </section>
         <Services />
         <About />
+        <Testimonials />
+        <FAQ />
         <Contact />
       </main>
+      <Footer />
       <WhatsAppFloat />
       <AccessibilityMenu />
     </div>
