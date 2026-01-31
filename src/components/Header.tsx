@@ -1,25 +1,52 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Bot, FileText } from "lucide-react";
+import { Mail, Bot, FileText, Home, Briefcase, Users, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 export const Header = () => {
   return (
-    <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-md border-b" style={{
-      background: 'linear-gradient(135deg, hsl(var(--background) / 0.95) 0%, hsl(220 20% 94% / 0.95) 100%)',
-      borderColor: 'hsl(var(--primary) / 0.1)'
+    <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-md border-b border-primary/20" style={{
+      background: 'linear-gradient(135deg, hsl(236 97% 12% / 0.95) 0%, hsl(236 80% 18% / 0.95) 100%)'
     }}>
-      <div className="container px-4 py-4 flex justify-between items-center">
+      <div className="container px-4 py-3 flex justify-between items-center">
+        {/* Navigation Links */}
+        <nav className="hidden md:flex gap-1 items-center">
+          <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-primary/20" asChild>
+            <a href="#hero">
+              <Home className="ml-1 h-4 w-4" />
+              בית
+            </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-primary/20" asChild>
+            <a href="#services">
+              <Briefcase className="ml-1 h-4 w-4" />
+              שירותים
+            </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-primary/20" asChild>
+            <a href="#about">
+              <Users className="ml-1 h-4 w-4" />
+              אודות
+            </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-primary/20" asChild>
+            <a href="#contact">
+              <Phone className="ml-1 h-4 w-4" />
+              צור קשר
+            </a>
+          </Button>
+        </nav>
+
+        {/* Action Buttons */}
         <div className="flex gap-2 flex-wrap items-center">
           <Button 
             variant="default" 
             size="default" 
             className="font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
             style={{
-              background: 'linear-gradient(135deg, hsl(210 100% 55%) 0%, hsl(250 90% 60%) 100%)',
-              color: 'hsl(0 0% 100%)',
-              textShadow: '0 2px 8px rgba(0,0,0,0.3)',
-              boxShadow: '0 8px 24px rgba(59, 130, 246, 0.5), 0 0 40px rgba(147, 51, 234, 0.3)',
-              border: '1px solid rgba(255,255,255,0.2)'
+              background: 'var(--gradient-button)',
+              color: 'white',
+              boxShadow: '0 8px 24px hsl(190 100% 42% / 0.4), 0 0 40px hsl(260 80% 55% / 0.2)',
+              border: '1px solid hsl(190 100% 42% / 0.3)'
             }}
             asChild
           >
@@ -28,65 +55,48 @@ export const Header = () => {
               תמיכה מרחוק
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+          <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-primary/20" asChild>
             <a href="https://script.google.com/macros/s/AKfycbyD2n-9G0ncG_fEYvvN9ZzeJQqQ5QVdRBge4Jz1PCnRejUojUb33bUaTjfEbpo8dcLmDQ/exec" target="_blank" rel="noopener noreferrer">
               <Bot className="ml-2 h-4 w-4" />
               בוט טכנאים
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+          <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-primary/20" asChild>
             <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/EjbE5ycmGrlInMZXY1g_dggBaf0P-aHPkJLvrBoNoe9Swg?e=9PO514" target="_blank" rel="noopener noreferrer">
               <FileText className="ml-2 h-4 w-4" />
               קבצי עזר לטכנאי
             </a>
           </Button>
         </div>
-        <div className="flex items-center gap-5">
+
+        {/* Logo & Brand */}
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-0.5 text-left">
+            <h1 className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight text-white" style={{
+              textShadow: '0 0 20px hsl(190 100% 42% / 0.5)'
+            }}>
+              Tech Therapy Computers
+            </h1>
+            <p className="text-xs md:text-sm font-medium text-primary">
+              ליווי טכנולוגי מקצועי
+            </p>
+          </div>
           <div className="relative group">
-            {/* Glowing background effect */}
-            <div className="absolute inset-0 rounded-2xl blur-2xl transition-all duration-500 group-hover:blur-3xl" style={{
-              background: 'var(--gradient-tech)',
-              opacity: 0.4,
-              transform: 'scale(1.2)'
+            <div className="absolute inset-0 rounded-xl blur-lg transition-all duration-500 group-hover:blur-xl" style={{
+              background: 'var(--gradient-button)',
+              opacity: 0.3,
+              transform: 'scale(1.1)'
             }}></div>
-            
-            {/* Animated border */}
-            <div className="absolute inset-0 rounded-2xl animate-pulse" style={{
-              background: 'linear-gradient(135deg, hsl(210 100% 55% / 0.3), hsl(250 90% 60% / 0.3))',
-              padding: '2px'
-            }}></div>
-            
-            {/* Logo */}
-            <div className="relative z-10 p-2 rounded-2xl backdrop-blur-sm" style={{
-              background: 'linear-gradient(135deg, hsl(var(--background) / 0.8) 0%, hsl(220 20% 94% / 0.8) 100%)',
-              border: '1px solid hsl(var(--primary) / 0.2)'
+            <div className="relative z-10 p-1.5 rounded-xl" style={{
+              background: 'linear-gradient(135deg, hsl(236 85% 16% / 0.9) 0%, hsl(236 85% 12% / 0.9) 100%)',
+              border: '1px solid hsl(190 100% 42% / 0.3)'
             }}>
               <img 
                 src={logo} 
                 alt="Tech Therapy Computers לוגו" 
-                className="h-14 w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 rounded-xl shadow-2xl transition-transform duration-300 group-hover:scale-105"
+                className="h-10 w-10 md:h-12 md:w-12 rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105"
               />
             </div>
-          </div>
-          
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl md:text-2xl lg:text-4xl font-extrabold leading-tight tracking-tight transition-all duration-300 hover:scale-105" style={{
-              background: 'var(--gradient-tech)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textShadow: '0 0 40px rgba(59, 130, 246, 0.3)'
-            }}>
-              Tech Therapy Computers
-            </h1>
-            <p className="text-xs md:text-sm lg:text-base font-semibold" style={{
-              background: 'linear-gradient(90deg, hsl(210 100% 55%) 0%, hsl(250 90% 60%) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              ✨ ליווי טכנולוגי מקצועי ומתקדם
-            </p>
           </div>
         </div>
       </div>

@@ -48,21 +48,18 @@ export const Services = () => {
   ];
 
   return (
-    <section className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
+    <section id="services" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
       {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{
-          background: 'var(--gradient-tech)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-white" style={{
+          textShadow: '0 0 30px hsl(190 100% 42% / 0.4)'
         }}>
-          התחומים שלנו
+          השירותים שלנו
         </h2>
-        <p className="text-lg text-foreground/70 text-center mb-16 max-w-2xl mx-auto">
+        <p className="text-lg text-white/70 text-center mb-16 max-w-2xl mx-auto">
           אנחנו כאן כדי לתמוך בכם בכל תחום טכנולוגי - מייעוץ והדרכה ועד הטמעה מלאה
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
