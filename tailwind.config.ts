@@ -97,6 +97,8 @@ export default {
         "wave": "wave 15s ease-in-out infinite",
         "typewriter": "typewriter 0.5s ease-in-out",
         "word-slide-up": "word-slide-up 0.9s ease-out",
+        "float": "float 6s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 4s ease-in-out infinite",
       },
       keyframes: {
         ...{
@@ -158,6 +160,24 @@ export default {
           "100%": { 
             opacity: "1",
             transform: "translateY(0)",
+          },
+        },
+        "float": {
+          "0%, 100%": { 
+            transform: "translateY(0) scale(1)",
+          },
+          "50%": { 
+            transform: "translateY(-12px) scale(1.02)",
+          },
+        },
+        "glow-pulse": {
+          "0%, 100%": { 
+            opacity: "0.4",
+            transform: "scale(0.9)",
+          },
+          "50%": { 
+            opacity: "0.6",
+            transform: "scale(0.95)",
           },
         },
       },
