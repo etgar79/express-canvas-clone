@@ -86,15 +86,16 @@ export const Hero = () => {
           
           {/* Hero Illustration */}
           <div className="order-1 lg:order-2 flex justify-center lg:justify-start">
-            <div className="relative group">
+            <div className="relative">
               {/* Glow effect behind image */}
-              <div className="absolute inset-0 rounded-3xl blur-2xl animate-glow-pulse" style={{
+              <div className="absolute inset-0 rounded-3xl blur-2xl opacity-40" style={{
                 background: 'var(--gradient-button)',
+                transform: 'scale(0.9)'
               }}></div>
               <img 
                 src={heroIllustration} 
                 alt="תמיכה טכנית מקצועית" 
-                className="relative z-10 w-full max-w-md lg:max-w-lg rounded-2xl shadow-2xl animate-float transition-transform duration-500 group-hover:scale-105"
+                className="relative z-10 w-full max-w-md lg:max-w-lg rounded-2xl shadow-2xl"
                 style={{
                   boxShadow: '0 25px 50px -12px hsl(190 100% 42% / 0.3)'
                 }}
