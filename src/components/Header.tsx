@@ -44,6 +44,12 @@ export const Header = () => {
               מאבחן תקלות
             </Link>
           </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+            <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer">
+              <FileText className="ml-1 h-4 w-4" />
+              קבצי עזר
+            </a>
+          </Button>
         </nav>
 
         {/* Action Buttons */}
@@ -115,6 +121,10 @@ export const Header = () => {
             <Terminal className="inline ml-1 h-4 w-4" />
             מאבחן תקלות AI
           </Link>
+          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>
+            <FileText className="inline ml-1 h-4 w-4" />
+            קבצי עזר
+          </a>
         </div>
       )}
     </header>
