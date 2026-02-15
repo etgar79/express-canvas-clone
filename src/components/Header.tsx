@@ -94,7 +94,7 @@ export const Header = () => {
               Tech Therapy
             </h1>
             <p className="text-xs md:text-sm font-mono text-accent">
-              Cyber • Network • IT
+              Consulting • Automation • IT
             </p>
           </div>
           <div className="relative group">

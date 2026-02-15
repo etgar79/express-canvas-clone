@@ -5,8 +5,8 @@ export const About = () => {
   const advantages = [
     {
       icon: Shield,
-      title: "מומחי סייבר מוסמכים",
-      description: "הצוות שלנו מוסמך באבטחת מידע וסייבר. אנחנו מגנים על העסק שלך מפני איומים מתקדמים.",
+      title: "מומחיות טכנולוגית",
+      description: "הצוות שלנו מתמחה בהטמעת טכנולוגיות, אוטומציות וייעוץ IT מקצועי לעסקים וארגונים.",
       stat: "Certified"
     },
     {
@@ -45,8 +45,8 @@ export const About = () => {
             מי אנחנו
           </h2>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
-            <span className="text-primary font-bold">Tech Therapy</span> היא חברת IT ואבטחת סייבר מובילה. 
-            אנחנו מספקים פתרונות טכנולוגיים מקיפים - מהגנת סייבר, דרך תשתיות רשת, ועד בית חכם.
+            <span className="text-primary font-bold">Tech Therapy</span> היא חברת ייעוץ והטמעת טכנולוגיה מובילה. 
+            אנחנו מספקים פתרונות מקיפים - מתמיכה במחשוב עסקי, דרך אוטומציות, ועד הטמעת טכנולוגיות בארגונים.
           </p>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
             עם ניסיון של למעלה מ-10 שנים, אנחנו מלווים עסקים בכל שלב - מאפיון הצורך ועד הטמעה מלאה,
