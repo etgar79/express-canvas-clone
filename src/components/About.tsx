@@ -1,90 +1,84 @@
 import { Card } from "@/components/ui/card";
-import { CheckCircle, Zap, Heart, TrendingUp, MessageCircle } from "lucide-react";
+import { Shield, Zap, Heart, TrendingUp, MessageCircle, Award } from "lucide-react";
 
 export const About = () => {
   const advantages = [
     {
-      icon: CheckCircle,
-      title: "ניסיון של 10+ שנים",
-      description: "צברנו ניסיון עשיר בעבודה עם עסקים מכל הגדלים. אנחנו מכירים את האתגרים ויודעים איך להתמודד איתם.",
-      stat: "50+ עסקים"
+      icon: Shield,
+      title: "מומחי סייבר מוסמכים",
+      description: "הצוות שלנו מוסמך באבטחת מידע וסייבר. אנחנו מגנים על העסק שלך מפני איומים מתקדמים.",
+      stat: "Certified"
     },
     {
       icon: Zap,
-      title: "תמיד מעודכנים",
-      description: "אנחנו עוקבים אחרי הטכנולוגיות החדשות ביותר כדי להציע לכם את הפתרונות המתאימים והמתקדמים ביותר.",
-      stat: "חדשנות מובילה"
+      title: "זמן תגובה מהיר",
+      description: "תגובה תוך דקות לכל תקלה. מערכת ניטור 24/7 שמזהה בעיות לפני שהלקוח מרגיש.",
+      stat: "< 30 min"
     },
     {
-      icon: Heart,
-      title: "פתרונות מותאמים אישית",
-      description: "אנחנו לא מציעים פתרונות גנריים. כל פתרון נבנה במיוחד עבורכם, מותאם לצרכים ולמטרות שלכם.",
-      stat: "התאמה מלאה"
+      icon: Award,
+      title: "10+ שנות ניסיון",
+      description: "ניסיון עשיר בעבודה עם עסקים מכל הגדלים - מסטארטאפים ועד ארגונים גדולים.",
+      stat: "50+ clients"
     },
     {
       icon: TrendingUp,
-      title: "ליווי ותמיכה צמודים",
-      description: "אנחנו זמינים לכם בכל שלב - מתחילת הפרויקט ועד הרבה אחרי. תמיכה מהירה וזמינה בווטסאפ.",
-      stat: "תמיכה 24/7"
+      title: "פתרונות מותאמים",
+      description: "כל פתרון נבנה במיוחד עבורכם. ניתוח צרכים, תכנון ויישום מותאם אישית.",
+      stat: "Custom"
     }
   ];
 
   return (
     <section id="about" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
-      {/* Decorative gradient orbs */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 grid-pattern"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
         {/* About Section */}
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white" style={{
-            textShadow: '0 0 30px hsl(190 100% 42% / 0.4)'
-          }}>
-            הגישה שלנו
+          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary font-mono text-sm mb-4">
+            // about_us
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 neon-text text-primary">
+            מי אנחנו
           </h2>
-          <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-6">
-            אנחנו מאמינים שטכנולוגיה צריכה לשרת את העסק - לא להיפך. לכן אנחנו לא מוכרים פתרונות מדף, 
-            אלא מלווים אתכם בכל שלב: מהבנת הצורך, דרך בחירת הכלים המתאימים, ועד הטמעה מלאה והדרכה.
+          <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
+            <span className="text-primary font-bold">Tech Therapy</span> היא חברת IT ואבטחת סייבר מובילה. 
+            אנחנו מספקים פתרונות טכנולוגיים מקיפים - מהגנת סייבר, דרך תשתיות רשת, ועד בית חכם.
           </p>
-          <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-6">
-            עם ניסיון של למעלה מ-10 שנים בעבודה עם עסקים בכל הגדלים, אנחנו יודעים שכל ארגון הוא ייחודי.
-            לכן אנחנו מקשיבים, מבינים, ומתאימים את הפתרון בדיוק לצרכים שלכם - תוך שמירה על קשר צמוד ותמיכה מלאה.
+          <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
+            עם ניסיון של למעלה מ-10 שנים, אנחנו מלווים עסקים בכל שלב - מאפיון הצורך ועד הטמעה מלאה,
+            תוך שמירה על רמת אבטחה גבוהה וזמינות מלאה.
           </p>
-          <div className="inline-block p-6 rounded-2xl mt-8" style={{
-            background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.1) 0%, hsl(260 80% 55% / 0.1) 100%)',
-            borderRight: '4px solid hsl(var(--primary))'
-          }}>
-            <p className="text-xl md:text-2xl font-semibold text-white italic">
-              "אנחנו כאן כדי שהטכנולוגיה תעבוד בשבילכם - בליווי אישי ומקצועי"
+          <div className="inline-block p-6 rounded-lg mt-4 border border-primary/20 bg-primary/5">
+            <p className="text-xl md:text-2xl font-semibold text-primary italic font-mono neon-text">
+              "Your IT. Our Mission."
             </p>
           </div>
         </div>
 
-        {/* Why Choose Us Section */}
+        {/* Why Choose Us */}
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white" style={{
-            textShadow: '0 0 20px hsl(190 100% 42% / 0.3)'
-          }}>
-            למה לבחור בנו?
+          <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 neon-text-cyan text-accent">
+            למה Tech Therapy?
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {advantages.map((advantage, index) => (
-              <Card key={index} className="p-6 hover:shadow-xl transition-all duration-300 border border-primary/20 group" style={{ background: 'var(--gradient-card)' }}>
+              <Card key={index} className="p-6 hover:border-primary/40 transition-all duration-300 border border-primary/15 group neon-border" style={{ background: 'var(--gradient-card)' }}>
                 <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300" style={{
-                    background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.15) 0%, hsl(260 80% 55% / 0.15) 100%)'
-                  }}>
+                  <div className="p-3 rounded-lg border border-primary/20 bg-primary/5 flex-shrink-0 group-hover:bg-primary/10 transition-colors">
                     <advantage.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-xl font-bold text-white">{advantage.title}</h4>
-                      <span className="text-sm font-bold text-primary px-3 py-1 rounded-full" style={{
-                        background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.15) 0%, hsl(260 80% 55% / 0.15) 100%)'
-                      }}>{advantage.stat}</span>
+                      <h4 className="text-lg font-bold text-foreground">{advantage.title}</h4>
+                      <span className="text-xs font-bold text-primary px-2 py-1 rounded-md border border-primary/30 bg-primary/5 font-mono">
+                        {advantage.stat}
+                      </span>
                     </div>
-                    <p className="text-white/70 leading-relaxed">{advantage.description}</p>
+                    <p className="text-foreground/50 leading-relaxed text-sm">{advantage.description}</p>
                   </div>
                 </div>
               </Card>
@@ -92,23 +86,20 @@ export const About = () => {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-2xl border" style={{ 
-          background: 'var(--gradient-card)',
-          borderColor: 'hsl(190 100% 42% / 0.3)'
-        }}>
-          <h4 className="text-2xl font-bold mb-4 text-white">נשמח לשמוע עליכם</h4>
-          <p className="text-lg text-white/70 mb-6">
-            צרו קשר לשיחת היכרות ללא התחייבות - נשמח להבין את הצרכים שלכם ולראות איך אנחנו יכולים לעזור
+        {/* CTA */}
+        <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-lg border border-primary/20 neon-border" style={{ background: 'var(--gradient-card)' }}>
+          <h4 className="text-2xl font-bold mb-4 text-foreground">מוכנים לשדרג את ה-IT?</h4>
+          <p className="text-lg text-foreground/50 mb-6">
+            שיחת ייעוץ ראשונית ללא עלות - נבין את הצרכים ונציע פתרון מותאם
           </p>
           <a 
             href="https://wa.me/972545368629" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg text-white"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-md font-bold text-lg transition-all duration-300 hover:scale-105 neon-border"
             style={{
               background: 'var(--gradient-button)',
-              boxShadow: '0 8px 24px hsl(190 100% 42% / 0.4)'
+              color: 'hsl(220 20% 4%)',
             }}
           >
             <MessageCircle className="h-5 w-5" />

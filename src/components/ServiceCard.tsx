@@ -16,46 +16,41 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
 
   return (
     <div 
-      className="group h-[380px] [perspective:1000px]"
+      className="group h-[360px] [perspective:1000px]"
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
+      onClick={() => setIsFlipped(!isFlipped)}
     >
       <div className={`relative h-full w-full transition-all duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
         {/* Front */}
-        <Card className="absolute inset-0 p-8 text-center flex flex-col items-center justify-center border border-primary/20 [backface-visibility:hidden] transition-all duration-300" style={{ background: 'var(--gradient-card)' }}>
+        <Card className="absolute inset-0 p-8 text-center flex flex-col items-center justify-center border border-primary/15 [backface-visibility:hidden] transition-all duration-300 hover:border-primary/40 neon-border" style={{ background: 'var(--gradient-card)' }}>
           <div className="mb-6 flex justify-center">
-            <div className="p-4 rounded-2xl animate-bounce-subtle" style={{
-              background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.15) 0%, hsl(260 80% 55% / 0.15) 100%)',
-              boxShadow: '0 4px 16px hsl(190 100% 42% / 0.2)'
-            }}>
+            <div className="p-4 rounded-lg border border-primary/20 bg-primary/5 animate-bounce-subtle">
               <Icon className="h-12 w-12 text-primary" />
             </div>
           </div>
-          <h3 className="text-2xl font-bold mb-4 text-white leading-tight">{title}</h3>
+          <h3 className="text-xl font-bold mb-3 text-foreground leading-tight font-mono">{title}</h3>
           {question && (
-            <p className="text-sm text-white/60 italic">{question}</p>
+            <p className="text-sm text-foreground/40 italic">{question}</p>
           )}
+          <div className="mt-4 text-xs text-primary/50 font-mono">[ hover לפרטים ]</div>
         </Card>
 
         {/* Back */}
-        <Card className="absolute inset-0 p-8 flex flex-col justify-between border border-primary/30 [backface-visibility:hidden] [transform:rotateY(180deg)] transition-all duration-300" style={{ background: 'var(--gradient-card-hover)' }}>
+        <Card className="absolute inset-0 p-6 flex flex-col justify-between border border-accent/30 [backface-visibility:hidden] [transform:rotateY(180deg)] neon-border-cyan" style={{ background: 'var(--gradient-card-hover)' }}>
           <div>
-            <div className="mb-4 flex justify-center">
-              <div className="p-3 rounded-xl" style={{
-                background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.2) 0%, hsl(260 80% 55% / 0.2) 100%)'
-              }}>
-                <Icon className="h-8 w-8 text-primary" />
+            <div className="mb-3 flex justify-center">
+              <div className="p-2.5 rounded-lg border border-accent/20 bg-accent/5">
+                <Icon className="h-7 w-7 text-accent" />
               </div>
             </div>
-            <p className="text-white/80 leading-relaxed text-sm mb-4">{description}</p>
+            <h3 className="text-lg font-bold mb-3 text-center text-accent font-mono">{title}</h3>
+            <p className="text-foreground/60 leading-relaxed text-sm">{description}</p>
           </div>
           {benefit && (
-            <div className="flex items-center gap-2 justify-center p-3 rounded-xl border" style={{
-              background: 'linear-gradient(135deg, hsl(190 100% 42% / 0.1) 0%, hsl(260 80% 55% / 0.1) 100%)',
-              borderColor: 'hsl(190 100% 42% / 0.3)'
-            }}>
-              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-              <span className="text-sm font-semibold text-primary">{benefit}</span>
+            <div className="flex items-center gap-2 justify-center p-3 rounded-md border border-primary/30 bg-primary/5 mt-3">
+              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="text-sm font-semibold text-primary font-mono">{benefit}</span>
             </div>
           )}
         </Card>

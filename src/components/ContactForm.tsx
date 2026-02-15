@@ -48,7 +48,7 @@ export const ContactForm = () => {
       
       toast({
         title: "✅ ההודעה נשלחה בהצלחה!",
-        description: "תודה שפנית אלינו. ניצור איתך קשר בהקדם האפשרי 💬",
+        description: "תודה שפנית אלינו. ניצור איתך קשר בהקדם 💬",
       });
       
       form.reset();
@@ -63,24 +63,22 @@ export const ContactForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-foreground font-semibold">שם מלא *</FormLabel>
+              <FormLabel className="text-foreground/70 font-mono text-sm">שם מלא *</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="הכנס את שמך המלא" 
+                  placeholder="הכנס את שמך" 
                   {...field}
                   aria-required="true"
-                  aria-invalid={!!form.formState.errors.name}
-                  aria-describedby={form.formState.errors.name ? "name-error" : undefined}
-                  className="text-right"
+                  className="text-right bg-muted border-primary/20 focus:border-primary/50 font-mono"
                 />
               </FormControl>
-              <FormMessage id="name-error" role="alert" />
+              <FormMessage role="alert" />
             </FormItem>
           )}
         />
@@ -90,19 +88,17 @@ export const ContactForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-foreground font-semibold">כתובת אימייל *</FormLabel>
+              <FormLabel className="text-foreground/70 font-mono text-sm">אימייל *</FormLabel>
               <FormControl>
                 <Input 
                   type="email"
                   placeholder="example@email.com" 
                   {...field}
                   aria-required="true"
-                  aria-invalid={!!form.formState.errors.email}
-                  aria-describedby={form.formState.errors.email ? "email-error" : undefined}
-                  className="text-right"
+                  className="text-right bg-muted border-primary/20 focus:border-primary/50 font-mono"
                 />
               </FormControl>
-              <FormMessage id="email-error" role="alert" />
+              <FormMessage role="alert" />
             </FormItem>
           )}
         />
@@ -112,19 +108,17 @@ export const ContactForm = () => {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-foreground font-semibold">מספר טלפון *</FormLabel>
+              <FormLabel className="text-foreground/70 font-mono text-sm">טלפון *</FormLabel>
               <FormControl>
                 <Input 
                   type="tel"
                   placeholder="050-1234567" 
                   {...field}
                   aria-required="true"
-                  aria-invalid={!!form.formState.errors.phone}
-                  aria-describedby={form.formState.errors.phone ? "phone-error" : undefined}
-                  className="text-right"
+                  className="text-right bg-muted border-primary/20 focus:border-primary/50 font-mono"
                 />
               </FormControl>
-              <FormMessage id="phone-error" role="alert" />
+              <FormMessage role="alert" />
             </FormItem>
           )}
         />
@@ -134,30 +128,26 @@ export const ContactForm = () => {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-foreground font-semibold">הודעה *</FormLabel>
+              <FormLabel className="text-foreground/70 font-mono text-sm">הודעה *</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="ספר לנו על הצרכים שלך..." 
-                  className="min-h-[120px] resize-none text-right"
+                  className="min-h-[100px] resize-none text-right bg-muted border-primary/20 focus:border-primary/50"
                   {...field}
                   aria-required="true"
-                  aria-invalid={!!form.formState.errors.message}
-                  aria-describedby={form.formState.errors.message ? "message-error" : undefined}
                 />
               </FormControl>
-              <FormMessage id="message-error" role="alert" />
+              <FormMessage role="alert" />
             </FormItem>
           )}
         />
 
         <Button 
           type="submit" 
-          className="w-full shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          className="w-full font-bold transition-all duration-300 hover:scale-[1.02] neon-border"
           style={{
-            background: 'var(--gradient-tech)',
-            color: 'hsl(0 0% 100%)',
-            textShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.5), 0 0 40px rgba(147, 51, 234, 0.3)'
+            background: 'var(--gradient-button)',
+            color: 'hsl(220 20% 4%)',
           }}
           disabled={form.formState.isSubmitting}
           aria-label="שלח טופס יצירת קשר"
@@ -165,10 +155,6 @@ export const ContactForm = () => {
           <Send className="ml-2 h-5 w-5" />
           {form.formState.isSubmitting ? "שולח..." : "שלח הודעה"}
         </Button>
-
-        <p className="text-sm text-muted-foreground text-center">
-          * שדות חובה
-        </p>
       </form>
     </Form>
   );
