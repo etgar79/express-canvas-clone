@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export const Hero = () => {
   const [currentWord, setCurrentWord] = useState(0);
-  const words = ["סייבר", "רשתות", "IT", "אבטחה"];
+  const words = ["אוטומציה", "ייעוץ", "IT", "הטמעה"];
   
   useEffect(() => {
     const interval = setInterval(() => {

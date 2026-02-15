@@ -15,12 +15,12 @@ export const Footer = () => {
               <img src={logo} alt="Tech Therapy" className="h-12 w-12 rounded-md border border-primary/20" />
               <div>
                 <h3 className="text-xl font-bold neon-text text-primary font-mono">Tech Therapy</h3>
-                <p className="text-accent text-sm font-mono">Cyber • Network • IT</p>
+                <p className="text-accent text-sm font-mono">Consulting • Automation • IT</p>
               </div>
             </div>
             <p className="text-foreground/40 leading-relaxed max-w-md text-sm">
-              חברת IT ואבטחת סייבר מובילה. פתרונות מקצועיים לעסקים - מתשתיות רשת ואבטחה, 
-              דרך מצלמות ובית חכם, ועד תמיכה שוטפת וליווי טכנולוגי מלא.
+              חברת ייעוץ והטמעת טכנולוגיה מובילה. פתרונות מקצועיים לעסקים - ייעוץ טכנולוגי, אוטומציות, 
+              הטמעת מערכות וליווי טכנולוגי מלא.
             </p>
           </div>
 
