@@ -30,7 +30,7 @@ export const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
+    <section id="about" className="py-20 relative overflow-hidden bg-muted">
       <div className="absolute inset-0 grid-pattern"></div>
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
@@ -66,7 +66,7 @@ export const About = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {advantages.map((advantage, index) => (
-              <Card key={index} className="p-6 hover:border-primary/40 transition-all duration-300 border border-primary/15 group neon-border" style={{ background: 'var(--gradient-card)' }}>
+              <Card key={index} className="p-6 hover:border-primary/40 transition-all duration-300 border border-border group bg-card shadow-sm">
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-lg border border-primary/20 bg-primary/5 flex-shrink-0 group-hover:bg-primary/10 transition-colors">
                     <advantage.icon className="h-6 w-6 text-primary" />
@@ -87,7 +87,7 @@ export const About = () => {
         </div>
 
         {/* CTA */}
-        <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-lg border border-primary/20 neon-border" style={{ background: 'var(--gradient-card)' }}>
+        <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-lg border border-border bg-card shadow-sm">
           <h4 className="text-2xl font-bold mb-4 text-foreground">מוכנים לשדרג את ה-IT?</h4>
           <p className="text-lg text-foreground/50 mb-6">
             שיחת ייעוץ ראשונית ללא עלות - נבין את הצרכים ונציע פתרון מותאם
@@ -96,11 +96,7 @@ export const About = () => {
             href="https://wa.me/972545368629" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-md font-bold text-lg transition-all duration-300 hover:scale-105 neon-border"
-            style={{
-              background: 'var(--gradient-button)',
-              color: 'hsl(220 20% 4%)',
-            }}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-md font-bold text-lg transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground shadow-lg"
           >
             <MessageCircle className="h-5 w-5" />
             יצירת קשר

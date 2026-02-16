@@ -15,9 +15,7 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden" style={{ 
-      background: 'var(--gradient-hero)'
-    }}>
+    <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden bg-background">
       {/* Grid background */}
       <div className="absolute inset-0 grid-pattern"></div>
       
@@ -26,10 +24,7 @@ export const Hero = () => {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/8 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1.5s' }}></div>
       <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-tech-blue/5 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '3s' }}></div>
       
-      {/* Scanlines overlay */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'repeating-linear-gradient(transparent, transparent 2px, hsl(150 100% 50% / 0.02) 2px, hsl(150 100% 50% / 0.02) 4px)'
-      }}></div>
+      {/* Subtle overlay */}
       
       <div className="container px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
@@ -60,11 +55,7 @@ export const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <Button
               size="lg"
-              className="text-lg px-8 py-6 rounded-md font-bold neon-border transition-all duration-300 hover:scale-105"
-              style={{
-                background: 'var(--gradient-button)',
-                color: 'hsl(220 20% 4%)',
-              }}
+              className="text-lg px-8 py-6 rounded-md font-bold transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground"
               asChild
             >
               <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">

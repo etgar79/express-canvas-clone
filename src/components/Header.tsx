@@ -8,9 +8,7 @@ export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-xl border-b border-primary/20 scanline-effect" style={{
-      background: 'hsl(220 20% 4% / 0.92)'
-    }}>
+    <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-xl border-b border-border bg-background/95">
       <div className="container px-4 py-3 flex justify-between items-center">
         {/* Navigation Links */}
         <nav className="hidden md:flex gap-1 items-center">
@@ -57,11 +55,7 @@ export const Header = () => {
           <Button 
             variant="default" 
             size="default" 
-            className="font-bold shadow-lg transition-all duration-300 hover:scale-105 neon-border"
-            style={{
-              background: 'var(--gradient-button)',
-              color: 'hsl(220 20% 4%)',
-            }}
+            className="font-bold shadow-lg transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground"
             asChild
           >
             <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
@@ -112,7 +106,7 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-primary/20 p-4 space-y-2" style={{ background: 'hsl(220 20% 4% / 0.98)' }}>
+        <div className="md:hidden border-t border-border p-4 space-y-2 bg-background/98">
           <a href="#hero" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>בית</a>
           <a href="#services" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>שירותים</a>
           <a href="#about" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>אודות</a>
