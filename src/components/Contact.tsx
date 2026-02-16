@@ -26,7 +26,7 @@ export const Contact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Contact Info */}
             <div className="space-y-6">
-              <Card className="p-6 border border-primary/15 neon-border" style={{ background: 'var(--gradient-card)' }}>
+              <Card className="p-6 border border-border bg-card shadow-sm">
                 <h3 className="text-xl font-bold mb-6 text-foreground font-mono">
                   <span className="text-primary">&gt;</span> פרטי יצירת קשר
                 </h3>
@@ -75,7 +75,7 @@ export const Contact = () => {
             </div>
 
             {/* Contact Form */}
-            <Card className="p-6 lg:p-8 border border-primary/15 neon-border" style={{ background: 'var(--gradient-card)' }}>
+            <Card className="p-6 lg:p-8 border border-border bg-card shadow-sm">
               <h3 className="text-xl font-bold mb-6 text-foreground font-mono">
                 <span className="text-primary">&gt;</span> שלח הודעה
               </h3>

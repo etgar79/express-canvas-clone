@@ -34,7 +34,7 @@ const faqs = [
 
 export const FAQ = () => {
   return (
-    <section className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
+    <section className="py-20 relative overflow-hidden bg-background">
       <div className="absolute inset-0 grid-pattern"></div>
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
@@ -58,8 +58,7 @@ export const FAQ = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="border border-primary/15 rounded-lg px-6 overflow-hidden neon-border"
-                style={{ background: 'var(--gradient-card)' }}
+                className="border border-border rounded-lg px-6 overflow-hidden bg-card shadow-sm"
               >
                 <AccordionTrigger className="text-lg font-semibold text-foreground hover:text-primary py-5 text-right">
                   {faq.question}
