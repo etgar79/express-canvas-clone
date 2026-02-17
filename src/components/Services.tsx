@@ -50,19 +50,19 @@ export const Services = () => {
   return (
     <section id="services" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
       <div className="absolute inset-0 hex-pattern"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary text-sm mb-4">
-            services
+          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+            מה אנחנו עושים
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 neon-text text-primary">
-            השירותים שלנו
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+            איך נוכל <span className="text-accent">לעזור</span> לכם?
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-            ייעוץ, תמיכה והטמעת טכנולוגיות לעסקים וארגונים
+            פתרונות טכנולוגיים עם גישה אישית - כל שירות מותאם בדיוק לצרכים שלכם
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
