@@ -41,14 +41,14 @@ export const FAQ = () => {
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary text-sm mb-4">
-            // FAQ
+          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+            שאלות ותשובות
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 neon-text text-primary">
-            שאלות נפוצות
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+            שאלתם? <span className="text-accent">עונים</span>
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-            תשובות לשאלות שאנחנו מקבלים הכי הרבה
+            הנה תשובות לשאלות שהכי שואלים אותנו
           </p>
         </div>
         
@@ -58,7 +58,7 @@ export const FAQ = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="border border-border rounded-lg px-6 overflow-hidden bg-card shadow-sm"
+                className="border border-border rounded-2xl px-6 overflow-hidden bg-card shadow-sm"
               >
                 <AccordionTrigger className="text-lg font-semibold text-foreground hover:text-primary py-5 text-right">
                   {faq.question}

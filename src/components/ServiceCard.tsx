@@ -23,24 +23,24 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
     >
       <div className={`relative h-full w-full transition-all duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
         {/* Front */}
-        <Card className="absolute inset-0 p-8 text-center flex flex-col items-center justify-center border border-border [backface-visibility:hidden] transition-all duration-300 hover:border-primary/40 bg-card shadow-sm">
+        <Card className="absolute inset-0 p-8 text-center flex flex-col items-center justify-center border border-border [backface-visibility:hidden] transition-all duration-300 hover:border-accent/30 bg-card shadow-sm rounded-2xl">
           <div className="mb-6 flex justify-center">
-            <div className="p-4 rounded-lg border border-primary/20 bg-primary/5 animate-bounce-subtle">
-              <Icon className="h-12 w-12 text-primary" />
+            <div className="p-4 rounded-2xl border border-accent/15 bg-accent/8 animate-bounce-subtle">
+              <Icon className="h-12 w-12 text-accent" />
             </div>
           </div>
           <h3 className="text-xl font-bold mb-3 text-foreground leading-tight">{title}</h3>
           {question && (
             <p className="text-sm text-foreground/40 italic">{question}</p>
           )}
-          <div className="mt-4 text-xs text-primary/50">[ hover לפרטים ]</div>
+          <div className="mt-4 text-xs text-foreground/30">לחצו לפרטים נוספים →</div>
         </Card>
 
         {/* Back */}
-        <Card className="absolute inset-0 p-6 flex flex-col justify-between border border-accent/30 [backface-visibility:hidden] [transform:rotateY(180deg)] bg-card shadow-sm">
+        <Card className="absolute inset-0 p-6 flex flex-col justify-between border border-accent/25 [backface-visibility:hidden] [transform:rotateY(180deg)] bg-card shadow-sm rounded-2xl">
           <div>
             <div className="mb-3 flex justify-center">
-              <div className="p-2.5 rounded-lg border border-accent/20 bg-accent/5">
+              <div className="p-2.5 rounded-xl border border-accent/15 bg-accent/8">
                 <Icon className="h-7 w-7 text-accent" />
               </div>
             </div>
@@ -48,9 +48,9 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
             <p className="text-foreground/60 leading-relaxed text-sm">{description}</p>
           </div>
           {benefit && (
-            <div className="flex items-center gap-2 justify-center p-3 rounded-md border border-primary/30 bg-primary/5 mt-3">
-              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-              <span className="text-sm font-semibold text-primary">{benefit}</span>
+            <div className="flex items-center gap-2 justify-center p-3 rounded-xl border border-accent/20 bg-accent/8 mt-3">
+              <CheckCircle className="h-4 w-4 text-accent flex-shrink-0" />
+              <span className="text-sm font-semibold text-accent">{benefit}</span>
             </div>
           )}
         </Card>
