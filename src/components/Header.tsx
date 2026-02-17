@@ -12,37 +12,37 @@ export const Header = () => {
       <div className="container px-4 py-3 flex justify-between items-center">
         {/* Navigation Links */}
         <nav className="hidden md:flex gap-1 items-center">
-          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="#hero">
               <Home className="ml-1 h-4 w-4" />
               בית
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="#services">
               <Briefcase className="ml-1 h-4 w-4" />
               שירותים
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="#about">
               <Users className="ml-1 h-4 w-4" />
               אודות
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="#contact">
               <Phone className="ml-1 h-4 w-4" />
               צור קשר
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-primary/80 hover:text-primary hover:bg-primary/10 font-mono text-xs border border-primary/30" asChild>
+          <Button variant="ghost" size="sm" className="text-primary/80 hover:text-primary hover:bg-primary/10 text-xs border border-primary/30" asChild>
             <Link to="/diagnostics">
               <Terminal className="ml-1 h-4 w-4" />
               מאבחן תקלות
             </Link>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer">
               <FileText className="ml-1 h-4 w-4" />
               קבצי עזר
@@ -63,7 +63,7 @@ export const Header = () => {
               תמיכה מרחוק
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 font-mono text-xs" asChild>
+          <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="https://script.google.com/macros/s/AKfycbyD2n-9G0ncG_fEYvvN9ZzeJQqQ5QVdRBge4Jz1PCnRejUojUb33bUaTjfEbpo8dcLmDQ/exec" target="_blank" rel="noopener noreferrer">
               <Bot className="ml-2 h-4 w-4" />
               בוט טכנאים
@@ -84,10 +84,10 @@ export const Header = () => {
         {/* Logo & Brand */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col gap-0.5 text-left">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight neon-text font-mono text-primary">
+            <h1 className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight neon-text text-primary">
               Tech Therapy
             </h1>
-            <p className="text-xs md:text-sm font-mono text-accent">
+            <p className="text-xs md:text-sm text-accent">
               Consulting • Automation • IT
             </p>
           </div>
@@ -107,15 +107,15 @@ export const Header = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border p-4 space-y-2 bg-background/98">
-          <a href="#hero" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>בית</a>
-          <a href="#services" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>שירותים</a>
-          <a href="#about" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>אודות</a>
-          <a href="#contact" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>צור קשר</a>
-          <Link to="/diagnostics" className="block py-2 px-4 text-primary font-mono text-sm border border-primary/30 rounded-md text-center" onClick={() => setMobileMenuOpen(false)}>
+          <a href="#hero" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>בית</a>
+          <a href="#services" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>שירותים</a>
+          <a href="#about" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>אודות</a>
+          <a href="#contact" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>צור קשר</a>
+          <Link to="/diagnostics" className="block py-2 px-4 text-primary text-sm border border-primary/30 rounded-md text-center" onClick={() => setMobileMenuOpen(false)}>
             <Terminal className="inline ml-1 h-4 w-4" />
             מאבחן תקלות AI
           </Link>
-          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary font-mono text-sm" onClick={() => setMobileMenuOpen(false)}>
+          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
             <FileText className="inline ml-1 h-4 w-4" />
             קבצי עזר
           </a>

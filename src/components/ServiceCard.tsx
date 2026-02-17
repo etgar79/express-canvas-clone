@@ -29,11 +29,11 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
               <Icon className="h-12 w-12 text-primary" />
             </div>
           </div>
-          <h3 className="text-xl font-bold mb-3 text-foreground leading-tight font-mono">{title}</h3>
+          <h3 className="text-xl font-bold mb-3 text-foreground leading-tight">{title}</h3>
           {question && (
             <p className="text-sm text-foreground/40 italic">{question}</p>
           )}
-          <div className="mt-4 text-xs text-primary/50 font-mono">[ hover לפרטים ]</div>
+          <div className="mt-4 text-xs text-primary/50">[ hover לפרטים ]</div>
         </Card>
 
         {/* Back */}
@@ -44,13 +44,13 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
                 <Icon className="h-7 w-7 text-accent" />
               </div>
             </div>
-            <h3 className="text-lg font-bold mb-3 text-center text-accent font-mono">{title}</h3>
+            <h3 className="text-lg font-bold mb-3 text-center text-accent">{title}</h3>
             <p className="text-foreground/60 leading-relaxed text-sm">{description}</p>
           </div>
           {benefit && (
             <div className="flex items-center gap-2 justify-center p-3 rounded-md border border-primary/30 bg-primary/5 mt-3">
               <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-              <span className="text-sm font-semibold text-primary font-mono">{benefit}</span>
+              <span className="text-sm font-semibold text-primary">{benefit}</span>
             </div>
           )}
         </Card>

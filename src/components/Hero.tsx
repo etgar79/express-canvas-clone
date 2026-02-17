@@ -24,12 +24,10 @@ export const Hero = () => {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/8 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1.5s' }}></div>
       <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-tech-blue/5 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '3s' }}></div>
       
-      {/* Subtle overlay */}
-      
       <div className="container px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Terminal tag */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8 font-mono text-sm text-primary animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8 text-sm text-primary animate-fade-in">
             <Shield className="h-4 w-4" />
             <span>Cyber Security & IT Solutions</span>
             <span className="animate-flicker">_</span>
@@ -45,7 +43,7 @@ export const Hero = () => {
             חברת IT מובילה המספקת פתרונות{" "}
             <span 
               key={currentWord} 
-              className="inline-block animate-word-slide-up font-bold px-3 py-1 rounded-md border border-primary/40 bg-primary/10 text-primary font-mono"
+              className="inline-block animate-word-slide-up font-bold px-3 py-1 rounded-md border border-primary/40 bg-primary/10 text-primary"
             >
               {words[currentWord]}
             </span>
@@ -66,7 +64,7 @@ export const Hero = () => {
             <Button
               size="lg"
               variant="outline"
-              className="text-lg px-8 py-6 rounded-md border-2 border-primary/40 bg-transparent hover:bg-primary/10 transition-all duration-300 hover:scale-105 text-primary font-semibold font-mono"
+              className="text-lg px-8 py-6 rounded-md border-2 border-primary/40 bg-transparent hover:bg-primary/10 transition-all duration-300 hover:scale-105 text-primary font-semibold"
               asChild
             >
               <Link to="/diagnostics">
@@ -84,8 +82,8 @@ export const Hero = () => {
               { value: "24/7", label: "זמינות" },
             ].map((stat, i) => (
               <div key={i} className="text-center p-4 rounded-lg border border-primary/15 bg-primary/5">
-                <div className="text-2xl md:text-3xl font-black text-primary neon-text font-mono">{stat.value}</div>
-                <div className="text-sm text-foreground/50 font-mono">{stat.label}</div>
+                <div className="text-2xl md:text-3xl font-black text-primary neon-text">{stat.value}</div>
+                <div className="text-sm text-foreground/50">{stat.label}</div>
               </div>
             ))}
           </div>

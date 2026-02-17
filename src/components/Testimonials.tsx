@@ -31,7 +31,7 @@ export const Testimonials = () => {
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary font-mono text-sm mb-4">
+          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary text-sm mb-4">
             // testimonials
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 neon-text text-primary">
@@ -60,7 +60,7 @@ export const Testimonials = () => {
               </div>
               <div className="border-t border-primary/15 pt-4">
                 <p className="font-bold text-foreground">{testimonial.name}</p>
-                <p className="text-foreground/40 text-sm font-mono">{testimonial.company}</p>
+                <p className="text-foreground/40 text-sm">{testimonial.company}</p>
               </div>
             </Card>
           ))}
