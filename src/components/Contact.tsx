@@ -12,7 +12,7 @@ export const Contact = () => {
       <div className="container px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary font-mono text-sm mb-4">
+            <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary text-sm mb-4">
               // contact
             </span>
             <h2 className="text-4xl md:text-5xl font-bold mb-4 neon-text text-primary">
@@ -24,10 +24,9 @@ export const Contact = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Contact Info */}
             <div className="space-y-6">
               <Card className="p-6 border border-border bg-card shadow-sm">
-                <h3 className="text-xl font-bold mb-6 text-foreground font-mono">
+                <h3 className="text-xl font-bold mb-6 text-foreground">
                   <span className="text-primary">&gt;</span> פרטי יצירת קשר
                 </h3>
                 
@@ -37,7 +36,7 @@ export const Contact = () => {
                       <Phone className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-xs text-foreground/40 font-mono">PHONE</p>
+                      <p className="text-xs text-foreground/40">PHONE</p>
                       <p className="font-semibold text-foreground">054-536-8629</p>
                     </div>
                   </a>
@@ -47,7 +46,7 @@ export const Contact = () => {
                       <MessageCircle className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-xs text-foreground/40 font-mono">WHATSAPP</p>
+                      <p className="text-xs text-foreground/40">WHATSAPP</p>
                       <p className="font-semibold text-foreground">שלח הודעה</p>
                     </div>
                   </a>
@@ -57,7 +56,7 @@ export const Contact = () => {
                       <Mail className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-xs text-foreground/40 font-mono">REMOTE SUPPORT</p>
+                      <p className="text-xs text-foreground/40">REMOTE SUPPORT</p>
                       <p className="font-semibold text-foreground">תמיכה מרחוק</p>
                     </div>
                   </a>
@@ -66,7 +65,7 @@ export const Contact = () => {
                 <div className="mt-6 p-4 rounded-md border border-accent/20 bg-accent/5">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="h-4 w-4 text-accent" />
-                    <p className="font-semibold text-accent font-mono text-sm">AVAILABILITY</p>
+                    <p className="font-semibold text-accent text-sm">AVAILABILITY</p>
                   </div>
                   <p className="text-foreground/50 text-sm">ראשון - חמישי: 9:00 - 18:00</p>
                   <p className="text-foreground/50 text-sm">WhatsApp: זמינים 24/7</p>
@@ -74,9 +73,8 @@ export const Contact = () => {
               </Card>
             </div>
 
-            {/* Contact Form */}
             <Card className="p-6 lg:p-8 border border-border bg-card shadow-sm">
-              <h3 className="text-xl font-bold mb-6 text-foreground font-mono">
+              <h3 className="text-xl font-bold mb-6 text-foreground">
                 <span className="text-primary">&gt;</span> שלח הודעה
               </h3>
               <ContactForm />

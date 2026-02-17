@@ -41,7 +41,7 @@ export const FAQ = () => {
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary font-mono text-sm mb-4">
+          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary text-sm mb-4">
             // FAQ
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 neon-text text-primary">

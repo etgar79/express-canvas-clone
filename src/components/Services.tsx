@@ -49,22 +49,19 @@ export const Services = () => {
 
   return (
     <section id="services" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
-      {/* Grid pattern */}
       <div className="absolute inset-0 hex-pattern"></div>
-      
-      {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary font-mono text-sm mb-4">
-            // services
+          <span className="inline-block px-3 py-1 rounded-md border border-primary/30 bg-primary/5 text-primary text-sm mb-4">
+            services
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 neon-text text-primary">
             השירותים שלנו
           </h2>
-          <p className="text-lg text-foreground/50 max-w-2xl mx-auto font-mono">
+          <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
             ייעוץ, תמיכה והטמעת טכנולוגיות לעסקים וארגונים
           </p>
         </div>
