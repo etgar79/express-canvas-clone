@@ -8,64 +8,64 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* כתום זהוב + כחול עמוק - אינטימי ומקצועי */
-    --background: 220 18% 30%;
-    --foreground: 35 22% 94%;
+    /* רקע בהיר עם כיתוב כחול עמוק ודגשי כתום זהוב */
+    --background: 220 20% 97%;
+    --foreground: 220 35% 18%;
 
-    --card: 220 16% 34%;
-    --card-foreground: 35 22% 94%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 35% 18%;
 
-    --popover: 220 16% 34%;
-    --popover-foreground: 35 22% 94%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 35% 18%;
 
-    /* צבע ראשי - כחול עמוק ועשיר */
-    --primary: 220 55% 45%;
+    /* צבע ראשי - כחול עמוק */
+    --primary: 220 55% 40%;
     --primary-foreground: 0 0% 100%;
 
     /* צבע משני */
-    --secondary: 220 15% 36%;
-    --secondary-foreground: 35 18% 92%;
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 220 30% 25%;
 
-    --muted: 220 14% 34%;
-    --muted-foreground: 35 12% 65%;
+    --muted: 220 12% 94%;
+    --muted-foreground: 220 15% 50%;
 
     /* דגש - כתום זהוב חם */
-    --accent: 30 90% 58%;
-    --accent-foreground: 220 35% 12%;
+    --accent: 30 90% 52%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 38%;
-    --input: 220 14% 34%;
-    --ring: 30 90% 58%;
+    --border: 220 15% 88%;
+    --input: 220 12% 92%;
+    --ring: 30 90% 52%;
 
     --radius: 1rem;
     
-    /* גרדיאנטים אינטימיים */
-    --gradient-hero: linear-gradient(135deg, hsl(220 18% 27%) 0%, hsl(220 16% 32%) 50%, hsl(215 15% 35%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(220 16% 35%) 0%, hsl(220 16% 31%) 100%);
-    --gradient-card-hover: linear-gradient(145deg, hsl(220 15% 38%) 0%, hsl(220 15% 35%) 100%);
-    --gradient-tech: linear-gradient(135deg, hsl(220 55% 45%) 0%, hsl(30 90% 58%) 100%);
-    --gradient-tech-light: linear-gradient(135deg, hsl(220 18% 30%) 0%, hsl(215 16% 34%) 100%);
-    --gradient-button: linear-gradient(135deg, hsl(30 90% 55%) 0%, hsl(35 95% 62%) 100%);
+    /* גרדיאנטים */
+    --gradient-hero: linear-gradient(135deg, hsl(220 20% 96%) 0%, hsl(220 18% 93%) 50%, hsl(215 15% 95%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 15% 98%) 100%);
+    --gradient-card-hover: linear-gradient(145deg, hsl(220 15% 98%) 0%, hsl(220 12% 96%) 100%);
+    --gradient-tech: linear-gradient(135deg, hsl(220 55% 40%) 0%, hsl(30 90% 52%) 100%);
+    --gradient-tech-light: linear-gradient(135deg, hsl(220 20% 96%) 0%, hsl(215 18% 94%) 100%);
+    --gradient-button: linear-gradient(135deg, hsl(30 90% 50%) 0%, hsl(35 95% 56%) 100%);
     
-    --tech-green: 220 55% 45%;
-    --tech-cyan: 30 90% 58%;
-    --tech-blue: 220 55% 45%;
+    --tech-green: 220 55% 40%;
+    --tech-cyan: 30 90% 52%;
+    --tech-blue: 220 55% 40%;
     
-    --glow-green: 220 55% 45%;
-    --glow-cyan: 30 90% 58%;
-    --glow-blue: 220 55% 45%;
+    --glow-green: 220 55% 40%;
+    --glow-cyan: 30 90% 52%;
+    --glow-blue: 220 55% 40%;
 
-    --sidebar-background: 220 18% 27%;
-    --sidebar-foreground: 35 22% 94%;
-    --sidebar-primary: 220 55% 45%;
+    --sidebar-background: 220 20% 96%;
+    --sidebar-foreground: 220 35% 18%;
+    --sidebar-primary: 220 55% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 90% 58%;
-    --sidebar-accent-foreground: 220 35% 12%;
-    --sidebar-border: 220 14% 34%;
-    --sidebar-ring: 30 90% 58%;
+    --sidebar-accent: 30 90% 52%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 15% 88%;
+    --sidebar-ring: 30 90% 52%;
   }
 
   .dark {
@@ -128,26 +128,26 @@ All colors MUST be HSL.
 /* Warm golden glow effects */
 .neon-text {
   text-shadow: 
-    0 0 20px hsl(30 90% 58% / 0.2),
-    0 0 40px hsl(30 90% 58% / 0.08);
+    0 0 20px hsl(220 55% 40% / 0.1),
+    0 0 40px hsl(220 55% 40% / 0.04);
 }
 
 .neon-text-cyan {
   text-shadow: 
-    0 0 20px hsl(30 90% 58% / 0.2),
-    0 0 40px hsl(30 90% 58% / 0.08);
+    0 0 20px hsl(30 90% 52% / 0.15),
+    0 0 40px hsl(30 90% 52% / 0.06);
 }
 
 .neon-border {
   box-shadow: 
-    0 4px 24px hsl(30 90% 58% / 0.1),
-    0 1px 4px hsl(220 35% 0% / 0.1);
+    0 4px 24px hsl(220 35% 18% / 0.06),
+    0 1px 4px hsl(220 35% 18% / 0.04);
 }
 
 .neon-border-cyan {
   box-shadow: 
-    0 4px 24px hsl(30 90% 58% / 0.1),
-    0 1px 4px hsl(220 35% 0% / 0.1);
+    0 4px 24px hsl(30 90% 52% / 0.1),
+    0 1px 4px hsl(30 90% 52% / 0.05);
 }
 
 /* Accessibility Styles */
@@ -238,13 +238,13 @@ html {
 /* Grid pattern */
 .grid-pattern {
   background-image: 
-    linear-gradient(hsl(30 90% 58% / 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(30 90% 58% / 0.03) 1px, transparent 1px);
+    linear-gradient(hsl(220 55% 40% / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(220 55% 40% / 0.04) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
 /* Hex pattern */
 .hex-pattern {
-  background-image: radial-gradient(circle, hsl(30 90% 58% / 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(circle, hsl(220 55% 40% / 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
