@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
   ArrowRight, MessageCircle, Loader2, Home, Stethoscope, 
-  Copy, CheckCircle, Bot, User, RefreshCw, Terminal, Search
+  Copy, CheckCircle, Bot, User, RefreshCw, Terminal, Search, Filter
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -12,6 +12,7 @@ type Issue = {
   id: number;
   description: string;
   script: string;
+  category: string;
 };
 
 type ChatMessage = {
@@ -28,6 +29,7 @@ export default function Diagnostics() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [copied, setCopied] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const fetchIssues = async () => {
     setLoading(true);
@@ -87,10 +89,14 @@ export default function Diagnostics() {
       },
     ]);
     setSearchQuery("");
+    setSelectedCategory("all");
   };
 
+  const categories = ["all", ...Array.from(new Set(issues.map(i => i.category)))];
+
   const filteredIssues = issues.filter(issue => 
-    issue.description.includes(searchQuery)
+    issue.description.includes(searchQuery) &&
+    (selectedCategory === "all" || issue.category === selectedCategory)
   );
 
   return (
@@ -161,6 +167,24 @@ export default function Diagnostics() {
                       {/* Issue list */}
                       {msg.issues && msg.issues.length > 0 && (
                         <div className="mt-4 space-y-2">
+                          {/* Category filter */}
+                          {categories.length > 2 && (
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {categories.map((cat) => (
+                                <button
+                                  key={cat}
+                                  onClick={() => setSelectedCategory(cat)}
+                                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                                    selectedCategory === cat
+                                      ? "bg-accent text-accent-foreground"
+                                      : "bg-muted/50 text-foreground/50 hover:bg-muted hover:text-foreground/70 border border-border"
+                                  }`}
+                                >
+                                  {cat === "all" ? "הכל" : cat}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                           {/* Search */}
                           {msg.issues.length > 5 && (
                             <div className="relative mb-3">
@@ -174,7 +198,7 @@ export default function Diagnostics() {
                               />
                             </div>
                           )}
-                          {(searchQuery ? filteredIssues : msg.issues).map((issue) => (
+                          {filteredIssues.map((issue) => (
                             <Button
                               key={issue.id}
                               variant="outline"

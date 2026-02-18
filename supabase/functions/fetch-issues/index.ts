@@ -59,8 +59,9 @@ serve(async (req) => {
       const cols = parseCSVLine(lines[i]);
       const description = (cols[0] || "").trim();
       const script = (cols[1] || "").trim();
+      const category = (cols[2] || "כללי").trim();
       if (description) {
-        issues.push({ id: i, description, script });
+        issues.push({ id: i, description, script, category });
       }
     }
 
