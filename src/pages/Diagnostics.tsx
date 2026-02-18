@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
-  Laptop, Building2, Lightbulb, Bot, ArrowRight, ArrowLeft, Terminal, 
-  MessageCircle, Shield, Loader2, CheckCircle, Home
+  Laptop, Building2, Lightbulb, Bot, ArrowRight, ArrowLeft, 
+  MessageCircle, Heart, Loader2, CheckCircle, Home, Stethoscope
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ReactMarkdown from "react-markdown";
@@ -123,7 +123,6 @@ export default function Diagnostics() {
     if (currentQuestion < selectedCategory.questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // All questions answered, get AI diagnosis
       setLoading(true);
       setError(null);
       try {
@@ -152,55 +151,53 @@ export default function Diagnostics() {
   };
 
   return (
-    <div className="min-h-screen relative" dir="rtl" style={{ background: 'var(--gradient-hero)' }}>
-      <div className="absolute inset-0 grid-pattern"></div>
+    <div className="min-h-screen bg-background" dir="rtl">
       
       {/* Header */}
-      <div className="border-b border-primary/15 backdrop-blur-xl" style={{ background: 'hsl(220 20% 4% / 0.9)' }}>
+      <div className="border-b border-border/50 bg-card/80 backdrop-blur-md">
         <div className="container px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors font-mono text-sm">
+          <Link to="/" className="flex items-center gap-2 text-foreground/50 hover:text-accent transition-colors text-sm">
             <ArrowRight className="h-4 w-4" />
             חזרה לאתר
           </Link>
           <div className="flex items-center gap-2">
-            <Terminal className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-bold neon-text text-primary font-mono">מאבחן תקלות AI</h1>
+            <Stethoscope className="h-5 w-5 text-accent" />
+            <h1 className="text-lg font-bold text-accent">אבחון חכם</h1>
           </div>
         </div>
       </div>
 
-      <div className="container px-4 py-12 relative z-10">
+      <div className="container px-4 py-12">
         <div className="max-w-2xl mx-auto">
           
           {/* Step 1: Category Selection */}
           {!selectedCategory && (
             <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-primary/30 bg-primary/5 mb-4">
-                  <Shield className="h-4 w-4 text-primary" />
-                  <span className="text-primary font-mono text-sm">AI-Powered Diagnostics</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-4">
+                  <Heart className="h-4 w-4 text-accent" />
+                  <span className="text-accent text-sm">ספרו לנו מה קורה</span>
                 </div>
-                <h2 className="text-3xl font-bold neon-text text-primary mb-2 font-mono">מה הבעיה?</h2>
-                <p className="text-foreground/50">בחר קטגוריה ונאבחן את התקלה בשבילך</p>
+                <h2 className="text-3xl font-bold text-foreground mb-3">איך נוכל לעזור?</h2>
+                <p className="text-foreground/50">בחרו את התחום ונעזור לכם למצוא פתרון</p>
               </div>
 
               <div className="grid gap-4">
                 {categories.map((cat) => (
                   <Card 
                     key={cat.id}
-                    className="p-6 border border-primary/15 hover:border-primary/40 transition-all duration-300 cursor-pointer group neon-border"
-                    style={{ background: 'var(--gradient-card)' }}
+                    className="p-6 border border-border hover:border-accent/30 transition-all duration-300 cursor-pointer group bg-card hover:shadow-lg rounded-2xl"
                     onClick={() => handleCategorySelect(cat)}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="p-3 rounded-lg border border-primary/20 bg-primary/5 group-hover:bg-primary/10 transition-colors">
-                        <cat.icon className="h-8 w-8 text-primary" />
+                      <div className="p-3 rounded-xl border border-accent/15 bg-accent/8 group-hover:bg-accent/15 transition-colors">
+                        <cat.icon className="h-8 w-8 text-accent" />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-foreground">{cat.label}</h3>
-                        <p className="text-foreground/40 text-sm font-mono">{cat.questions.length} שאלות → אבחנה</p>
+                        <p className="text-foreground/40 text-sm">{cat.questions.length} שאלות קצרות → המלצה אישית</p>
                       </div>
-                      <ArrowLeft className="h-5 w-5 text-primary/50 group-hover:text-primary transition-colors" />
+                      <ArrowLeft className="h-5 w-5 text-accent/40 group-hover:text-accent transition-colors" />
                     </div>
                   </Card>
                 ))}
@@ -212,29 +209,28 @@ export default function Diagnostics() {
           {selectedCategory && !diagnosis && !loading && !error && (
             <div className="space-y-6 animate-fade-in">
               <div className="flex items-center justify-between mb-4">
-                <button onClick={reset} className="text-foreground/40 hover:text-primary transition-colors font-mono text-sm flex items-center gap-1">
+                <button onClick={reset} className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
                   <ArrowRight className="h-4 w-4" />
                   חזרה
                 </button>
-                <span className="text-primary font-mono text-sm">
-                  {currentQuestion + 1} / {selectedCategory.questions.length}
+                <span className="text-accent text-sm font-medium">
+                  שאלה {currentQuestion + 1} מתוך {selectedCategory.questions.length}
                 </span>
               </div>
 
               {/* Progress bar */}
-              <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
+              <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
                 <div 
-                  className="h-full rounded-full transition-all duration-500"
+                  className="h-full rounded-full bg-accent transition-all duration-500"
                   style={{ 
-                    width: `${((currentQuestion + 1) / selectedCategory.questions.length) * 100}%`,
-                    background: 'var(--gradient-button)' 
+                    width: `${((currentQuestion + 1) / selectedCategory.questions.length) * 100}%`
                   }}
                 />
               </div>
 
-              <Card className="p-8 border border-primary/15 neon-border" style={{ background: 'var(--gradient-card)' }}>
+              <Card className="p-8 border border-border bg-card rounded-2xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <selectedCategory.icon className="h-6 w-6 text-primary" />
+                  <selectedCategory.icon className="h-6 w-6 text-accent" />
                   <h3 className="text-xl font-bold text-foreground">
                     {selectedCategory.questions[currentQuestion].question}
                   </h3>
@@ -245,10 +241,9 @@ export default function Diagnostics() {
                     <Button
                       key={i}
                       variant="outline"
-                      className="w-full justify-start text-right p-4 h-auto border-primary/20 hover:border-primary/50 hover:bg-primary/5 text-foreground/70 hover:text-foreground transition-all"
+                      className="w-full justify-start text-right p-4 h-auto border-border hover:border-accent/40 hover:bg-accent/5 text-foreground/70 hover:text-foreground transition-all rounded-xl"
                       onClick={() => handleAnswer(option)}
                     >
-                      <span className="text-primary font-mono text-xs ml-3">{String.fromCharCode(65 + i)}.</span>
                       {option}
                     </Button>
                   ))}
@@ -259,19 +254,19 @@ export default function Diagnostics() {
 
           {/* Loading */}
           {loading && (
-            <Card className="p-12 border border-primary/15 text-center neon-border animate-fade-in" style={{ background: 'var(--gradient-card)' }}>
-              <Loader2 className="h-12 w-12 text-primary animate-spin mx-auto mb-4" />
-              <p className="text-primary font-mono text-lg neon-text">מאבחן את התקלה...</p>
-              <p className="text-foreground/40 mt-2 font-mono text-sm">AI מנתח את המידע</p>
+            <Card className="p-12 border border-border text-center bg-card rounded-2xl animate-fade-in">
+              <Loader2 className="h-12 w-12 text-accent animate-spin mx-auto mb-4" />
+              <p className="text-foreground text-lg font-medium">מנתחים את המידע...</p>
+              <p className="text-foreground/40 mt-2 text-sm">רק רגע, מכינים לכם המלצה אישית 🙂</p>
             </Card>
           )}
 
           {/* Error */}
           {error && (
-            <Card className="p-8 border border-destructive/30 text-center" style={{ background: 'var(--gradient-card)' }}>
+            <Card className="p-8 border border-destructive/30 text-center bg-card rounded-2xl">
               <p className="text-destructive mb-4">{error}</p>
-              <Button onClick={reset} variant="outline" className="border-primary/30">
-                נסה שוב
+              <Button onClick={reset} variant="outline" className="border-border rounded-xl">
+                ננסה שוב
               </Button>
             </Card>
           )}
@@ -279,32 +274,31 @@ export default function Diagnostics() {
           {/* Step 3: Diagnosis */}
           {diagnosis && (
             <div className="space-y-6 animate-fade-in">
-              <Card className="p-8 border border-primary/30 neon-border" style={{ background: 'var(--gradient-card)' }}>
+              <Card className="p-8 border border-accent/20 bg-card rounded-2xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <CheckCircle className="h-6 w-6 text-primary" />
-                  <h3 className="text-xl font-bold text-primary font-mono">אבחנה</h3>
+                  <CheckCircle className="h-6 w-6 text-accent" />
+                  <h3 className="text-xl font-bold text-accent">ההמלצה שלנו</h3>
                 </div>
                 
                 <div className="prose prose-invert prose-sm max-w-none text-foreground/80 leading-relaxed mb-6">
                   <ReactMarkdown>{diagnosis}</ReactMarkdown>
                 </div>
 
-                <div className="border-t border-primary/15 pt-6 space-y-3">
-                  <p className="text-foreground/50 text-sm font-mono">רוצה שטכנאי יטפל בזה?</p>
+                <div className="border-t border-border/50 pt-6 space-y-3">
+                  <p className="text-foreground/50 text-sm">רוצים שנטפל בזה בשבילכם? 💪</p>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Button 
-                      className="flex-1 neon-border font-bold"
-                      style={{ background: 'var(--gradient-button)', color: 'hsl(220 20% 4%)' }}
+                      className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl"
                       asChild
                     >
                       <a href="https://wa.me/972545368629?text=שלום, השתמשתי במאבחן התקלות ואשמח לקבל טיפול מקצועי" target="_blank" rel="noopener noreferrer">
                         <MessageCircle className="ml-2 h-4 w-4" />
-                        הזמן טכנאי
+                        בואו נדבר
                       </a>
                     </Button>
                     <Button 
                       variant="outline" 
-                      className="flex-1 border-primary/30"
+                      className="flex-1 border-border rounded-xl"
                       onClick={reset}
                     >
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -315,7 +309,7 @@ export default function Diagnostics() {
               </Card>
 
               <div className="text-center">
-                <Link to="/" className="text-foreground/40 hover:text-primary transition-colors font-mono text-sm inline-flex items-center gap-1">
+                <Link to="/" className="text-foreground/40 hover:text-accent transition-colors text-sm inline-flex items-center gap-1">
                   <Home className="h-4 w-4" />
                   חזרה לדף הבית
                 </Link>
