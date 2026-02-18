@@ -2,3 +2,9 @@ project_id = "pzjkrotlikvopslpdvof"
 
 [functions.send-visitor-email]
 verify_jwt = false
+
+[functions.fetch-issues]
+verify_jwt = false
+
+[functions.diagnose-issue]
+verify_jwt = false
