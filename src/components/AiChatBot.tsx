@@ -162,7 +162,7 @@ export const AiChatBot = () => {
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-accent/10">
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-accent" />
-              <span className="font-bold text-foreground text-sm">הבוט של אקספרס IT</span>
+              <span className="font-bold text-foreground text-sm">הבוט של אתגר</span>
             </div>
             <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="h-5 w-5" />
@@ -175,7 +175,7 @@ export const AiChatBot = () => {
               <div className="text-center text-muted-foreground text-sm py-8">
                 <Bot className="h-10 w-10 mx-auto mb-3 text-accent/50" />
                 <p className="font-medium text-foreground/70">שלום! 👋</p>
-                <p className="mt-1">אני הבוט החכם של אקספרס IT.</p>
+                <p className="mt-1">אני הבוט של אתגר.</p>
                 <p>ספרו לי מה התקלה ואמצא לכם פתרון!</p>
               </div>
             )}
