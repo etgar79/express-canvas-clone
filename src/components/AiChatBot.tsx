@@ -91,8 +91,13 @@ async function streamChat({
   }
 }
 
+const BOT_PASSWORD = "0545368629";
+
 export const AiChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -104,10 +109,21 @@ export const AiChatBot = () => {
   }, [messages]);
 
   useEffect(() => {
+    if (isOpen && !isUnlocked) return;
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, isUnlocked]);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === BOT_PASSWORD) {
+      setIsUnlocked(true);
+      setPasswordError(false);
+    } else {
+      setPasswordError(true);
+    }
+  };
 
   const send = async () => {
     const text = input.trim();
@@ -169,79 +185,102 @@ export const AiChatBot = () => {
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.length === 0 && (
-              <div className="text-center text-muted-foreground text-sm py-8">
-                <Bot className="h-10 w-10 mx-auto mb-3 text-accent/50" />
-                <p className="font-medium text-foreground/70">שלום! 👋</p>
-                <p className="mt-1">אני הבוט של אתגר.</p>
-                <p>ספרו לי מה התקלה ואמצא לכם פתרון!</p>
-              </div>
-            )}
+          {!isUnlocked ? (
+            <div className="flex-1 flex items-center justify-center p-6">
+              <form onSubmit={handlePasswordSubmit} className="w-full space-y-4 text-center">
+                <Bot className="h-12 w-12 mx-auto text-accent/50" />
+                <p className="text-sm text-foreground/70 font-medium">הזן סיסמה כדי לגשת לבוט</p>
+                <input
+                  type="password"
+                  value={passwordInput}
+                  onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                  placeholder="סיסמה..."
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50 text-center"
+                  autoFocus
+                />
+                {passwordError && (
+                  <p className="text-destructive text-xs">סיסמה שגויה, נסה שוב</p>
+                )}
+                <Button type="submit" size="sm" className="w-full rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
+                  כניסה
+                </Button>
+              </form>
+            </div>
+          ) : (
+            <>
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {messages.length === 0 && (
+                  <div className="text-center text-muted-foreground text-sm py-8">
+                    <Bot className="h-10 w-10 mx-auto mb-3 text-accent/50" />
+                    <p className="font-medium text-foreground/70">שלום! 👋</p>
+                    <p className="mt-1">אני הבוט של אתגר.</p>
+                    <p>ספרו לי מה התקלה ואמצא לכם פתרון!</p>
+                  </div>
+                )}
 
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs ${
-                  msg.role === "assistant" ? "bg-accent/15 text-accent" : "bg-primary/15 text-primary"
-                }`}>
-                  {msg.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
-                </div>
-                <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
-                  msg.role === "user"
-                    ? "bg-accent/10 border border-accent/20 text-foreground"
-                    : "bg-muted/50 border border-border text-foreground/85"
-                }`}>
-                  {msg.role === "assistant" ? (
-                    <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                {messages.map((msg, i) => (
+                  <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                    <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs ${
+                      msg.role === "assistant" ? "bg-accent/15 text-accent" : "bg-primary/15 text-primary"
+                    }`}>
+                      {msg.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
                     </div>
-                  ) : (
-                    <p>{msg.content}</p>
-                  )}
-                </div>
+                    <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
+                      msg.role === "user"
+                        ? "bg-accent/10 border border-accent/20 text-foreground"
+                        : "bg-muted/50 border border-border text-foreground/85"
+                    }`}>
+                      {msg.role === "assistant" ? (
+                        <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
+                          <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        </div>
+                      ) : (
+                        <p>{msg.content}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+                  <div className="flex gap-2">
+                    <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-accent/15 text-accent">
+                      <Bot className="h-4 w-4" />
+                    </div>
+                    <div className="bg-muted/50 border border-border rounded-xl px-3 py-2">
+                      <Loader2 className="h-4 w-4 animate-spin text-accent" />
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
               </div>
-            ))}
 
-            {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-              <div className="flex gap-2">
-                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-accent/15 text-accent">
-                  <Bot className="h-4 w-4" />
-                </div>
-                <div className="bg-muted/50 border border-border rounded-xl px-3 py-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-accent" />
-                </div>
+              <div className="border-t border-border p-3">
+                <form
+                  onSubmit={(e) => { e.preventDefault(); send(); }}
+                  className="flex gap-2"
+                >
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="תאר את התקלה..."
+                    disabled={isLoading}
+                    className="flex-1 px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50 disabled:opacity-50"
+                  />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    disabled={!input.trim() || isLoading}
+                    className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground px-3"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </form>
               </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="border-t border-border p-3">
-            <form
-              onSubmit={(e) => { e.preventDefault(); send(); }}
-              className="flex gap-2"
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="תאר את התקלה..."
-                disabled={isLoading}
-                className="flex-1 px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50 disabled:opacity-50"
-              />
-              <Button
-                type="submit"
-                size="sm"
-                disabled={!input.trim() || isLoading}
-                className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground px-3"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
-          </div>
+            </>
+          )}
         </div>
       )}
     </>
