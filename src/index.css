@@ -9,25 +9,25 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* כתום זהוב + כחול עמוק - אינטימי ומקצועי */
-    --background: 220 25% 22%;
-    --foreground: 35 20% 93%;
+    --background: 220 18% 30%;
+    --foreground: 35 22% 94%;
 
-    --card: 220 22% 25%;
-    --card-foreground: 35 20% 93%;
+    --card: 220 16% 34%;
+    --card-foreground: 35 22% 94%;
 
-    --popover: 220 22% 25%;
-    --popover-foreground: 35 20% 93%;
+    --popover: 220 16% 34%;
+    --popover-foreground: 35 22% 94%;
 
     /* צבע ראשי - כחול עמוק ועשיר */
     --primary: 220 55% 45%;
     --primary-foreground: 0 0% 100%;
 
     /* צבע משני */
-    --secondary: 220 20% 28%;
-    --secondary-foreground: 35 15% 90%;
+    --secondary: 220 15% 36%;
+    --secondary-foreground: 35 18% 92%;
 
-    --muted: 220 18% 27%;
-    --muted-foreground: 35 10% 62%;
+    --muted: 220 14% 34%;
+    --muted-foreground: 35 12% 65%;
 
     /* דגש - כתום זהוב חם */
     --accent: 30 90% 58%;
@@ -36,18 +36,18 @@ All colors MUST be HSL.
     --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 18% 30%;
-    --input: 220 18% 27%;
+    --border: 220 14% 38%;
+    --input: 220 14% 34%;
     --ring: 30 90% 58%;
 
     --radius: 1rem;
     
     /* גרדיאנטים אינטימיים */
-    --gradient-hero: linear-gradient(135deg, hsl(220 25% 19%) 0%, hsl(220 22% 24%) 50%, hsl(215 20% 27%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(220 22% 27%) 0%, hsl(220 22% 23%) 100%);
-    --gradient-card-hover: linear-gradient(145deg, hsl(220 20% 30%) 0%, hsl(220 20% 27%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220 18% 27%) 0%, hsl(220 16% 32%) 50%, hsl(215 15% 35%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(220 16% 35%) 0%, hsl(220 16% 31%) 100%);
+    --gradient-card-hover: linear-gradient(145deg, hsl(220 15% 38%) 0%, hsl(220 15% 35%) 100%);
     --gradient-tech: linear-gradient(135deg, hsl(220 55% 45%) 0%, hsl(30 90% 58%) 100%);
-    --gradient-tech-light: linear-gradient(135deg, hsl(220 25% 22%) 0%, hsl(215 22% 26%) 100%);
+    --gradient-tech-light: linear-gradient(135deg, hsl(220 18% 30%) 0%, hsl(215 16% 34%) 100%);
     --gradient-button: linear-gradient(135deg, hsl(30 90% 55%) 0%, hsl(35 95% 62%) 100%);
     
     --tech-green: 220 55% 45%;
@@ -58,13 +58,13 @@ All colors MUST be HSL.
     --glow-cyan: 30 90% 58%;
     --glow-blue: 220 55% 45%;
 
-    --sidebar-background: 220 25% 19%;
-    --sidebar-foreground: 35 20% 93%;
+    --sidebar-background: 220 18% 27%;
+    --sidebar-foreground: 35 22% 94%;
     --sidebar-primary: 220 55% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 30 90% 58%;
     --sidebar-accent-foreground: 220 35% 12%;
-    --sidebar-border: 220 18% 27%;
+    --sidebar-border: 220 14% 34%;
     --sidebar-ring: 30 90% 58%;
   }
 
