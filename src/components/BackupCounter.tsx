@@ -1,13 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { HardDrive, Shield, Activity } from "lucide-react";
 
+// Start date: when backups "began" at 300TB
+const START_DATE = new Date("2024-01-01T00:00:00Z");
+const BASE_TB = 300;
+const GB_PER_SECOND = 2;
+
+function getBackupTotal() {
+  const elapsed = (Date.now() - START_DATE.getTime()) / 1000; // seconds since start
+  const totalGB = elapsed * GB_PER_SECOND;
+  const extraTB = Math.floor(totalGB / 1000);
+  const remainderGB = totalGB % 1000;
+  return { tb: BASE_TB + extraTB, gb: remainderGB };
+}
+
 export const BackupCounter = () => {
-  const [totalTB, setTotalTB] = useState(300);
-  const [totalGB, setTotalGB] = useState(0);
+  const [data, setData] = useState(getBackupTotal);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Intersection observer for scroll reveal
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -19,23 +30,16 @@ export const BackupCounter = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Counter animation - adds 2GB every second
+  // Update counter every second based on real elapsed time
   useEffect(() => {
     if (!isVisible) return;
     const interval = setInterval(() => {
-      setTotalGB((prev) => {
-        const next = prev + 2;
-        if (next >= 1000) {
-          setTotalTB((t) => t + 1);
-          return next - 1000;
-        }
-        return next;
-      });
+      setData(getBackupTotal());
     }, 1000);
     return () => clearInterval(interval);
   }, [isVisible]);
 
-  const displayValue = `${totalTB.toLocaleString()}.${String(Math.floor(totalGB / 100)).padStart(1, "0")}`;
+  const displayValue = `${data.tb.toLocaleString()}.${String(Math.floor(data.gb / 100)).padStart(1, "0")}`;
 
   return (
     <div ref={ref} className="py-16 relative overflow-hidden">
@@ -75,10 +79,6 @@ export const BackupCounter = () => {
               </div>
             </div>
 
-            {/* Flying GB badges */}
-            <div className="absolute -top-3 -right-3 bg-accent text-accent-foreground text-xs font-bold px-2.5 py-1 rounded-full animate-bounce-subtle shadow-md">
-              +2GB/s
-            </div>
           </div>
 
           {/* Stats row */}
