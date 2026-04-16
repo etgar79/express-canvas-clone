@@ -8,3 +8,12 @@ verify_jwt = false
 
 [functions.diagnose-issue]
 verify_jwt = false
+
+[functions.action1]
+verify_jwt = false
+
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.settings]
+verify_jwt = false
