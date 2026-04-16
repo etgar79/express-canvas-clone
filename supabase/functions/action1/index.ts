@@ -126,7 +126,9 @@ serve(async (req) => {
       );
 
       if (!resp.ok) {
-        return new Response(JSON.stringify({ error: "שגיאה בשליפת עמדות" }), {
+        const errBody = await resp.text();
+        console.error("Endpoints API error:", resp.status, errBody);
+        return new Response(JSON.stringify({ error: `שגיאה בשליפת עמדות (${resp.status})` }), {
           status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
