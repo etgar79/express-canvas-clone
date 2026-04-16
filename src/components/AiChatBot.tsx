@@ -86,17 +86,17 @@ async function streamChat({
   }
 }
 
-// Extract script name from bot message (looks for text before a code block)
+// Extract script name from bot message - looks for [SCRIPT_NAME:...] tag
 function extractScriptContext(content: string): string | null {
-  // Look for a script name pattern - the bot mentions the issue name before the code block
-  const lines = content.split("\n");
-  for (const line of lines) {
-    const cleaned = line.replace(/[*`#]/g, "").trim();
-    if (cleaned && !cleaned.startsWith("```") && cleaned.length > 5 && cleaned.length < 100) {
-      return cleaned;
-    }
-  }
+  const match = content.match(/\[SCRIPT_NAME:([^\]]+)\]/);
+  if (match) return match[1].trim();
   return null;
+}
+
+// Extract code block content for copying
+function extractCodeBlock(content: string): string | null {
+  const match = content.match(/```[\w]*\n?([\s\S]*?)```/);
+  return match ? match[1].trim() : null;
 }
 
 function hasCodeBlock(content: string): boolean {
