@@ -181,7 +181,7 @@ export default function TechDashboard() {
               {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Save className="h-4 w-4 mr-1" />}
               שמור שינויים
             </Button>
-            {saved && <span className="text-sm text-green-600 font-medium">✅ נשמר בהצלחה!</span>}
+            {saved && <span className="text-sm text-accent font-medium">✅ נשמר בהצלחה!</span>}
           </div>
         </div>
 
