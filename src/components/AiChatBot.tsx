@@ -293,6 +293,7 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
 export const AiChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [userRole, setUserRole] = useState<UserRole>("client");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
