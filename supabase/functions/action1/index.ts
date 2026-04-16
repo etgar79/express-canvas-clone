@@ -182,7 +182,7 @@ serve(async (req) => {
 
       const { token, orgId } = await getAction1Token();
       const jobResp = await fetch(
-        `https://app.eu.action1.com/api/3.0/organizations/${orgId}/jobs`,
+        `https://app.eu.action1.com/api/3.0/automations/instances/${orgId}`,
         {
           method: "POST",
           headers: {
@@ -190,10 +190,20 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: `BotRun_${Date.now()}`,
-            type: "PowerShell",
-            script: scriptContent,
-            targets: [endpointId],
+            name: `BotRun_${scriptName}_${Date.now()}`,
+            retry_minutes: "60",
+            endpoints: [
+              { id: endpointId, type: "Endpoint" }
+            ],
+            actions: [
+              {
+                name: "Run Script",
+                template_id: "run_powershell",
+                params: {
+                  script_content: scriptContent,
+                }
+              }
+            ]
           }),
         }
       );
