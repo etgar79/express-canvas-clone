@@ -378,6 +378,19 @@ export const AiChatBot = () => {
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-accent" />
               <span className="font-bold text-foreground text-sm">הבוט של אתגר</span>
+              {isUnlocked && (
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                  userRole === "tech" 
+                    ? "bg-primary/15 text-primary border border-primary/20" 
+                    : "bg-accent/15 text-accent border border-accent/20"
+                }`}>
+                  {userRole === "tech" ? (
+                    <span className="flex items-center gap-0.5"><Shield className="h-2.5 w-2.5" /> טכנאי</span>
+                  ) : (
+                    <span className="flex items-center gap-0.5"><UserCheck className="h-2.5 w-2.5" /> לקוח</span>
+                  )}
+                </span>
+              )}
             </div>
             <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="h-5 w-5" />
