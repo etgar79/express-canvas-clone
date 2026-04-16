@@ -109,7 +109,7 @@ const TECH_PASSWORD = "06536368";
 type UserRole = "client" | "tech";
 
 // --- Run Script Panel ---
-function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: () => void }) {
+function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string; onClose: () => void; userRole: UserRole }) {
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
