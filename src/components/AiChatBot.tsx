@@ -314,7 +314,12 @@ export const AiChatBot = () => {
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === BOT_PASSWORD) {
+    if (passwordInput === TECH_PASSWORD) {
+      setUserRole("tech");
+      setIsUnlocked(true);
+      setPasswordError(false);
+    } else if (passwordInput === BOT_PASSWORD) {
+      setUserRole("client");
       setIsUnlocked(true);
       setPasswordError(false);
     } else {
