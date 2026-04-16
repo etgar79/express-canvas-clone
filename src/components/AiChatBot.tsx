@@ -6,7 +6,8 @@ import ReactMarkdown from "react-markdown";
 type Msg = { role: "user" | "assistant"; content: string };
 type Endpoint = { id: string; name: string; status: string; lanIp?: string };
 
-const REMEMBERED_ENDPOINT_KEY = "techtherapy_remembered_endpoint_id";
+const REMEMBERED_ENDPOINT_ID_KEY = "techtherapy_remembered_endpoint_id";
+const REMEMBERED_ENDPOINT_NAME_KEY = "techtherapy_remembered_endpoint_name";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
@@ -133,77 +134,78 @@ function CopyScriptButton({ content }: { content: string }) {
   );
 }
 
-// --- Run Script Panel ---
-function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string; onClose: () => void; userRole: UserRole }) {
-  const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
-  const [autoDetected, setAutoDetected] = useState(false);
-  const [showManual, setShowManual] = useState(false);
+// --- Shared: run a script on a specific endpoint ID ---
+async function runScriptOnEndpoint(scriptName: string, endpointId: string) {
+  const resp = await fetch(`${ACTION1_URL}?action=run`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ scriptName, endpointId }),
+  });
+  return resp.json();
+}
+
+// --- Run Script Panel (CLIENT) ---
+// Privacy-safe: never shows other endpoints. Asks for the user's PC name,
+// looks it up server-side, and remembers the matched ID in localStorage.
+function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onClose: () => void }) {
+  const [rememberedId, setRememberedId] = useState<string | null>(null);
+  const [rememberedName, setRememberedName] = useState<string | null>(null);
+  const [pcNameInput, setPcNameInput] = useState("");
+  const [lookingUp, setLookingUp] = useState(false);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
   useEffect(() => {
-    fetchEndpoints();
+    const id = localStorage.getItem(REMEMBERED_ENDPOINT_ID_KEY);
+    const name = localStorage.getItem(REMEMBERED_ENDPOINT_NAME_KEY);
+    if (id && name) {
+      setRememberedId(id);
+      setRememberedName(name);
+    }
   }, []);
 
-  const fetchEndpoints = async () => {
+  const lookupAndRun = async () => {
+    const name = pcNameInput.trim();
+    if (!name) return;
+    setLookingUp(true);
+    setResult(null);
     try {
-      const resp = await fetch(`${ACTION1_URL}?action=endpoints`, {
-        headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
-      });
+      const resp = await fetch(
+        `${ACTION1_URL}?action=lookup&name=${encodeURIComponent(name)}`,
+        { headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` } }
+      );
       const data = await resp.json();
-      if (data.endpoints) {
-        setEndpoints(data.endpoints);
-
-        // Try to recall a previously chosen endpoint from localStorage
-        const remembered = typeof window !== "undefined"
-          ? localStorage.getItem(REMEMBERED_ENDPOINT_KEY)
-          : null;
-        const rememberedExists = remembered && data.endpoints.find((e: Endpoint) => e.id === remembered);
-
-        if (rememberedExists) {
-          setSelectedEndpoint(remembered);
-          setAutoDetected(true);
-        } else if (data.endpoints.length === 1) {
-          // Only one endpoint - auto-pick and remember
-          setSelectedEndpoint(data.endpoints[0].id);
-          setAutoDetected(true);
-          localStorage.setItem(REMEMBERED_ENDPOINT_KEY, data.endpoints[0].id);
-        } else if (data.endpoints.length > 0) {
-          setSelectedEndpoint(data.endpoints[0].id);
-        }
+      if (!data.found) {
+        setResult({ success: false, message: `❌ לא נמצא מחשב בשם "${name}". בדוק את האיות.` });
+        setLookingUp(false);
+        return;
       }
+      // Remember and run
+      localStorage.setItem(REMEMBERED_ENDPOINT_ID_KEY, data.endpoint.id);
+      localStorage.setItem(REMEMBERED_ENDPOINT_NAME_KEY, data.endpoint.name);
+      setRememberedId(data.endpoint.id);
+      setRememberedName(data.endpoint.name);
+      setLookingUp(false);
+      await runOnRemembered(data.endpoint.id, data.endpoint.name);
     } catch {
-      setResult({ success: false, message: "שגיאה בטעינת עמדות" });
-    } finally {
-      setLoading(false);
+      setResult({ success: false, message: "❌ שגיאת תקשורת" });
+      setLookingUp(false);
     }
   };
 
-  const rememberAndRun = async () => {
-    if (!selectedEndpoint) return;
-    // Remember the choice for next time
-    localStorage.setItem(REMEMBERED_ENDPOINT_KEY, selectedEndpoint);
-    await runScript();
-  };
-
-  const runScript = async () => {
-    if (!selectedEndpoint) return;
+  const runOnRemembered = async (id?: string, name?: string) => {
+    const targetId = id || rememberedId;
+    const targetName = name || rememberedName || "המחשב";
+    if (!targetId) return;
     setRunning(true);
     setResult(null);
     try {
-      const resp = await fetch(`${ACTION1_URL}?action=run`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({ scriptName, endpointId: selectedEndpoint }),
-      });
-      const data = await resp.json();
+      const data = await runScriptOnEndpoint(scriptName, targetId);
       if (data.success) {
-        setResult({ success: true, message: `✅ הסקריפט נשלח בהצלחה! (Job: ${data.jobId})` });
+        setResult({ success: true, message: `✅ הסקריפט נשלח ל${targetName} בהצלחה!` });
       } else {
         setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
       }
@@ -215,12 +217,13 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
   };
 
   const forgetChoice = () => {
-    localStorage.removeItem(REMEMBERED_ENDPOINT_KEY);
-    setAutoDetected(false);
-    setShowManual(true);
+    localStorage.removeItem(REMEMBERED_ENDPOINT_ID_KEY);
+    localStorage.removeItem(REMEMBERED_ENDPOINT_NAME_KEY);
+    setRememberedId(null);
+    setRememberedName(null);
+    setPcNameInput("");
+    setResult(null);
   };
-
-  const selectedName = endpoints.find(e => e.id === selectedEndpoint)?.name || "";
 
   return (
     <div className="bg-accent/5 border border-accent/20 rounded-xl p-3 mt-2 space-y-2">
@@ -233,79 +236,61 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
         </button>
       </div>
 
-      {loading ? (
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Loader2 className="h-3 w-3 animate-spin" /> טוען מחשבים זמינים...
-        </div>
-      ) : endpoints.length === 0 ? (
-        <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
-      ) : autoDetected && !showManual ? (
-        // Remembered choice - show it and run directly
+      {rememberedId && rememberedName ? (
         <div className="space-y-2">
           <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-2 py-1.5">
             <Monitor className="h-3.5 w-3.5 text-accent" />
             <span className="text-xs font-medium text-foreground">
-              המחשב שלך: <span className="text-accent font-bold">{selectedName}</span>
+              המחשב שלך: <span className="text-accent font-bold">{rememberedName}</span>
             </span>
           </div>
           <Button
             size="sm"
-            onClick={rememberAndRun}
-            disabled={running || !selectedEndpoint}
+            onClick={() => runOnRemembered()}
+            disabled={running}
             className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
           >
             {running ? (
               <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
             ) : (
-              <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName}</>
+              <><Play className="h-3 w-3 mr-1" /> הרץ על {rememberedName}</>
             )}
           </Button>
           <button
             onClick={forgetChoice}
             className="text-[10px] text-muted-foreground hover:text-foreground underline"
           >
-            זה לא המחשב שלי? בחר מחדש
+            זה לא המחשב שלי? הזן מחדש
           </button>
         </div>
       ) : (
-        // First time / manual selection - choose from list
         <div className="space-y-2">
-          <label className="text-xs text-foreground/70">
-            {userRole === "client" ? "בחר את המחשב שלך:" : "בחר מחשב להרצה:"}
+          <label className="text-xs text-foreground/70 block">
+            הזן את שם המחשב שלך (Computer Name):
           </label>
-          <div className="space-y-1">
-            {endpoints.map((ep) => (
-              <button
-                key={ep.id}
-                onClick={() => setSelectedEndpoint(ep.id)}
-                className={`w-full flex items-center gap-2 rounded-lg px-2 py-1.5 text-right transition-colors border ${
-                  selectedEndpoint === ep.id
-                    ? "bg-accent/15 border-accent/40 text-foreground"
-                    : "bg-background border-border text-foreground/70 hover:bg-accent/5"
-                }`}
-              >
-                <Monitor className="h-3.5 w-3.5 text-accent shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium truncate">{ep.name}</div>
-                  {ep.lanIp && (
-                    <div className="text-[10px] text-muted-foreground truncate" dir="ltr">
-                      {ep.lanIp} • {ep.status}
-                    </div>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
+          <input
+            type="text"
+            value={pcNameInput}
+            onChange={(e) => setPcNameInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !lookingUp && lookupAndRun()}
+            placeholder="לדוגמה: DESKTOP-ABC123"
+            className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+            dir="ltr"
+            disabled={lookingUp}
+          />
+          <p className="text-[10px] text-muted-foreground leading-relaxed">
+            💡 איך לבדוק? הקש Win+R, רשום <span className="font-mono" dir="ltr">cmd</span>, ואז <span className="font-mono" dir="ltr">hostname</span>
+          </p>
           <Button
             size="sm"
-            onClick={rememberAndRun}
-            disabled={running || !selectedEndpoint}
+            onClick={lookupAndRun}
+            disabled={lookingUp || !pcNameInput.trim()}
             className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
           >
-            {running ? (
-              <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
+            {lookingUp ? (
+              <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מחפש...</>
             ) : (
-              <><Play className="h-3 w-3 mr-1" /> הרץ ושמור בחירה</>
+              <><Play className="h-3 w-3 mr-1" /> מצא והרץ</>
             )}
           </Button>
         </div>
@@ -318,6 +303,117 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
       )}
     </div>
   );
+}
+
+// --- Run Script Panel (TECH) ---
+// Technicians can see all endpoints and choose any.
+function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClose: () => void }) {
+  const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await fetch(`${ACTION1_URL}?action=endpoints&role=tech`, {
+          headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        });
+        const data = await resp.json();
+        if (data.endpoints) {
+          setEndpoints(data.endpoints);
+          if (data.endpoints.length > 0) setSelectedEndpoint(data.endpoints[0].id);
+        }
+      } catch {
+        setResult({ success: false, message: "שגיאה בטעינת מחשבים" });
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const run = async () => {
+    if (!selectedEndpoint) return;
+    setRunning(true);
+    setResult(null);
+    try {
+      const data = await runScriptOnEndpoint(scriptName, selectedEndpoint);
+      if (data.success) {
+        setResult({ success: true, message: `✅ הסקריפט נשלח בהצלחה! (Job: ${data.jobId})` });
+      } else {
+        setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
+      }
+    } catch {
+      setResult({ success: false, message: "❌ שגיאת תקשורת" });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  const selectedName = endpoints.find(e => e.id === selectedEndpoint)?.name || "";
+
+  return (
+    <div className="bg-accent/5 border border-accent/20 rounded-xl p-3 mt-2 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold text-accent flex items-center gap-1">
+          <Play className="h-3 w-3" /> הרצה מרחוק (טכנאי)
+        </span>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Loader2 className="h-3 w-3 animate-spin" /> טוען מחשבים...
+        </div>
+      ) : endpoints.length === 0 ? (
+        <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
+      ) : (
+        <div className="space-y-2">
+          <label className="text-xs text-foreground/70">בחר מחשב להרצה:</label>
+          <select
+            value={selectedEndpoint}
+            onChange={(e) => setSelectedEndpoint(e.target.value)}
+            className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+          >
+            {endpoints.map((ep) => (
+              <option key={ep.id} value={ep.id}>
+                {ep.name} ({ep.status}) {ep.lanIp ? `- ${ep.lanIp}` : ""}
+              </option>
+            ))}
+          </select>
+          <Button
+            size="sm"
+            onClick={run}
+            disabled={running || !selectedEndpoint}
+            className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
+          >
+            {running ? (
+              <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
+            ) : (
+              <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName || "המחשב"}</>
+            )}
+          </Button>
+        </div>
+      )}
+
+      {result && (
+        <p className={`text-xs ${result.success ? "text-accent" : "text-destructive"}`}>
+          {result.message}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// --- Wrapper that routes to client/tech panel ---
+function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string; onClose: () => void; userRole: UserRole }) {
+  if (userRole === "tech") {
+    return <RunScriptPanelTech scriptName={scriptName} onClose={onClose} />;
+  }
+  return <RunScriptPanelClient scriptName={scriptName} onClose={onClose} />;
 }
 
 // --- Main Chat Bot ---
