@@ -1,17 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Bot, User, Loader2 } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
+type Endpoint = { id: string; name: string; status: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
 
 async function streamChat({
-  messages,
-  onDelta,
-  onDone,
-  onError,
+  messages, onDelta, onDone, onError,
 }: {
   messages: Msg[];
   onDelta: (text: string) => void;
@@ -49,14 +48,11 @@ async function streamChat({
       while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
         let line = textBuffer.slice(0, newlineIndex);
         textBuffer = textBuffer.slice(newlineIndex + 1);
-
         if (line.endsWith("\r")) line = line.slice(0, -1);
         if (line.startsWith(":") || line.trim() === "") continue;
         if (!line.startsWith("data: ")) continue;
-
         const jsonStr = line.slice(6).trim();
         if (jsonStr === "[DONE]") break;
-
         try {
           const parsed = JSON.parse(jsonStr);
           const content = parsed.choices?.[0]?.delta?.content as string | undefined;
@@ -68,7 +64,6 @@ async function streamChat({
       }
     }
 
-    // Final flush
     if (textBuffer.trim()) {
       for (let raw of textBuffer.split("\n")) {
         if (!raw) continue;
@@ -86,13 +81,144 @@ async function streamChat({
     }
 
     onDone();
-  } catch (e) {
+  } catch {
     onError("שגיאת תקשורת, בדוק את החיבור לאינטרנט.");
   }
 }
 
+// Extract script name from bot message (looks for text before a code block)
+function extractScriptContext(content: string): string | null {
+  // Look for a script name pattern - the bot mentions the issue name before the code block
+  const lines = content.split("\n");
+  for (const line of lines) {
+    const cleaned = line.replace(/[*`#]/g, "").trim();
+    if (cleaned && !cleaned.startsWith("```") && cleaned.length > 5 && cleaned.length < 100) {
+      return cleaned;
+    }
+  }
+  return null;
+}
+
+function hasCodeBlock(content: string): boolean {
+  return content.includes("```");
+}
+
 const BOT_PASSWORD = "0545368629";
 
+// --- Run Script Panel ---
+function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: () => void }) {
+  const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  useEffect(() => {
+    fetchEndpoints();
+  }, []);
+
+  const fetchEndpoints = async () => {
+    try {
+      const resp = await fetch(`${ACTION1_URL}?action=endpoints`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+      });
+      const data = await resp.json();
+      if (data.endpoints) {
+        setEndpoints(data.endpoints);
+        if (data.endpoints.length > 0) setSelectedEndpoint(data.endpoints[0].id);
+      }
+    } catch {
+      setResult({ success: false, message: "שגיאה בטעינת עמדות" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const runScript = async () => {
+    if (!selectedEndpoint) return;
+    setRunning(true);
+    setResult(null);
+    try {
+      const resp = await fetch(`${ACTION1_URL}?action=run`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ scriptName, endpointId: selectedEndpoint }),
+      });
+      const data = await resp.json();
+      if (data.success) {
+        setResult({ success: true, message: `✅ הסקריפט נשלח בהצלחה! (Job: ${data.jobId})` });
+      } else {
+        setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
+      }
+    } catch {
+      setResult({ success: false, message: "❌ שגיאת תקשורת" });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <div className="bg-accent/5 border border-accent/20 rounded-xl p-3 mt-2 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold text-accent flex items-center gap-1">
+          <Play className="h-3 w-3" /> הרצה מרחוק
+        </span>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Loader2 className="h-3 w-3 animate-spin" /> טוען עמדות...
+        </div>
+      ) : endpoints.length === 0 ? (
+        <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
+      ) : (
+        <>
+          <div className="space-y-1">
+            <label className="text-xs text-foreground/70">בחר מחשב:</label>
+            <select
+              value={selectedEndpoint}
+              onChange={(e) => setSelectedEndpoint(e.target.value)}
+              className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+            >
+              {endpoints.map((ep) => (
+                <option key={ep.id} value={ep.id}>
+                  <Monitor className="h-3 w-3" /> {ep.name} ({ep.status})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <Button
+            size="sm"
+            onClick={runScript}
+            disabled={running || !selectedEndpoint}
+            className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
+          >
+            {running ? (
+              <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
+            ) : (
+              <><Play className="h-3 w-3 mr-1" /> הרץ על המחשב</>
+            )}
+          </Button>
+        </>
+      )}
+
+      {result && (
+        <p className={`text-xs ${result.success ? "text-green-600" : "text-destructive"}`}>
+          {result.message}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// --- Main Chat Bot ---
 export const AiChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -101,6 +227,7 @@ export const AiChatBot = () => {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [runScriptIndex, setRunScriptIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -110,9 +237,7 @@ export const AiChatBot = () => {
 
   useEffect(() => {
     if (isOpen && !isUnlocked) return;
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isOpen && inputRef.current) inputRef.current.focus();
   }, [isOpen, isUnlocked]);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -160,7 +285,6 @@ export const AiChatBot = () => {
 
   return (
     <>
-      {/* Chat toggle button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
@@ -171,10 +295,8 @@ export const AiChatBot = () => {
         </button>
       )}
 
-      {/* Chat window */}
       {isOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in" dir="rtl">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-accent/10">
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-accent" />
@@ -198,9 +320,7 @@ export const AiChatBot = () => {
                   className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50 text-center"
                   autoFocus
                 />
-                {passwordError && (
-                  <p className="text-destructive text-xs">סיסמה שגויה, נסה שוב</p>
-                )}
+                {passwordError && <p className="text-destructive text-xs">סיסמה שגויה, נסה שוב</p>}
                 <Button type="submit" size="sm" className="w-full rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
                   כניסה
                 </Button>
@@ -219,25 +339,47 @@ export const AiChatBot = () => {
                 )}
 
                 {messages.map((msg, i) => (
-                  <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                    <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs ${
-                      msg.role === "assistant" ? "bg-accent/15 text-accent" : "bg-primary/15 text-primary"
-                    }`}>
-                      {msg.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                  <div key={i}>
+                    <div className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                      <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs ${
+                        msg.role === "assistant" ? "bg-accent/15 text-accent" : "bg-primary/15 text-primary"
+                      }`}>
+                        {msg.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                      </div>
+                      <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
+                        msg.role === "user"
+                          ? "bg-accent/10 border border-accent/20 text-foreground"
+                          : "bg-muted/50 border border-border text-foreground/85"
+                      }`}>
+                        {msg.role === "assistant" ? (
+                          <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
+                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p>{msg.content}</p>
+                        )}
+                      </div>
                     </div>
-                    <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
-                      msg.role === "user"
-                        ? "bg-accent/10 border border-accent/20 text-foreground"
-                        : "bg-muted/50 border border-border text-foreground/85"
-                    }`}>
-                      {msg.role === "assistant" ? (
-                        <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                          <ReactMarkdown>{msg.content}</ReactMarkdown>
-                        </div>
-                      ) : (
-                        <p>{msg.content}</p>
-                      )}
-                    </div>
+
+                    {/* Run Script button for assistant messages with code blocks */}
+                    {msg.role === "assistant" && hasCodeBlock(msg.content) && !isLoading && (
+                      <div className="mr-9 mt-1">
+                        {runScriptIndex === i ? (
+                          <RunScriptPanel
+                            scriptName={extractScriptContext(msg.content) || "unknown"}
+                            onClose={() => setRunScriptIndex(null)}
+                          />
+                        ) : (
+                          <button
+                            onClick={() => setRunScriptIndex(i)}
+                            className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
+                          >
+                            <Play className="h-3 w-3" />
+                            הרץ על מחשב מרחוק
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
 
@@ -256,10 +398,7 @@ export const AiChatBot = () => {
               </div>
 
               <div className="border-t border-border p-3">
-                <form
-                  onSubmit={(e) => { e.preventDefault(); send(); }}
-                  className="flex gap-2"
-                >
+                <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex gap-2">
                   <input
                     ref={inputRef}
                     type="text"
