@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
@@ -86,17 +86,17 @@ async function streamChat({
   }
 }
 
-// Extract script name from bot message (looks for text before a code block)
+// Extract script name from bot message - looks for [SCRIPT_NAME:...] tag
 function extractScriptContext(content: string): string | null {
-  // Look for a script name pattern - the bot mentions the issue name before the code block
-  const lines = content.split("\n");
-  for (const line of lines) {
-    const cleaned = line.replace(/[*`#]/g, "").trim();
-    if (cleaned && !cleaned.startsWith("```") && cleaned.length > 5 && cleaned.length < 100) {
-      return cleaned;
-    }
-  }
+  const match = content.match(/\[SCRIPT_NAME:([^\]]+)\]/);
+  if (match) return match[1].trim();
   return null;
+}
+
+// Extract code block content for copying
+function extractCodeBlock(content: string): string | null {
+  const match = content.match(/```[\w]*\n?([\s\S]*?)```/);
+  return match ? match[1].trim() : null;
 }
 
 function hasCodeBlock(content: string): boolean {
@@ -107,6 +107,29 @@ const BOT_PASSWORD = "0545368629";
 const TECH_PASSWORD = "06536368";
 
 type UserRole = "client" | "tech";
+
+// --- Copy Script Button ---
+function CopyScriptButton({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false);
+  const code = extractCodeBlock(content);
+  if (!code) return null;
+  
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-lg px-2 py-1"
+    >
+      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+      {copied ? "הועתק!" : "העתק סקריפט"}
+    </button>
+  );
+}
 
 // --- Run Script Panel ---
 function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string; onClose: () => void; userRole: UserRole }) {
@@ -443,7 +466,7 @@ export const AiChatBot = () => {
                       }`}>
                         {msg.role === "assistant" ? (
                           <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            <ReactMarkdown>{msg.content.replace(/\[SCRIPT_NAME:[^\]]+\]/g, "")}</ReactMarkdown>
                           </div>
                         ) : (
                           <p>{msg.content}</p>
@@ -451,23 +474,26 @@ export const AiChatBot = () => {
                       </div>
                     </div>
 
-                    {/* Run Script button for assistant messages with code blocks */}
+                    {/* Copy + Run buttons for assistant messages with code blocks */}
                     {msg.role === "assistant" && hasCodeBlock(msg.content) && !isLoading && (
-                      <div className="mr-9 mt-1">
-                        {runScriptIndex === i ? (
-                          <RunScriptPanel
-                            scriptName={extractScriptContext(msg.content) || "unknown"}
-                            onClose={() => setRunScriptIndex(null)}
-                            userRole={userRole}
-                          />
-                        ) : (
-                          <button
-                            onClick={() => setRunScriptIndex(i)}
-                            className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
-                          >
-                            <Play className="h-3 w-3" />
-                            הרץ על מחשב מרחוק
-                          </button>
+                      <div className="mr-9 mt-1 flex flex-wrap gap-1">
+                        <CopyScriptButton content={msg.content} />
+                        {extractScriptContext(msg.content) && (
+                          runScriptIndex === i ? (
+                            <RunScriptPanel
+                              scriptName={extractScriptContext(msg.content) || "unknown"}
+                              onClose={() => setRunScriptIndex(null)}
+                              userRole={userRole}
+                            />
+                          ) : (
+                            <button
+                              onClick={() => setRunScriptIndex(i)}
+                              className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
+                            >
+                              <Play className="h-3 w-3" />
+                              הרץ על מחשב מרחוק
+                            </button>
+                          )
                         )}
                       </div>
                     )}
