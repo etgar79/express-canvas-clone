@@ -145,21 +145,20 @@ serve(async (req) => {
       const items = data.items || data || [];
       const endpoints = items.map((e: any) => ({
         id: e.id,
-        name: e.name || e.hostname || e.id,
+        name: e.name || e.device_name || e.hostname || e.id,
         status: e.status || "unknown",
-        externalAddress: e.external_address || e.address || "",
+        lanIp: e.address || "",
+        lastSeen: e.last_seen || "",
+        platform: e.platform || "",
       }));
 
-      // Try to auto-match by IP
-      let matchedEndpoint = null;
-      if (clientIp) {
-        matchedEndpoint = endpoints.find((ep: any) => ep.externalAddress === clientIp);
-      }
-
+      // Note: Action1 API does NOT expose public/WAN IP, only LAN address.
+      // Auto-matching by IP is not possible. Client must select endpoint manually
+      // (selection is then remembered in localStorage on the client side).
       return new Response(JSON.stringify({ 
         endpoints, 
         clientIp,
-        matchedEndpoint: matchedEndpoint || null,
+        matchedEndpoint: null,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

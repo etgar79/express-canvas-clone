@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
-type Endpoint = { id: string; name: string; status: string };
+type Endpoint = { id: string; name: string; status: string; lanIp?: string };
+
+const REMEMBERED_ENDPOINT_KEY = "techtherapy_remembered_endpoint_id";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
@@ -137,7 +139,6 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
   const [loading, setLoading] = useState(true);
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
   const [autoDetected, setAutoDetected] = useState(false);
-  const [clientIp, setClientIp] = useState("");
   const [showManual, setShowManual] = useState(false);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -154,11 +155,21 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
       const data = await resp.json();
       if (data.endpoints) {
         setEndpoints(data.endpoints);
-        setClientIp(data.clientIp || "");
 
-        if (data.matchedEndpoint) {
-          setSelectedEndpoint(data.matchedEndpoint.id);
+        // Try to recall a previously chosen endpoint from localStorage
+        const remembered = typeof window !== "undefined"
+          ? localStorage.getItem(REMEMBERED_ENDPOINT_KEY)
+          : null;
+        const rememberedExists = remembered && data.endpoints.find((e: Endpoint) => e.id === remembered);
+
+        if (rememberedExists) {
+          setSelectedEndpoint(remembered);
           setAutoDetected(true);
+        } else if (data.endpoints.length === 1) {
+          // Only one endpoint - auto-pick and remember
+          setSelectedEndpoint(data.endpoints[0].id);
+          setAutoDetected(true);
+          localStorage.setItem(REMEMBERED_ENDPOINT_KEY, data.endpoints[0].id);
         } else if (data.endpoints.length > 0) {
           setSelectedEndpoint(data.endpoints[0].id);
         }
@@ -168,6 +179,13 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
     } finally {
       setLoading(false);
     }
+  };
+
+  const rememberAndRun = async () => {
+    if (!selectedEndpoint) return;
+    // Remember the choice for next time
+    localStorage.setItem(REMEMBERED_ENDPOINT_KEY, selectedEndpoint);
+    await runScript();
   };
 
   const runScript = async () => {
@@ -196,6 +214,12 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
     }
   };
 
+  const forgetChoice = () => {
+    localStorage.removeItem(REMEMBERED_ENDPOINT_KEY);
+    setAutoDetected(false);
+    setShowManual(true);
+  };
+
   const selectedName = endpoints.find(e => e.id === selectedEndpoint)?.name || "";
 
   return (
@@ -211,96 +235,80 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
 
       {loading ? (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Loader2 className="h-3 w-3 animate-spin" /> מזהה את המחשב שלך...
+          <Loader2 className="h-3 w-3 animate-spin" /> טוען מחשבים זמינים...
         </div>
       ) : endpoints.length === 0 ? (
         <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
-      ) : userRole === "client" ? (
-        // CLIENT: auto-detect only, no manual selection
-        <>
-          {autoDetected ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-2 py-1.5">
-                <Monitor className="h-3.5 w-3.5 text-accent" />
-                <span className="text-xs font-medium text-foreground">
-                  זוהה: <span className="text-accent font-bold">{selectedName}</span>
-                </span>
-              </div>
-              <Button
-                size="sm"
-                onClick={runScript}
-                disabled={running || !selectedEndpoint}
-                className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
-              >
-                {running ? (
-                  <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
-                ) : (
-                  <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName}</>
-                )}
-              </Button>
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              😕 המחשב שלך לא זוהה (IP: {clientIp}). פנה לטכנאי לעזרה.
-            </p>
-          )}
-        </>
-      ) : (
-        // TECH: full manual selection + auto-detect
-        <>
-          {autoDetected && !showManual ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-2 py-1.5">
-                <Monitor className="h-3.5 w-3.5 text-accent" />
-                <span className="text-xs font-medium text-foreground">
-                  זוהה: <span className="text-accent font-bold">{selectedName}</span>
-                </span>
-              </div>
-              <button
-                onClick={() => setShowManual(true)}
-                className="text-[10px] text-muted-foreground hover:text-foreground underline"
-              >
-                בחר מחשב אחר
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-1">
-              <label className="text-xs text-foreground/70">בחר מחשב:</label>
-              <select
-                value={selectedEndpoint}
-                onChange={(e) => setSelectedEndpoint(e.target.value)}
-                className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
-              >
-                {endpoints.map((ep) => (
-                  <option key={ep.id} value={ep.id}>
-                    {ep.name} ({ep.status})
-                  </option>
-                ))}
-              </select>
-              {autoDetected && (
-                <button
-                  onClick={() => setShowManual(false)}
-                  className="text-[10px] text-accent hover:text-accent/80 underline"
-                >
-                  חזור לזיהוי אוטומטי
-                </button>
-              )}
-            </div>
-          )}
-
+      ) : autoDetected && !showManual ? (
+        // Remembered choice - show it and run directly
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-2 py-1.5">
+            <Monitor className="h-3.5 w-3.5 text-accent" />
+            <span className="text-xs font-medium text-foreground">
+              המחשב שלך: <span className="text-accent font-bold">{selectedName}</span>
+            </span>
+          </div>
           <Button
             size="sm"
-            onClick={runScript}
+            onClick={rememberAndRun}
             disabled={running || !selectedEndpoint}
             className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
           >
             {running ? (
               <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
             ) : (
-              <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName || "המחשב"}</>
+              <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName}</>
             )}
           </Button>
-        </>
+          <button
+            onClick={forgetChoice}
+            className="text-[10px] text-muted-foreground hover:text-foreground underline"
+          >
+            זה לא המחשב שלי? בחר מחדש
+          </button>
+        </div>
+      ) : (
+        // First time / manual selection - choose from list
+        <div className="space-y-2">
+          <label className="text-xs text-foreground/70">
+            {userRole === "client" ? "בחר את המחשב שלך:" : "בחר מחשב להרצה:"}
+          </label>
+          <div className="space-y-1">
+            {endpoints.map((ep) => (
+              <button
+                key={ep.id}
+                onClick={() => setSelectedEndpoint(ep.id)}
+                className={`w-full flex items-center gap-2 rounded-lg px-2 py-1.5 text-right transition-colors border ${
+                  selectedEndpoint === ep.id
+                    ? "bg-accent/15 border-accent/40 text-foreground"
+                    : "bg-background border-border text-foreground/70 hover:bg-accent/5"
+                }`}
+              >
+                <Monitor className="h-3.5 w-3.5 text-accent shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium truncate">{ep.name}</div>
+                  {ep.lanIp && (
+                    <div className="text-[10px] text-muted-foreground truncate" dir="ltr">
+                      {ep.lanIp} • {ep.status}
+                    </div>
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+          <Button
+            size="sm"
+            onClick={rememberAndRun}
+            disabled={running || !selectedEndpoint}
+            className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
+          >
+            {running ? (
+              <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
+            ) : (
+              <><Play className="h-3 w-3 mr-1" /> הרץ ושמור בחירה</>
+            )}
+          </Button>
+        </div>
       )}
 
       {result && (
