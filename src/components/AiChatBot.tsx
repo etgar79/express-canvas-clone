@@ -104,6 +104,9 @@ function hasCodeBlock(content: string): boolean {
 }
 
 const BOT_PASSWORD = "0545368629";
+const TECH_PASSWORD = "06536368";
+
+type UserRole = "client" | "tech";
 
 // --- Run Script Panel ---
 function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: () => void }) {
