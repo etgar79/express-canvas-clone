@@ -1,4 +1,4 @@
-import { Phone, Mail, MessageCircle, Facebook, Linkedin, Terminal, Heart } from "lucide-react";
+import { Phone, Mail, MessageCircle, Facebook, Linkedin, Terminal, Heart, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
