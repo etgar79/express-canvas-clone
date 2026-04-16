@@ -108,6 +108,29 @@ const TECH_PASSWORD = "06536368";
 
 type UserRole = "client" | "tech";
 
+// --- Copy Script Button ---
+function CopyScriptButton({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false);
+  const code = extractCodeBlock(content);
+  if (!code) return null;
+  
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-lg px-2 py-1"
+    >
+      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+      {copied ? "הועתק!" : "העתק סקריפט"}
+    </button>
+  );
+}
+
 // --- Run Script Panel ---
 function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string; onClose: () => void; userRole: UserRole }) {
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
