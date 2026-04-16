@@ -42,6 +42,7 @@ export const Footer = () => {
                   <Settings className="h-3 w-3" />
                   טכנאים
                 </Link>
+              </li>
             </ul>
           </div>
 
