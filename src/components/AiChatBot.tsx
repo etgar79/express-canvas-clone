@@ -6,7 +6,8 @@ import ReactMarkdown from "react-markdown";
 type Msg = { role: "user" | "assistant"; content: string };
 type Endpoint = { id: string; name: string; status: string; lanIp?: string };
 
-const REMEMBERED_ENDPOINT_KEY = "techtherapy_remembered_endpoint_id";
+const REMEMBERED_ENDPOINT_ID_KEY = "techtherapy_remembered_endpoint_id";
+const REMEMBERED_ENDPOINT_NAME_KEY = "techtherapy_remembered_endpoint_name";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
