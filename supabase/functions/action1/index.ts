@@ -162,14 +162,6 @@ serve(async (req) => {
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
-
-      return new Response(JSON.stringify({ 
-        endpoints, 
-        clientIp,
-        matchedEndpoint: matchedEndpoint || null,
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
     }
 
     if (action === "run") {
