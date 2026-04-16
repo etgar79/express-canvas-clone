@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,29 +10,53 @@ const SHEET_ID = "1mR7NpQPcIxwURMKTrSP4scD7eYI4vYXnt2lBkyFNWxc";
 
 let cachedToken: { token: string; expiresAt: number } | null = null;
 
-async function getAction1Token(): Promise<string> {
-  if (cachedToken && Date.now() < cachedToken.expiresAt) {
-    return cachedToken.token;
+function getSupabase() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  );
+}
+
+async function getAction1Config(): Promise<{ clientId: string; clientSecret: string; orgId: string }> {
+  const supabase = getSupabase();
+  const { data } = await supabase
+    .from("app_settings")
+    .select("key, value")
+    .in("key", ["ACTION1_CLIENT_ID", "ACTION1_CLIENT_SECRET", "ACTION1_ORG_ID"]);
+
+  const config: Record<string, string> = {};
+  for (const row of data || []) {
+    config[row.key] = row.value;
   }
 
-  const clientId = Deno.env.get("ACTION1_CLIENT_ID");
-  const clientSecret = Deno.env.get("ACTION1_CLIENT_SECRET");
-  const orgId = Deno.env.get("ACTION1_ORG_ID");
+  // Fallback to env vars if DB is empty
+  const clientId = config.ACTION1_CLIENT_ID || Deno.env.get("ACTION1_CLIENT_ID") || "";
+  const clientSecret = config.ACTION1_CLIENT_SECRET || Deno.env.get("ACTION1_CLIENT_SECRET") || "";
+  const orgId = config.ACTION1_ORG_ID || Deno.env.get("ACTION1_ORG_ID") || "";
 
   if (!clientId || !clientSecret || !orgId) {
     throw new Error("Action1 credentials not configured");
   }
 
+  return { clientId, clientSecret, orgId };
+}
+
+async function getAction1Token(): Promise<{ token: string; orgId: string }> {
+  const config = await getAction1Config();
+
+  if (cachedToken && Date.now() < cachedToken.expiresAt) {
+    return { token: cachedToken.token, orgId: config.orgId };
+  }
+
   const resp = await fetch("https://app.eu.action1.com/api/3.0/oauth2/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(clientSecret)}`,
+    body: `grant_type=client_credentials&client_id=${encodeURIComponent(config.clientId)}&client_secret=${encodeURIComponent(config.clientSecret)}`,
   });
 
   const data = await resp.json();
-  console.log("Action1 auth response status:", resp.status, "keys:", Object.keys(data));
   if (!data.access_token) {
-    console.error("Action1 auth failed:", JSON.stringify(data));
+    console.error("Action1 auth failed:", resp.status, JSON.stringify(data));
     throw new Error("Failed to authenticate with Action1");
   }
 
@@ -39,11 +64,7 @@ async function getAction1Token(): Promise<string> {
     token: data.access_token,
     expiresAt: Date.now() + (data.expires_in - 300) * 1000,
   };
-  return cachedToken.token;
-}
-
-function getOrgId(): string {
-  return Deno.env.get("ACTION1_ORG_ID") || "";
+  return { token: cachedToken.token, orgId: config.orgId };
 }
 
 function parseCSVLine(line: string): string[] {
@@ -98,8 +119,7 @@ serve(async (req) => {
     const action = url.searchParams.get("action");
 
     if (action === "endpoints") {
-      const token = await getAction1Token();
-      const orgId = getOrgId();
+      const { token, orgId } = await getAction1Token();
       const resp = await fetch(
         `https://app.eu.action1.com/api/3.0/organizations/${orgId}/endpoints?$top=100`,
         { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
@@ -139,8 +159,7 @@ serve(async (req) => {
         });
       }
 
-      const token = await getAction1Token();
-      const orgId = getOrgId();
+      const { token, orgId } = await getAction1Token();
       const jobResp = await fetch(
         `https://app.eu.action1.com/api/3.0/organizations/${orgId}/jobs`,
         {

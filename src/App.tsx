@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AiChatBot } from "@/components/AiChatBot";
 import Index from "./pages/Index";
 import Diagnostics from "./pages/Diagnostics";
+import TechDashboard from "./pages/TechDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/diagnostics" element={<Diagnostics />} />
+          <Route path="/tech-dashboard" element={<TechDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
