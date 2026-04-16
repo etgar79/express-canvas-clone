@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AiChatBot } from "@/components/AiChatBot";
 import Index from "./pages/Index";
 import Diagnostics from "./pages/Diagnostics";
+import TechDashboard from "./pages/TechDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
