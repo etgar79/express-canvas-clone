@@ -110,6 +110,9 @@ function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: 
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
+  const [autoDetected, setAutoDetected] = useState(false);
+  const [clientIp, setClientIp] = useState("");
+  const [showManual, setShowManual] = useState(false);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -125,7 +128,14 @@ function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: 
       const data = await resp.json();
       if (data.endpoints) {
         setEndpoints(data.endpoints);
-        if (data.endpoints.length > 0) setSelectedEndpoint(data.endpoints[0].id);
+        setClientIp(data.clientIp || "");
+
+        if (data.matchedEndpoint) {
+          setSelectedEndpoint(data.matchedEndpoint.id);
+          setAutoDetected(true);
+        } else if (data.endpoints.length > 0) {
+          setSelectedEndpoint(data.endpoints[0].id);
+        }
       }
     } catch {
       setResult({ success: false, message: "שגיאה בטעינת עמדות" });
@@ -160,6 +170,8 @@ function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: 
     }
   };
 
+  const selectedName = endpoints.find(e => e.id === selectedEndpoint)?.name || "";
+
   return (
     <div className="bg-accent/5 border border-accent/20 rounded-xl p-3 mt-2 space-y-2">
       <div className="flex items-center justify-between">
@@ -173,26 +185,53 @@ function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: 
 
       {loading ? (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Loader2 className="h-3 w-3 animate-spin" /> טוען עמדות...
+          <Loader2 className="h-3 w-3 animate-spin" /> מזהה את המחשב שלך...
         </div>
       ) : endpoints.length === 0 ? (
         <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
       ) : (
         <>
-          <div className="space-y-1">
-            <label className="text-xs text-foreground/70">בחר מחשב:</label>
-            <select
-              value={selectedEndpoint}
-              onChange={(e) => setSelectedEndpoint(e.target.value)}
-              className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
-            >
-              {endpoints.map((ep) => (
-                <option key={ep.id} value={ep.id}>
-                  <Monitor className="h-3 w-3" /> {ep.name} ({ep.status})
-                </option>
-              ))}
-            </select>
-          </div>
+          {autoDetected && !showManual ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-2 py-1.5">
+                <Monitor className="h-3.5 w-3.5 text-accent" />
+                <span className="text-xs font-medium text-foreground">
+                  זוהה: <span className="text-accent font-bold">{selectedName}</span>
+                </span>
+              </div>
+              <button
+                onClick={() => setShowManual(true)}
+                className="text-[10px] text-muted-foreground hover:text-foreground underline"
+              >
+                בחר מחשב אחר
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              <label className="text-xs text-foreground/70">
+                {autoDetected ? "בחר מחשב:" : `לא זוהה מחשב (IP: ${clientIp}) - בחר ידנית:`}
+              </label>
+              <select
+                value={selectedEndpoint}
+                onChange={(e) => setSelectedEndpoint(e.target.value)}
+                className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+              >
+                {endpoints.map((ep) => (
+                  <option key={ep.id} value={ep.id}>
+                    {ep.name} ({ep.status})
+                  </option>
+                ))}
+              </select>
+              {autoDetected && (
+                <button
+                  onClick={() => setShowManual(false)}
+                  className="text-[10px] text-accent hover:text-accent/80 underline"
+                >
+                  חזור לזיהוי אוטומטי
+                </button>
+              )}
+            </div>
+          )}
 
           <Button
             size="sm"
@@ -203,14 +242,14 @@ function RunScriptPanel({ scriptName, onClose }: { scriptName: string; onClose: 
             {running ? (
               <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
             ) : (
-              <><Play className="h-3 w-3 mr-1" /> הרץ על המחשב</>
+              <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName || "המחשב"}</>
             )}
           </Button>
         </>
       )}
 
       {result && (
-        <p className={`text-xs ${result.success ? "text-green-600" : "text-destructive"}`}>
+        <p className={`text-xs ${result.success ? "text-accent" : "text-destructive"}`}>
           {result.message}
         </p>
       )}
