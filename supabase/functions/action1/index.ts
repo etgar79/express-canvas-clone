@@ -173,7 +173,7 @@ serve(async (req) => {
         });
       }
 
-      const scriptContent = await getScriptFromSheet(scriptName);
+      const scriptContent = await getScript(scriptName);
       if (!scriptContent) {
         return new Response(JSON.stringify({ error: "הסקריפט לא נמצא" }), {
           status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
