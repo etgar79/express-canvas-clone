@@ -192,7 +192,38 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
         </div>
       ) : endpoints.length === 0 ? (
         <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
+      ) : userRole === "client" ? (
+        // CLIENT: auto-detect only, no manual selection
+        <>
+          {autoDetected ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-2 py-1.5">
+                <Monitor className="h-3.5 w-3.5 text-accent" />
+                <span className="text-xs font-medium text-foreground">
+                  זוהה: <span className="text-accent font-bold">{selectedName}</span>
+                </span>
+              </div>
+              <Button
+                size="sm"
+                onClick={runScript}
+                disabled={running || !selectedEndpoint}
+                className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
+              >
+                {running ? (
+                  <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
+                ) : (
+                  <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName}</>
+                )}
+              </Button>
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              😕 המחשב שלך לא זוהה (IP: {clientIp}). פנה לטכנאי לעזרה.
+            </p>
+          )}
+        </>
       ) : (
+        // TECH: full manual selection + auto-detect
         <>
           {autoDetected && !showManual ? (
             <div className="space-y-2">
@@ -211,9 +242,7 @@ function RunScriptPanel({ scriptName, onClose, userRole }: { scriptName: string;
             </div>
           ) : (
             <div className="space-y-1">
-              <label className="text-xs text-foreground/70">
-                {autoDetected ? "בחר מחשב:" : `לא זוהה מחשב (IP: ${clientIp}) - בחר ידנית:`}
-              </label>
+              <label className="text-xs text-foreground/70">בחר מחשב:</label>
               <select
                 value={selectedEndpoint}
                 onChange={(e) => setSelectedEndpoint(e.target.value)}
