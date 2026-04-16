@@ -121,7 +121,7 @@ serve(async (req) => {
     if (action === "endpoints") {
       const { token, orgId } = await getAction1Token();
       const resp = await fetch(
-        `https://app.eu.action1.com/api/3.0/organizations/${orgId}/endpoints?$top=100`,
+        `https://app.eu.action1.com/api/3.0/endpoints/managed/${orgId}?fields=*`,
         { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
       );
 
