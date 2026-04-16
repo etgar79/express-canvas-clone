@@ -91,20 +91,23 @@ function parseCSVLine(line: string): string[] {
   return result;
 }
 
-async function getScriptFromSheet(scriptName: string): Promise<string | null> {
+async function getScript(scriptName: string): Promise<string | null> {
+  // Try DB first
+  const supabase = getSupabase();
+  const { data } = await supabase.from("scripts").select("script").eq("name", scriptName).maybeSingle();
+  if (data?.script) return data.script;
+
+  // Fallback to Google Sheets
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
   const response = await fetch(url);
   if (!response.ok) return null;
   const csvText = await response.text();
   const lines = csvText.split("\n").filter(line => line.trim());
-
   for (let i = 1; i < lines.length; i++) {
     const cols = parseCSVLine(lines[i]);
     const description = (cols[0] || "").trim();
     const script = (cols[1] || "").trim();
-    if (description === scriptName && script) {
-      return script;
-    }
+    if (description === scriptName && script) return script;
   }
   return null;
 }
@@ -170,7 +173,7 @@ serve(async (req) => {
         });
       }
 
-      const scriptContent = await getScriptFromSheet(scriptName);
+      const scriptContent = await getScript(scriptName);
       if (!scriptContent) {
         return new Response(JSON.stringify({ error: "הסקריפט לא נמצא" }), {
           status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },

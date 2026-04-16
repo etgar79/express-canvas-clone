@@ -32,6 +32,39 @@ export type Database = {
         }
         Relationships: []
       }
+      scripts: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          is_public: boolean
+          name: string
+          script: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          is_public?: boolean
+          name: string
+          script: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          is_public?: boolean
+          name?: string
+          script?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
