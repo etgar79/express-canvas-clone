@@ -37,6 +37,11 @@ export const Footer = () => {
                   מאבחן תקלות
                 </Link>
               </li>
+              <li>
+                <Link to="/tech-dashboard" className="text-foreground/30 hover:text-foreground/50 transition-colors text-xs flex items-center gap-1">
+                  <Settings className="h-3 w-3" />
+                  טכנאים
+                </Link>
             </ul>
           </div>
 
