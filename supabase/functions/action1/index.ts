@@ -29,7 +29,11 @@ async function getAction1Token(): Promise<string> {
   });
 
   const data = await resp.json();
-  if (!data.access_token) throw new Error("Failed to authenticate with Action1");
+  console.log("Action1 auth response status:", resp.status, "keys:", Object.keys(data));
+  if (!data.access_token) {
+    console.error("Action1 auth failed:", JSON.stringify(data));
+    throw new Error("Failed to authenticate with Action1");
+  }
 
   cachedToken = {
     token: data.access_token,
