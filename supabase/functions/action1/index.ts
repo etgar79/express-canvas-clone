@@ -143,26 +143,25 @@ serve(async (req) => {
 
       const data = await resp.json();
       const items = data.items || data || [];
-      // Log first item to see all available fields
-      if (items.length > 0) {
-        console.log("Sample endpoint fields:", JSON.stringify(items[0], null, 2));
-      }
       const endpoints = items.map((e: any) => ({
         id: e.id,
-        name: e.name || e.hostname || e.id,
+        name: e.name || e.device_name || e.hostname || e.id,
         status: e.status || "unknown",
-        externalAddress: e.external_address || e.address || "",
-        networkIp: e.network_ip || e.public_ip || e.wan_ip || "",
-        allFields: e, // temp for debug
+        lanIp: e.address || "",
+        lastSeen: e.last_seen || "",
+        platform: e.platform || "",
       }));
 
-      // Try to auto-match by public IP (network_ip from Action1 vs Cloudflare client IP)
-      let matchedEndpoint = null;
-      if (clientIp) {
-        matchedEndpoint = endpoints.find((ep: any) => 
-          ep.networkIp === clientIp || ep.externalAddress === clientIp
-        );
-      }
+      // Note: Action1 API does NOT expose public/WAN IP, only LAN address.
+      // Auto-matching by IP is not possible. Client must select endpoint manually
+      // (selection is then remembered in localStorage on the client side).
+      return new Response(JSON.stringify({ 
+        endpoints, 
+        clientIp,
+        matchedEndpoint: null,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
 
       return new Response(JSON.stringify({ 
         endpoints, 
