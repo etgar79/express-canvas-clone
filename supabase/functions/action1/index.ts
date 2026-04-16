@@ -120,30 +120,23 @@ serve(async (req) => {
   try {
     const url = new URL(req.url);
     const action = url.searchParams.get("action");
+    const role = url.searchParams.get("role") || "client"; // "client" | "tech"
 
-    if (action === "endpoints") {
-      // Get client IP from headers
-      const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() 
-        || req.headers.get("x-real-ip") || "";
-      console.log("Client IP:", clientIp);
-
+    // Helper: fetch all endpoints from Action1
+    const fetchAllEndpoints = async () => {
       const { token, orgId } = await getAction1Token();
       const resp = await fetch(
         `https://app.eu.action1.com/api/3.0/endpoints/managed/${orgId}?fields=*`,
         { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
       );
-
       if (!resp.ok) {
         const errBody = await resp.text();
         console.error("Endpoints API error:", resp.status, errBody);
-        return new Response(JSON.stringify({ error: `שגיאה בשליפת עמדות (${resp.status})` }), {
-          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        throw new Error(`שגיאה בשליפת עמדות (${resp.status})`);
       }
-
       const data = await resp.json();
       const items = data.items || data || [];
-      const endpoints = items.map((e: any) => ({
+      return items.map((e: any) => ({
         id: e.id,
         name: e.name || e.device_name || e.hostname || e.id,
         status: e.status || "unknown",
@@ -151,15 +144,41 @@ serve(async (req) => {
         lastSeen: e.last_seen || "",
         platform: e.platform || "",
       }));
+    };
 
-      // Note: Action1 API does NOT expose public/WAN IP, only LAN address.
-      // Auto-matching by IP is not possible. Client must select endpoint manually
-      // (selection is then remembered in localStorage on the client side).
-      return new Response(JSON.stringify({ 
-        endpoints, 
-        clientIp,
-        matchedEndpoint: null,
+    // CLIENT-SAFE: lookup endpoint by name (case-insensitive). Does NOT leak the endpoint list.
+    if (action === "lookup") {
+      const name = (url.searchParams.get("name") || "").trim().toLowerCase();
+      if (!name) {
+        return new Response(JSON.stringify({ error: "חסר שם מחשב" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const all = await fetchAllEndpoints();
+      const match = all.find((e: any) => (e.name || "").toLowerCase() === name);
+      if (!match) {
+        return new Response(JSON.stringify({ found: false }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      // Return only the matched endpoint - never the full list
+      return new Response(JSON.stringify({
+        found: true,
+        endpoint: { id: match.id, name: match.name, status: match.status },
       }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // TECH-ONLY: full endpoints listing (used by technician interface)
+    if (action === "endpoints") {
+      if (role !== "tech") {
+        return new Response(JSON.stringify({ error: "אין הרשאה" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const endpoints = await fetchAllEndpoints();
+      return new Response(JSON.stringify({ endpoints, matchedEndpoint: null }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
