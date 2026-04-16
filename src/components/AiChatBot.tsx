@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
@@ -443,7 +443,7 @@ export const AiChatBot = () => {
                       }`}>
                         {msg.role === "assistant" ? (
                           <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            <ReactMarkdown>{msg.content.replace(/\[SCRIPT_NAME:[^\]]+\]/g, "")}</ReactMarkdown>
                           </div>
                         ) : (
                           <p>{msg.content}</p>
@@ -451,23 +451,26 @@ export const AiChatBot = () => {
                       </div>
                     </div>
 
-                    {/* Run Script button for assistant messages with code blocks */}
+                    {/* Copy + Run buttons for assistant messages with code blocks */}
                     {msg.role === "assistant" && hasCodeBlock(msg.content) && !isLoading && (
-                      <div className="mr-9 mt-1">
-                        {runScriptIndex === i ? (
-                          <RunScriptPanel
-                            scriptName={extractScriptContext(msg.content) || "unknown"}
-                            onClose={() => setRunScriptIndex(null)}
-                            userRole={userRole}
-                          />
-                        ) : (
-                          <button
-                            onClick={() => setRunScriptIndex(i)}
-                            className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
-                          >
-                            <Play className="h-3 w-3" />
-                            הרץ על מחשב מרחוק
-                          </button>
+                      <div className="mr-9 mt-1 flex flex-wrap gap-1">
+                        <CopyScriptButton content={msg.content} />
+                        {extractScriptContext(msg.content) && (
+                          runScriptIndex === i ? (
+                            <RunScriptPanel
+                              scriptName={extractScriptContext(msg.content) || "unknown"}
+                              onClose={() => setRunScriptIndex(null)}
+                              userRole={userRole}
+                            />
+                          ) : (
+                            <button
+                              onClick={() => setRunScriptIndex(i)}
+                              className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
+                            >
+                              <Play className="h-3 w-3" />
+                              הרץ על מחשב מרחוק
+                            </button>
+                          )
                         )}
                       </div>
                     )}
