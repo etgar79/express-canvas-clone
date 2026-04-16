@@ -119,6 +119,11 @@ serve(async (req) => {
     const action = url.searchParams.get("action");
 
     if (action === "endpoints") {
+      // Get client IP from headers
+      const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() 
+        || req.headers.get("x-real-ip") || "";
+      console.log("Client IP:", clientIp);
+
       const { token, orgId } = await getAction1Token();
       const resp = await fetch(
         `https://app.eu.action1.com/api/3.0/endpoints/managed/${orgId}?fields=*`,
@@ -139,9 +144,20 @@ serve(async (req) => {
         id: e.id,
         name: e.name || e.hostname || e.id,
         status: e.status || "unknown",
+        externalAddress: e.external_address || e.address || "",
       }));
 
-      return new Response(JSON.stringify({ endpoints }), {
+      // Try to auto-match by IP
+      let matchedEndpoint = null;
+      if (clientIp) {
+        matchedEndpoint = endpoints.find((ep: any) => ep.externalAddress === clientIp);
+      }
+
+      return new Response(JSON.stringify({ 
+        endpoints, 
+        clientIp,
+        matchedEndpoint: matchedEndpoint || null,
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
