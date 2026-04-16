@@ -445,6 +445,7 @@ export const AiChatBot = () => {
                           <RunScriptPanel
                             scriptName={extractScriptContext(msg.content) || "unknown"}
                             onClose={() => setRunScriptIndex(null)}
+                            userRole={userRole}
                           />
                         ) : (
                           <button
