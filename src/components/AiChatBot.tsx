@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
