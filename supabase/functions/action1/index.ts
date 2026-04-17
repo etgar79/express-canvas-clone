@@ -226,6 +226,61 @@ serve(async (req) => {
       });
     }
 
+    // Poll job status from Action1
+    if (action === "status") {
+      const jobId = url.searchParams.get("jobId");
+      if (!jobId) {
+        return new Response(JSON.stringify({ error: "חסר jobId" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { token, orgId } = await getAction1Token();
+      const resp = await fetch(
+        `https://app.eu.action1.com/api/3.0/automations/instances/${orgId}/${jobId}`,
+        { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+      );
+      if (!resp.ok) {
+        const errBody = await resp.text();
+        console.error("Status API error:", resp.status, errBody);
+        return new Response(JSON.stringify({ error: `שגיאה בשליפת סטטוס (${resp.status})` }), {
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const data = await resp.json();
+      // Action1 returns status fields like: status, state, result, etc.
+      // Normalize to a simple state machine: queued | running | completed | failed
+      const rawStatus = String(data.status || data.state || "").toLowerCase();
+      let normalized: "queued" | "running" | "completed" | "failed" = "queued";
+      if (["running", "in_progress", "executing", "started"].includes(rawStatus)) {
+        normalized = "running";
+      } else if (["completed", "success", "succeeded", "finished", "done"].includes(rawStatus)) {
+        normalized = "completed";
+      } else if (["failed", "error", "failure", "cancelled", "canceled", "timeout"].includes(rawStatus)) {
+        normalized = "failed";
+      } else if (["queued", "pending", "scheduled", "waiting"].includes(rawStatus)) {
+        normalized = "queued";
+      }
+
+      // Try to derive per-endpoint outcome if available
+      const endpoints = data.endpoints || data.results || data.targets || [];
+      const endpointSummary = Array.isArray(endpoints)
+        ? endpoints.map((e: any) => ({
+            id: e.id || e.endpoint_id || "",
+            name: e.name || e.endpoint_name || "",
+            status: String(e.status || e.state || e.result || "").toLowerCase(),
+          }))
+        : [];
+
+      return new Response(JSON.stringify({
+        jobId,
+        status: normalized,
+        rawStatus,
+        endpoints: endpointSummary,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (action === "run") {
       const { scriptName, endpointId } = await req.json();
       if (!scriptName || !endpointId) {

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
@@ -147,6 +147,103 @@ async function runScriptOnEndpoint(scriptName: string, endpointId: string) {
   return resp.json();
 }
 
+// --- Job Status Indicator: polls /action1?action=status until terminal state ---
+type JobState = "queued" | "running" | "completed" | "failed";
+function JobStatusIndicator({ jobId }: { jobId: string }) {
+  const [state, setState] = useState<JobState>("queued");
+  const [error, setError] = useState<string | null>(null);
+  const [elapsedSec, setElapsedSec] = useState(0);
+
+  useEffect(() => {
+    if (!jobId || jobId === "sent") return;
+    let cancelled = false;
+    const startedAt = Date.now();
+    const tick = () => setElapsedSec(Math.floor((Date.now() - startedAt) / 1000));
+    const elapsedTimer = setInterval(tick, 1000);
+
+    const poll = async () => {
+      try {
+        const resp = await fetch(
+          `${ACTION1_URL}?action=status&jobId=${encodeURIComponent(jobId)}`,
+          { headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` } }
+        );
+        const data = await resp.json();
+        if (cancelled) return;
+        if (data.error) {
+          setError(data.error);
+          return;
+        }
+        const next = data.status as JobState;
+        setState(next);
+        if (next === "completed" || next === "failed") return;
+        // Stop polling after 5 minutes safety cap
+        if (Date.now() - startedAt > 5 * 60 * 1000) {
+          setError("הזמן הקצוב חלף");
+          return;
+        }
+        setTimeout(poll, 3000);
+      } catch {
+        if (!cancelled) {
+          setError("שגיאת תקשורת בבדיקת סטטוס");
+        }
+      }
+    };
+    poll();
+
+    return () => {
+      cancelled = true;
+      clearInterval(elapsedTimer);
+    };
+  }, [jobId]);
+
+  if (!jobId || jobId === "sent") return null;
+
+  const config: Record<JobState, { icon: JSX.Element; label: string; color: string; bg: string; border: string }> = {
+    queued: {
+      icon: <Clock className="h-3 w-3" />,
+      label: "ממתין בתור",
+      color: "text-muted-foreground",
+      bg: "bg-muted/30",
+      border: "border-border",
+    },
+    running: {
+      icon: <Loader2 className="h-3 w-3 animate-spin" />,
+      label: "פועל כעת",
+      color: "text-accent",
+      bg: "bg-accent/10",
+      border: "border-accent/20",
+    },
+    completed: {
+      icon: <CircleCheck className="h-3 w-3" />,
+      label: "הושלם בהצלחה",
+      color: "text-accent",
+      bg: "bg-accent/10",
+      border: "border-accent/30",
+    },
+    failed: {
+      icon: <CircleAlert className="h-3 w-3" />,
+      label: "נכשל",
+      color: "text-destructive",
+      bg: "bg-destructive/10",
+      border: "border-destructive/20",
+    },
+  };
+
+  const c = error ? config.failed : config[state];
+
+  return (
+    <div className={`flex items-center justify-between gap-2 rounded-lg border ${c.border} ${c.bg} px-2 py-1.5`}>
+      <span className={`flex items-center gap-1.5 text-xs font-medium ${c.color}`}>
+        {c.icon}
+        {error || c.label}
+      </span>
+      <span className="text-[10px] text-muted-foreground tabular-nums" dir="ltr">
+        {elapsedSec}s
+      </span>
+    </div>
+  );
+}
+
 // --- Run Script Panel (CLIENT) ---
 // Privacy-safe: never shows other endpoints. Asks for the user's PC name,
 // looks it up server-side, and remembers the matched ID in localStorage.
@@ -157,6 +254,7 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
   const [lookingUp, setLookingUp] = useState(false);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<Endpoint[]>([]);
 
   useEffect(() => {
@@ -219,10 +317,12 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
     if (!targetId) return;
     setRunning(true);
     setResult(null);
+    setJobId(null);
     try {
       const data = await runScriptOnEndpoint(scriptName, targetId);
       if (data.success) {
-        setResult({ success: true, message: `✅ הסקריפט נשלח ל${targetName} בהצלחה!` });
+        setResult({ success: true, message: `✅ הסקריפט נשלח ל${targetName}. עוקב אחר ההרצה...` });
+        if (data.jobId) setJobId(data.jobId);
       } else {
         setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
       }
@@ -241,6 +341,7 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
     setPcNameInput("");
     setResult(null);
     setCandidates([]);
+    setJobId(null);
   };
 
   return (
@@ -349,6 +450,8 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
           {result.message}
         </p>
       )}
+
+      {jobId && <JobStatusIndicator jobId={jobId} />}
     </div>
   );
 }
@@ -361,6 +464,7 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -385,10 +489,12 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
     if (!selectedEndpoint) return;
     setRunning(true);
     setResult(null);
+    setJobId(null);
     try {
       const data = await runScriptOnEndpoint(scriptName, selectedEndpoint);
       if (data.success) {
-        setResult({ success: true, message: `✅ הסקריפט נשלח בהצלחה! (Job: ${data.jobId})` });
+        setResult({ success: true, message: `✅ הסקריפט נשלח (Job: ${data.jobId}). עוקב אחר ההרצה...` });
+        if (data.jobId) setJobId(data.jobId);
       } else {
         setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
       }
@@ -452,6 +558,8 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
           {result.message}
         </p>
       )}
+
+      {jobId && <JobStatusIndicator jobId={jobId} />}
     </div>
   );
 }
