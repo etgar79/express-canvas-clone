@@ -157,6 +157,7 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
   const [lookingUp, setLookingUp] = useState(false);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [candidates, setCandidates] = useState<Endpoint[]>([]);
 
   useEffect(() => {
     const id = localStorage.getItem(REMEMBERED_ENDPOINT_ID_KEY);
@@ -172,28 +173,44 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
     if (!name) return;
     setLookingUp(true);
     setResult(null);
+    setCandidates([]);
     try {
       const resp = await fetch(
         `${ACTION1_URL}?action=lookup&name=${encodeURIComponent(name)}`,
         { headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` } }
       );
       const data = await resp.json();
-      if (!data.found) {
-        setResult({ success: false, message: `❌ לא נמצא מחשב בשם "${name}". בדוק את האיות.` });
+      if (data.found && data.endpoint) {
+        localStorage.setItem(REMEMBERED_ENDPOINT_ID_KEY, data.endpoint.id);
+        localStorage.setItem(REMEMBERED_ENDPOINT_NAME_KEY, data.endpoint.name);
+        setRememberedId(data.endpoint.id);
+        setRememberedName(data.endpoint.name);
+        setLookingUp(false);
+        await runOnRemembered(data.endpoint.id, data.endpoint.name);
+        return;
+      }
+      // Multiple partial matches → ask the user to pick
+      if (Array.isArray(data.candidates) && data.candidates.length > 1) {
+        setCandidates(data.candidates);
+        setResult({ success: false, message: `נמצאו ${data.candidates.length} מחשבים דומים. בחר את שלך:` });
         setLookingUp(false);
         return;
       }
-      // Remember and run
-      localStorage.setItem(REMEMBERED_ENDPOINT_ID_KEY, data.endpoint.id);
-      localStorage.setItem(REMEMBERED_ENDPOINT_NAME_KEY, data.endpoint.name);
-      setRememberedId(data.endpoint.id);
-      setRememberedName(data.endpoint.name);
+      setResult({ success: false, message: `❌ לא נמצא מחשב בשם "${name}". בדוק את האיות.` });
       setLookingUp(false);
-      await runOnRemembered(data.endpoint.id, data.endpoint.name);
     } catch {
       setResult({ success: false, message: "❌ שגיאת תקשורת" });
       setLookingUp(false);
     }
+  };
+
+  const pickCandidate = async (c: Endpoint) => {
+    localStorage.setItem(REMEMBERED_ENDPOINT_ID_KEY, c.id);
+    localStorage.setItem(REMEMBERED_ENDPOINT_NAME_KEY, c.name);
+    setRememberedId(c.id);
+    setRememberedName(c.name);
+    setCandidates([]);
+    await runOnRemembered(c.id, c.name);
   };
 
   const runOnRemembered = async (id?: string, name?: string) => {
@@ -223,6 +240,7 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
     setRememberedName(null);
     setPcNameInput("");
     setResult(null);
+    setCandidates([]);
   };
 
   return (
@@ -261,6 +279,36 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
             className="text-[10px] text-muted-foreground hover:text-foreground underline"
           >
             זה לא המחשב שלי? הזן מחדש
+          </button>
+        </div>
+      ) : candidates.length > 0 ? (
+        <div className="space-y-2">
+          <p className="text-xs text-foreground/80">
+            נמצאו {candidates.length} מחשבים דומים. בחר את שלך:
+          </p>
+          <div className="space-y-1 max-h-48 overflow-y-auto">
+            {candidates.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => pickCandidate(c)}
+                disabled={running}
+                className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg border border-border hover:border-accent/50 hover:bg-accent/5 transition-colors text-xs"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Monitor className="h-3 w-3 text-accent" />
+                  <span className="font-medium text-foreground" dir="ltr">{c.name}</span>
+                </span>
+                <span className={`text-[10px] ${c.status === "online" ? "text-accent" : "text-muted-foreground"}`}>
+                  {c.status === "online" ? "● מחובר" : "○ לא מחובר"}
+                </span>
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => { setCandidates([]); setResult(null); }}
+            className="text-[10px] text-muted-foreground hover:text-foreground underline"
+          >
+            חזרה להזנה ידנית
           </button>
         </div>
       ) : (
