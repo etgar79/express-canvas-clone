@@ -450,6 +450,8 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
           {result.message}
         </p>
       )}
+
+      {jobId && <JobStatusIndicator jobId={jobId} />}
     </div>
   );
 }
