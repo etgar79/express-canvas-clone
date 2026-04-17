@@ -317,10 +317,12 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
     if (!targetId) return;
     setRunning(true);
     setResult(null);
+    setJobId(null);
     try {
       const data = await runScriptOnEndpoint(scriptName, targetId);
       if (data.success) {
-        setResult({ success: true, message: `✅ הסקריפט נשלח ל${targetName} בהצלחה!` });
+        setResult({ success: true, message: `✅ הסקריפט נשלח ל${targetName}. עוקב אחר ההרצה...` });
+        if (data.jobId) setJobId(data.jobId);
       } else {
         setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
       }
