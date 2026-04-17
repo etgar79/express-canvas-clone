@@ -489,10 +489,12 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
     if (!selectedEndpoint) return;
     setRunning(true);
     setResult(null);
+    setJobId(null);
     try {
       const data = await runScriptOnEndpoint(scriptName, selectedEndpoint);
       if (data.success) {
-        setResult({ success: true, message: `✅ הסקריפט נשלח בהצלחה! (Job: ${data.jobId})` });
+        setResult({ success: true, message: `✅ הסקריפט נשלח (Job: ${data.jobId}). עוקב אחר ההרצה...` });
+        if (data.jobId) setJobId(data.jobId);
       } else {
         setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
       }
