@@ -464,6 +464,7 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
