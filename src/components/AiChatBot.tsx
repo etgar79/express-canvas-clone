@@ -254,6 +254,7 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
   const [lookingUp, setLookingUp] = useState(false);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<Endpoint[]>([]);
 
   useEffect(() => {
