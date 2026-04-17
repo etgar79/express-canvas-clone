@@ -146,16 +146,45 @@ serve(async (req) => {
       }));
     };
 
-    // CLIENT-SAFE: lookup endpoint by name (case-insensitive). Does NOT leak the endpoint list.
+    // Soft-normalize: lowercase, strip spaces/dashes/underscores/dots, normalize unicode,
+    // and map common Hebrew↔English lookalike characters so users can type in either language.
+    const normalizeName = (raw: string): string => {
+      let s = (raw || "").normalize("NFKC").toLowerCase().trim();
+      // Remove whitespace, dashes, underscores, dots
+      s = s.replace(/[\s\-_.]+/g, "");
+      // Map visually/phonetically similar chars (Hebrew → Latin) – best-effort
+      const map: Record<string, string> = {
+        "א": "a", "ב": "b", "ג": "g", "ד": "d", "ה": "h", "ו": "v",
+        "ז": "z", "ח": "h", "ט": "t", "י": "y", "כ": "k", "ך": "k",
+        "ל": "l", "מ": "m", "ם": "m", "נ": "n", "ן": "n", "ס": "s",
+        "ע": "a", "פ": "p", "ף": "p", "צ": "ts", "ץ": "ts", "ק": "k",
+        "ר": "r", "ש": "sh", "ת": "t",
+      };
+      let out = "";
+      for (const ch of s) out += map[ch] ?? ch;
+      return out;
+    };
+
+    // CLIENT-SAFE: lookup endpoint by name with soft matching. Does NOT leak the endpoint list.
     if (action === "lookup") {
-      const name = (url.searchParams.get("name") || "").trim().toLowerCase();
-      if (!name) {
+      const rawName = url.searchParams.get("name") || "";
+      const needle = normalizeName(rawName);
+      if (!needle) {
         return new Response(JSON.stringify({ error: "חסר שם מחשב" }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const all = await fetchAllEndpoints();
-      const match = all.find((e: any) => (e.name || "").toLowerCase() === name);
+      // 1) Exact normalized match
+      let match = all.find((e: any) => normalizeName(e.name || "") === needle);
+      // 2) Fallback: contains (either direction) – only if unambiguous
+      if (!match) {
+        const partial = all.filter((e: any) => {
+          const n = normalizeName(e.name || "");
+          return n.includes(needle) || needle.includes(n);
+        });
+        if (partial.length === 1) match = partial[0];
+      }
       if (!match) {
         return new Response(JSON.stringify({ found: false }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
