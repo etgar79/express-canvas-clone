@@ -558,6 +558,8 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
           {result.message}
         </p>
       )}
+
+      {jobId && <JobStatusIndicator jobId={jobId} />}
     </div>
   );
 }
