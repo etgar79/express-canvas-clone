@@ -177,24 +177,38 @@ serve(async (req) => {
       const all = await fetchAllEndpoints();
       // 1) Exact normalized match
       let match = all.find((e: any) => normalizeName(e.name || "") === needle);
-      // 2) Fallback: contains (either direction) – only if unambiguous
-      if (!match) {
-        const partial = all.filter((e: any) => {
-          const n = normalizeName(e.name || "");
-          return n.includes(needle) || needle.includes(n);
-        });
-        if (partial.length === 1) match = partial[0];
+      // 2) Partial matches (either direction)
+      const partial = match
+        ? []
+        : all.filter((e: any) => {
+            const n = normalizeName(e.name || "");
+            return n && (n.includes(needle) || needle.includes(n));
+          });
+
+      if (!match && partial.length === 1) {
+        match = partial[0];
       }
-      if (!match) {
-        return new Response(JSON.stringify({ found: false }), {
+
+      if (match) {
+        return new Response(JSON.stringify({
+          found: true,
+          endpoint: { id: match.id, name: match.name, status: match.status },
+        }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      // Return only the matched endpoint - never the full list
-      return new Response(JSON.stringify({
-        found: true,
-        endpoint: { id: match.id, name: match.name, status: match.status },
-      }), {
+
+      // Multiple partial matches → return a small list (cap at 8) for the user to pick
+      if (partial.length > 1) {
+        const candidates = partial.slice(0, 8).map((e: any) => ({
+          id: e.id, name: e.name, status: e.status,
+        }));
+        return new Response(JSON.stringify({ found: false, candidates }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(JSON.stringify({ found: false, candidates: [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
