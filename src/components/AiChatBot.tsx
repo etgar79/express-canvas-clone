@@ -341,6 +341,7 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
     setPcNameInput("");
     setResult(null);
     setCandidates([]);
+    setJobId(null);
   };
 
   return (
