@@ -127,19 +127,6 @@ const TECH_PASSWORD = "06536368";
 
 type UserRole = "client" | "tech";
 
-// --- Copy Script Button ---
-function CopyScriptButton({ content }: { content: string }) {
-  const [copied, setCopied] = useState(false);
-  const code = extractCodeBlock(content);
-  if (!code) return null;
-  
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-// --- Copy Script Button ---
 function CopyScriptButton({ content, scriptName, userRole }: { content: string; scriptName: string | null; userRole: UserRole }) {
   const [copied, setCopied] = useState(false);
   const code = extractCodeBlock(content);
