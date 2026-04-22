@@ -34,7 +34,7 @@ serve(async (req) => {
     // --- Settings ---
     if (action === "get") {
       const { data } = await supabase.from("app_settings").select("key, value")
-        .in("key", ["ACTION1_CLIENT_ID", "ACTION1_CLIENT_SECRET", "ACTION1_ORG_ID", "TECH_PASSWORD"]);
+        .in("key", ["ACTION1_CLIENT_ID", "ACTION1_CLIENT_SECRET", "ACTION1_ORG_ID", "TECH_PASSWORD", "ONEDRIVE_FOLDER_LINK"]);
       const settings: Record<string, string> = {};
       for (const row of data || []) {
         settings[row.key] = row.key === "ACTION1_CLIENT_SECRET" ? "••••••" + (row.value?.slice(-4) || "") : row.value;
@@ -45,7 +45,7 @@ serve(async (req) => {
     if (action === "update") {
       const { settings } = body as { settings: Record<string, string> };
       if (!settings || typeof settings !== "object") return json({ error: "נתונים חסרים" }, 400);
-      const allowedKeys = ["ACTION1_CLIENT_ID", "ACTION1_CLIENT_SECRET", "ACTION1_ORG_ID", "TECH_PASSWORD"];
+      const allowedKeys = ["ACTION1_CLIENT_ID", "ACTION1_CLIENT_SECRET", "ACTION1_ORG_ID", "TECH_PASSWORD", "ONEDRIVE_FOLDER_LINK"];
       for (const [key, value] of Object.entries(settings)) {
         if (!allowedKeys.includes(key)) continue;
         if (key === "ACTION1_CLIENT_SECRET" && value.startsWith("••••")) continue;
