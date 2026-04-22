@@ -13,6 +13,18 @@ function getSupabase() {
   );
 }
 
+// Fire-and-forget audit log helper
+async function logAudit(
+  supabase: ReturnType<typeof getSupabase>,
+  entry: { action: string; resource_type?: string; resource_id?: string; resource_name?: string; details?: Record<string, unknown> },
+) {
+  try {
+    await supabase.from("audit_log").insert({ ...entry, actor: "tech" });
+  } catch (e) {
+    console.error("audit log error:", e);
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
