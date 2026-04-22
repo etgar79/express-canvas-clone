@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
-import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe } from "lucide-react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const SETTINGS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/settings`;
 
@@ -32,23 +34,58 @@ async function apiCall(password: string, action: string, extra: Record<string, u
   return resp.json();
 }
 
+// Sanitize a script name into a safe filename
+function toSafeFilename(name: string) {
+  const cleaned = name
+    .replace(/[\\/:*?"<>|]+/g, "")
+    .replace(/\s+/g, "_")
+    .trim()
+    .slice(0, 80);
+  return cleaned || "script";
+}
+
+function downloadScriptFile(s: Script) {
+  const blob = new Blob([s.script], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${toSafeFilename(s.name)}.ps1`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 // --- Script Editor Modal ---
 function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onSave: (s: Script) => void; onCancel: () => void }) {
   const [form, setForm] = useState<Script>(script || { name: "", description: "", script: "", category: "כללי", is_public: false });
 
+  // Esc to close
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && form.name.trim() && form.script.trim()) {
+        e.preventDefault();
+        onSave(form);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [form, onCancel, onSave]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl">
-      <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl" onClick={onCancel}>
+      <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl space-y-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-foreground">{script?.id ? "עריכת סקריפט" : "סקריפט חדש"}</h3>
-          <button onClick={onCancel} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
+          <button onClick={onCancel} className="text-muted-foreground hover:text-foreground" aria-label="סגור"><X className="h-5 w-5" /></button>
         </div>
 
         <div className="space-y-3">
           <div>
             <label className="text-xs font-medium text-foreground/70 block mb-1">שם</label>
             <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50" />
+              className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50" autoFocus />
           </div>
           <div>
             <label className="text-xs font-medium text-foreground/70 block mb-1">תיאור</label>
@@ -76,12 +113,13 @@ function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onS
           </div>
         </div>
 
-        <div className="flex gap-2 pt-2">
+        <div className="flex items-center gap-2 pt-2">
           <Button onClick={() => onSave(form)} disabled={!form.name.trim() || !form.script.trim()}
             className="flex-1 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
             <Save className="h-4 w-4 mr-1" /> שמור
           </Button>
           <Button variant="outline" onClick={onCancel} className="rounded-xl">ביטול</Button>
+          <span className="text-[10px] text-muted-foreground hidden sm:inline">Ctrl+Enter לשמירה • Esc לסגירה</span>
         </div>
       </div>
     </div>
@@ -109,6 +147,9 @@ export default function TechDashboard() {
   const [expandedScript, setExpandedScript] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [publicOnly, setPublicOnly] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const copyScript = async (s: Script) => {
     try {
@@ -165,12 +206,10 @@ export default function TechDashboard() {
   };
 
   const togglePublic = async (s: Script) => {
-    // Optimistic update
     setScripts(prev => prev.map(x => x.id === s.id ? { ...x, is_public: !s.is_public } : x));
     const updated = { ...s, is_public: !s.is_public };
     const data = await apiCall(password, "save_script", { script: updated });
     if (data?.error) {
-      // Revert on failure
       setScripts(prev => prev.map(x => x.id === s.id ? s : x));
     }
   };
@@ -209,15 +248,56 @@ export default function TechDashboard() {
 
   const toggleShow = (key: string) => setShowSecrets(prev => ({ ...prev, [key]: !prev[key] }));
 
-  // Filter & group scripts by category
+  // Keyboard shortcuts: Ctrl+K (search), Ctrl+N (new script)
+  useEffect(() => {
+    if (!isUnlocked) return;
+    const handler = (e: KeyboardEvent) => {
+      const isMod = e.ctrlKey || e.metaKey;
+      if (!isMod) return;
+      // Skip when typing in an input/textarea (except for Ctrl+K which is universal)
+      const target = e.target as HTMLElement;
+      const inEditable = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
+
+      if (e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setActiveTab("scripts");
+        setTimeout(() => searchRef.current?.focus(), 50);
+      } else if (e.key.toLowerCase() === "n" && !inEditable && !editingScript) {
+        e.preventDefault();
+        setActiveTab("scripts");
+        setEditingScript("new");
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isUnlocked, editingScript]);
+
+  // All categories (unique, sorted)
+  const allCategories = useMemo(() => {
+    const set = new Set(scripts.map(s => s.category || "כללי"));
+    return Array.from(set).sort();
+  }, [scripts]);
+
+  // Counts per category for chips
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of scripts) counts[s.category || "כללי"] = (counts[s.category || "כללי"] || 0) + 1;
+    return counts;
+  }, [scripts]);
+
+  // Filter & group scripts
   const q = searchQuery.trim().toLowerCase();
-  const filtered = q
-    ? scripts.filter(s =>
-        s.name.toLowerCase().includes(q) ||
-        s.description?.toLowerCase().includes(q) ||
-        s.category?.toLowerCase().includes(q) ||
-        s.script.toLowerCase().includes(q))
-    : scripts;
+  const filtered = scripts.filter(s => {
+    if (publicOnly && !s.is_public) return false;
+    if (activeCategory !== "all" && (s.category || "כללי") !== activeCategory) return false;
+    if (!q) return true;
+    return (
+      s.name.toLowerCase().includes(q) ||
+      s.description?.toLowerCase().includes(q) ||
+      s.category?.toLowerCase().includes(q) ||
+      s.script.toLowerCase().includes(q)
+    );
+  });
   const grouped = filtered.reduce((acc, s) => {
     (acc[s.category] = acc[s.category] || []).push(s);
     return acc;
@@ -292,8 +372,8 @@ export default function TechDashboard() {
         {activeTab === "scripts" && (
           <div className="space-y-4">
             {/* Actions bar */}
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={() => setEditingScript("new")} className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground" size="sm">
+            <div className="flex flex-wrap gap-2 items-center">
+              <Button onClick={() => setEditingScript("new")} className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground" size="sm" title="קיצור: Ctrl+N">
                 <Plus className="h-4 w-4 mr-1" /> סקריפט חדש
               </Button>
               <Button onClick={syncFromSheets} disabled={syncing} variant="outline" size="sm" className="rounded-xl">
@@ -304,6 +384,12 @@ export default function TechDashboard() {
                 {syncing ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Cloud className="h-4 w-4 mr-1" />}
                 סנכרן מ-OneDrive
               </Button>
+              <button
+                onClick={() => setPublicOnly(p => !p)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-colors flex items-center gap-1.5 ${publicOnly ? "bg-accent/10 text-accent border-accent/30" : "bg-background text-muted-foreground border-border hover:text-foreground"}`}
+                title="הצג רק סקריפטים שהבוט יראה ללקוחות">
+                <Globe className="h-3.5 w-3.5" /> ציבורי בלבד
+              </button>
               {syncResult && <span className="text-xs self-center">{syncResult}</span>}
             </div>
 
@@ -311,10 +397,11 @@ export default function TechDashboard() {
             <div className="relative">
               <Search className="h-4 w-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
+                ref={searchRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="חיפוש לפי שם, תיאור, קטגוריה או תוכן..."
+                placeholder="חיפוש לפי שם, תיאור, קטגוריה או תוכן... (Ctrl+K)"
                 className="w-full pr-10 pl-10 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50"
               />
               {searchQuery && (
@@ -328,6 +415,26 @@ export default function TechDashboard() {
               )}
             </div>
 
+            {/* Category chips */}
+            {allCategories.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 items-center">
+                <Filter className="h-3.5 w-3.5 text-muted-foreground ml-1" />
+                <button
+                  onClick={() => setActiveCategory("all")}
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${activeCategory === "all" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+                  הכל ({scripts.length})
+                </button>
+                {allCategories.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${activeCategory === cat ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+                    {cat} ({categoryCounts[cat]})
+                  </button>
+                ))}
+              </div>
+            )}
+
             {scriptsLoading ? (
               <div className="flex items-center justify-center py-12 text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin mr-2" /> טוען סקריפטים...
@@ -340,7 +447,7 @@ export default function TechDashboard() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Search className="h-10 w-10 mx-auto mb-3 opacity-30" />
-                <p>לא נמצאו תוצאות עבור "{searchQuery}"</p>
+                <p>לא נמצאו תוצאות{searchQuery ? ` עבור "${searchQuery}"` : ""}</p>
               </div>
             ) : (
               Object.entries(grouped).map(([cat, catScripts]) => (
@@ -378,6 +485,12 @@ export default function TechDashboard() {
                             title="העתק סקריפט">
                             {copiedId === s.id ? <Check className="h-3.5 w-3.5 text-accent" /> : <Copy className="h-3.5 w-3.5" />}
                           </button>
+                          <button onClick={(e) => { e.stopPropagation(); downloadScriptFile(s); }}
+                            className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
+                            aria-label="הורד כקובץ .ps1"
+                            title="הורד כקובץ .ps1">
+                            <Download className="h-3.5 w-3.5" />
+                          </button>
                           <button onClick={(e) => { e.stopPropagation(); setEditingScript(s); }}
                             className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
                             aria-label="ערוך סקריפט">
@@ -394,9 +507,16 @@ export default function TechDashboard() {
                       {expandedScript === s.id && (
                         <div className="px-4 pb-3 space-y-2 border-t border-border pt-2">
                           {s.description && <p className="text-xs text-foreground/60">{s.description}</p>}
-                          <pre className="bg-background border border-border rounded-lg p-3 text-xs font-mono overflow-x-auto max-h-48 whitespace-pre-wrap" dir="ltr">
-                            {s.script}
-                          </pre>
+                          <div className="rounded-lg overflow-hidden border border-border max-h-72 overflow-y-auto" dir="ltr">
+                            <SyntaxHighlighter
+                              language="powershell"
+                              style={vscDarkPlus}
+                              customStyle={{ margin: 0, padding: "0.75rem", fontSize: "0.75rem", background: "hsl(var(--background))" }}
+                              wrapLongLines
+                            >
+                              {s.script}
+                            </SyntaxHighlighter>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -404,6 +524,11 @@ export default function TechDashboard() {
                 </div>
               ))
             )}
+
+            {/* Keyboard shortcuts hint */}
+            <p className="text-[10px] text-muted-foreground text-center pt-2">
+              קיצורי מקלדת: <kbd className="px-1 py-0.5 rounded bg-muted text-foreground/70">Ctrl+K</kbd> חיפוש • <kbd className="px-1 py-0.5 rounded bg-muted text-foreground/70">Ctrl+N</kbd> סקריפט חדש • <kbd className="px-1 py-0.5 rounded bg-muted text-foreground/70">Esc</kbd> סגירה
+            </p>
           </div>
         )}
 
