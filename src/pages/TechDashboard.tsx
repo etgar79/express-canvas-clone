@@ -34,7 +34,7 @@ async function apiCall(password: string, action: string, extra: Record<string, u
 
 // --- Script Editor Modal ---
 function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onSave: (s: Script) => void; onCancel: () => void }) {
-  const [form, setForm] = useState<Script>(script || { name: "", description: "", script: "", category: "כללי", is_public: true });
+  const [form, setForm] = useState<Script>(script || { name: "", description: "", script: "", category: "כללי", is_public: false });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl">
