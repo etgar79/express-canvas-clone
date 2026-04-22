@@ -865,6 +865,16 @@ export const AiChatBot = () => {
               )}
             </div>
             <div className="flex items-center gap-1">
+              {isUnlocked && messages.length > 0 && (
+                <button
+                  onClick={clearHistory}
+                  className="text-muted-foreground hover:text-destructive transition-colors p-1 rounded-lg hover:bg-destructive/10"
+                  title="נקה שיחה"
+                  aria-label="נקה שיחה"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
               {isUnlocked && userRole === "tech" && (
                 <Link
                   to="/tech-dashboard"
@@ -904,33 +914,50 @@ export const AiChatBot = () => {
             <>
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.length === 0 && (
-                  <div className="text-center text-muted-foreground text-sm py-8">
-                    <Bot className="h-10 w-10 mx-auto mb-3 text-accent/50" />
-                    <p className="font-medium text-foreground/70">שלום! 👋</p>
-                    <p className="mt-1">אני הבוט של אתגר.</p>
-                    <p>ספרו לי מה התקלה ואמצא לכם פתרון!</p>
+                  <div className="text-center py-4 animate-fade-in">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent/15 mb-3">
+                      <Bot className="h-8 w-8 text-accent" />
+                    </div>
+                    <p className="text-base font-bold text-foreground">היי, אני אתגר 👋</p>
+                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                      ספר לי בקצרה מה התקלה<br/>ואמצא לך פתרון מהיר
+                    </p>
+                    <div className="mt-5 grid grid-cols-2 gap-2">
+                      {SUGGESTED_QUESTIONS.map((q, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => sendText(q.text)}
+                          className="chip-pop-in flex items-center justify-center gap-1.5 text-xs font-medium text-foreground bg-accent/5 hover:bg-accent/15 border border-accent/20 hover:border-accent/40 rounded-xl px-2 py-2.5 transition-colors"
+                          style={{ animationDelay: `${idx * 70}ms` }}
+                        >
+                          <span className="text-accent">{q.icon}</span>
+                          <span className="text-right">{q.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-4">
+                      או פשוט כתוב לי בשפה חופשית 👇
+                    </p>
                   </div>
                 )}
 
                 {messages.map((msg, i) => (
-                  <div key={i}>
+                  <div key={i} className="animate-fade-in">
                     <div className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                       <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs ${
                         msg.role === "assistant" ? "bg-accent/15 text-accent" : "bg-primary/15 text-primary"
                       }`}>
                         {msg.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
                       </div>
-                      <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
+                      <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
                         msg.role === "user"
                           ? "bg-accent/10 border border-accent/20 text-foreground"
                           : "bg-muted/50 border border-border text-foreground/85"
                       }`}>
                         {msg.role === "assistant" ? (
-                          <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                            <ReactMarkdown>{stripTags(msg.content)}</ReactMarkdown>
-                          </div>
+                          <MarkdownRenderer content={stripTags(msg.content)} />
                         ) : (
-                          <p>{msg.content}</p>
+                          <p className="whitespace-pre-wrap">{msg.content}</p>
                         )}
                       </div>
                     </div>
@@ -973,13 +1000,32 @@ export const AiChatBot = () => {
                   </div>
                 ))}
 
-                {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-                  <div className="flex gap-2">
-                    <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-accent/15 text-accent">
-                      <Bot className="h-4 w-4" />
+                {isLoading && messages[messages.length - 1]?.role !== "assistant" && <TypingIndicator />}
+
+                {/* Idle nudge: shown after silence following an assistant reply */}
+                {showIdleNudge && !isLoading && (
+                  <div className="animate-fade-in flex flex-col gap-1.5 items-start mr-9">
+                    <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" />
+                      הצעות מהירות
                     </div>
-                    <div className="bg-muted/50 border border-border rounded-xl px-3 py-2">
-                      <Loader2 className="h-4 w-4 animate-spin text-accent" />
+                    <div className="flex flex-wrap gap-1.5">
+                      {IDLE_SUGGESTIONS.map((s, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            if (idx === 2) {
+                              window.open("https://wa.me/972545368629", "_blank", "noopener");
+                              setShowIdleNudge(false);
+                            } else {
+                              sendText(s);
+                            }
+                          }}
+                          className="text-xs text-foreground/80 bg-card hover:bg-accent/10 border border-border hover:border-accent/30 rounded-full px-2.5 py-1 transition-colors"
+                        >
+                          {s}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -1007,11 +1053,17 @@ export const AiChatBot = () => {
                     <Send className="h-4 w-4" />
                   </Button>
                 </form>
+                {messages.length >= 18 && (
+                  <p className="text-[10px] text-muted-foreground mt-1.5 text-center">
+                    💡 שיחה ארוכה — מומלץ לנקות ולפתוח מחדש לחיסכון
+                  </p>
+                )}
               </div>
             </>
           )}
         </div>
       )}
     </>
+
   );
 };
