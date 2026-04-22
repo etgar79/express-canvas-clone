@@ -537,6 +537,9 @@ export default function TechDashboard() {
           </div>
         )}
 
+        {/* Analytics Tab */}
+        {activeTab === "analytics" && <AnalyticsTab password={password} />}
+
         {/* Settings Tab */}
         {activeTab === "settings" && (
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-5">
