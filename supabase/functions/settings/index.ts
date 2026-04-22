@@ -58,12 +58,15 @@ serve(async (req) => {
       const { settings } = body as { settings: Record<string, string> };
       if (!settings || typeof settings !== "object") return json({ error: "נתונים חסרים" }, 400);
       const allowedKeys = ["ACTION1_CLIENT_ID", "ACTION1_CLIENT_SECRET", "ACTION1_ORG_ID", "TECH_PASSWORD", "ONEDRIVE_FOLDER_LINK"];
+      const changedKeys: string[] = [];
       for (const [key, value] of Object.entries(settings)) {
         if (!allowedKeys.includes(key)) continue;
         if (key === "ACTION1_CLIENT_SECRET" && value.startsWith("••••")) continue;
         if (!value || typeof value !== "string" || value.length > 500) continue;
         await supabase.from("app_settings").upsert({ key, value: value.trim(), updated_at: new Date().toISOString() });
+        changedKeys.push(key);
       }
+      if (changedKeys.length) await logAudit(supabase, { action: "settings_update", resource_type: "settings", details: { keys: changedKeys } });
       return json({ success: true });
     }
 
@@ -90,9 +93,11 @@ serve(async (req) => {
       if (script.id) {
         const { error } = await supabase.from("scripts").update(row).eq("id", script.id);
         if (error) return json({ error: error.message }, 500);
+        await logAudit(supabase, { action: "script_update", resource_type: "script", resource_id: script.id, resource_name: row.name });
       } else {
-        const { error } = await supabase.from("scripts").insert(row);
+        const { data: inserted, error } = await supabase.from("scripts").insert(row).select("id").single();
         if (error) return json({ error: error.message }, 500);
+        await logAudit(supabase, { action: "script_create", resource_type: "script", resource_id: inserted?.id, resource_name: row.name });
       }
       return json({ success: true });
     }
@@ -100,8 +105,10 @@ serve(async (req) => {
     if (action === "delete_script") {
       const { scriptId } = body;
       if (!scriptId) return json({ error: "מזהה חסר" }, 400);
+      const { data: existing } = await supabase.from("scripts").select("name").eq("id", scriptId).maybeSingle();
       const { error } = await supabase.from("scripts").delete().eq("id", scriptId);
       if (error) return json({ error: error.message }, 500);
+      await logAudit(supabase, { action: "script_delete", resource_type: "script", resource_id: scriptId, resource_name: existing?.name });
       return json({ success: true });
     }
 
