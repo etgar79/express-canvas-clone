@@ -715,12 +715,23 @@ export const AiChatBot = () => {
   const [userRole, setUserRole] = useState<UserRole>("client");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([]);
+  const [messages, setMessages] = useState<Msg[]>(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.slice(-HISTORY_MAX);
+      }
+    } catch { /* ignore */ }
+    return [];
+  });
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [runScriptIndex, setRunScriptIndex] = useState<number | null>(null);
+  const [showIdleNudge, setShowIdleNudge] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -730,6 +741,26 @@ export const AiChatBot = () => {
     if (isOpen && !isUnlocked) return;
     if (isOpen && inputRef.current) inputRef.current.focus();
   }, [isOpen, isUnlocked]);
+
+  // Persist conversation (saves credits — no re-fetch needed on reload)
+  useEffect(() => {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-HISTORY_MAX)));
+    } catch { /* ignore quota */ }
+  }, [messages]);
+
+  // Idle nudge: gentle suggestion after silence
+  useEffect(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    setShowIdleNudge(false);
+    if (!isOpen || !isUnlocked || isLoading) return;
+    if (messages.length < 2) return;
+    if (messages[messages.length - 1]?.role !== "assistant") return;
+    idleTimerRef.current = setTimeout(() => setShowIdleNudge(true), IDLE_TIMEOUT_MS);
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    };
+  }, [messages, isOpen, isUnlocked, isLoading]);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -746,11 +777,21 @@ export const AiChatBot = () => {
     }
   };
 
-  const send = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
+  const clearHistory = () => {
+    if (messages.length === 0) return;
+    if (!confirm("למחוק את כל השיחה?")) return;
+    setMessages([]);
+    setRunScriptIndex(null);
+    setShowIdleNudge(false);
+    try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
+  };
 
-    const userMsg: Msg = { role: "user", content: text };
+  const sendText = async (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed || isLoading) return;
+    setShowIdleNudge(false);
+
+    const userMsg: Msg = { role: "user", content: trimmed };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
@@ -777,8 +818,7 @@ export const AiChatBot = () => {
         if (sn) {
           logUsage(sn, "suggested", userRole);
         } else if (isNoMatch(assistantSoFar)) {
-          // Log the user question for the techs to discover gaps
-          supabase.functions.invoke("log-bot-miss", { body: { question: text, userRole } }).then(() => {});
+          supabase.functions.invoke("log-bot-miss", { body: { question: trimmed, userRole } }).then(() => {});
         }
       },
       onError: (err) => {
@@ -786,6 +826,10 @@ export const AiChatBot = () => {
         setIsLoading(false);
       },
     });
+  };
+
+  const send = async () => {
+    await sendText(input);
   };
 
   return (
