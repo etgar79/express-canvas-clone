@@ -107,6 +107,16 @@ export default function TechDashboard() {
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState("");
   const [expandedScript, setExpandedScript] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyScript = async (s: Script) => {
+    try {
+      await navigator.clipboard.writeText(s.script);
+      setCopiedId(s.id || null);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch { /* ignore */ }
+  };
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
