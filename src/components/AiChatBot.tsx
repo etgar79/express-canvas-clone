@@ -676,9 +676,21 @@ export const AiChatBot = () => {
                 </span>
               )}
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-              <X className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              {isUnlocked && userRole === "tech" && (
+                <Link
+                  to="/tech-dashboard"
+                  className="text-muted-foreground hover:text-accent transition-colors p-1 rounded-lg hover:bg-accent/10"
+                  title="דשבורד טכנאים"
+                  aria-label="דשבורד טכנאים"
+                >
+                  <Settings className="h-4 w-4" />
+                </Link>
+              )}
+              <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors p-1" aria-label="סגור">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {!isUnlocked ? (
