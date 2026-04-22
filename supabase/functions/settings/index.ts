@@ -155,3 +155,108 @@ function parseCSVLine(line: string): string[] {
   result.push(current);
   return result;
 }
+
+// --- OneDrive sync helpers ---
+
+// Convert a OneDrive share URL to a Microsoft Graph "shares" API token
+// per https://learn.microsoft.com/graph/api/shares-get
+function shareLinkToToken(shareUrl: string): string {
+  const base64 = btoa(shareUrl).replace(/=+$/, "").replace(/\//g, "_").replace(/\+/g, "-");
+  return "u!" + base64;
+}
+
+type OneDriveItem = {
+  id: string;
+  name: string;
+  file?: { mimeType?: string };
+  folder?: unknown;
+  size?: number;
+  "@microsoft.graph.downloadUrl"?: string;
+};
+
+async function syncFromOneDrive(shareUrl: string, supabase: ReturnType<typeof getSupabase>) {
+  const token = shareLinkToToken(shareUrl);
+  // Use the public shares endpoint (anonymous, no auth needed for "anyone with the link" shares)
+  const driveItemUrl = `https://graph.microsoft.com/v1.0/shares/${token}/driveItem`;
+
+  const itemResp = await fetch(driveItemUrl);
+  if (!itemResp.ok) {
+    throw new Error(`OneDrive: לא ניתן לגשת ללינק (${itemResp.status}). ודא שהשיתוף מוגדר ל"כל מי שיש לו את הלינק".`);
+  }
+  const item = await itemResp.json() as OneDriveItem;
+
+  // Fetch children of the folder
+  const childrenUrl = `https://graph.microsoft.com/v1.0/shares/${token}/driveItem/children?$top=200`;
+  const childResp = await fetch(childrenUrl);
+  if (!childResp.ok) throw new Error(`OneDrive: שגיאה בקריאת תוכן התיקייה (${childResp.status})`);
+  const childData = await childResp.json() as { value: OneDriveItem[] };
+
+  const files = (childData.value || []).filter(f => f.file && /\.(ps1|txt)$/i.test(f.name));
+  if (files.length === 0) {
+    return { imported: 0, updated: 0, failed: 0, message: `לא נמצאו קבצי .ps1/.txt בתיקייה "${item.name}"` };
+  }
+
+  let imported = 0, updated = 0, failed = 0;
+  const errors: string[] = [];
+
+  for (const f of files) {
+    try {
+      const dl = f["@microsoft.graph.downloadUrl"];
+      if (!dl) { failed++; errors.push(`${f.name}: חסר downloadUrl`); continue; }
+
+      const contentResp = await fetch(dl);
+      if (!contentResp.ok) { failed++; errors.push(`${f.name}: ${contentResp.status}`); continue; }
+      const raw = await contentResp.text();
+
+      const meta = parseScriptMetadata(raw, f.name);
+      if (!meta.script.trim()) { failed++; errors.push(`${f.name}: ריק`); continue; }
+
+      const { data: existing } = await supabase.from("scripts").select("id").eq("name", meta.name).maybeSingle();
+      if (existing) {
+        await supabase.from("scripts").update({
+          script: meta.script,
+          description: meta.description,
+          category: meta.category,
+          is_public: meta.is_public,
+          updated_at: new Date().toISOString(),
+        }).eq("id", existing.id);
+        updated++;
+      } else {
+        await supabase.from("scripts").insert(meta);
+        imported++;
+      }
+    } catch (e) {
+      failed++;
+      errors.push(`${f.name}: ${e instanceof Error ? e.message : "שגיאה"}`);
+    }
+  }
+
+  return { imported, updated, failed, total: files.length, folder: item.name, errors: errors.slice(0, 5) };
+}
+
+// Parse `# @key: value` metadata comments from the top of a PowerShell file
+function parseScriptMetadata(raw: string, fileName: string) {
+  const meta: Record<string, string> = {};
+  const lines = raw.split(/\r?\n/);
+  let bodyStart = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line === "") { bodyStart = i + 1; continue; }
+    const m = line.match(/^#\s*@(\w+)\s*:\s*(.+)$/);
+    if (m) {
+      meta[m[1].toLowerCase()] = m[2].trim();
+      bodyStart = i + 1;
+    } else {
+      break;
+    }
+  }
+  const body = lines.slice(bodyStart).join("\n").trim();
+  const defaultName = fileName.replace(/\.(ps1|txt)$/i, "").trim();
+  return {
+    name: (meta.name || defaultName).slice(0, 200),
+    description: (meta.description || "").slice(0, 500),
+    category: (meta.category || "כללי").slice(0, 50),
+    is_public: meta.public ? meta.public.toLowerCase() !== "false" : true,
+    script: body,
+  };
+}
