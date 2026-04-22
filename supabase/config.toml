@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.settings]
 verify_jwt = false
+
+[functions.explain-script]
+verify_jwt = false
+
+[functions.log-bot-miss]
+verify_jwt = false

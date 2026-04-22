@@ -112,6 +112,16 @@ function extractScriptContext(content: string): string | null {
   return null;
 }
 
+// Detect bot couldn't find a matching script
+function isNoMatch(content: string): boolean {
+  return /\[NO_MATCH\]/.test(content);
+}
+
+// Strip control tags from user-facing message
+function stripTags(content: string): string {
+  return content.replace(/\[SCRIPT_NAME:[^\]]+\]/g, "").replace(/\[NO_MATCH\]/g, "").trim();
+}
+
 // Extract code block content for copying
 function extractCodeBlock(content: string): string | null {
   const match = content.match(/```[\w]*\n?([\s\S]*?)```/);
@@ -759,7 +769,12 @@ export const AiChatBot = () => {
       onDone: () => {
         setIsLoading(false);
         const sn = extractScriptContext(assistantSoFar);
-        if (sn) logUsage(sn, "suggested", userRole);
+        if (sn) {
+          logUsage(sn, "suggested", userRole);
+        } else if (isNoMatch(assistantSoFar)) {
+          // Log the user question for the techs to discover gaps
+          supabase.functions.invoke("log-bot-miss", { body: { question: text, userRole } }).then(() => {});
+        }
       },
       onError: (err) => {
         setMessages(prev => [...prev, { role: "assistant", content: `⚠️ ${err}` }]);
@@ -863,7 +878,7 @@ export const AiChatBot = () => {
                       }`}>
                         {msg.role === "assistant" ? (
                           <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                            <ReactMarkdown>{msg.content.replace(/\[SCRIPT_NAME:[^\]]+\]/g, "")}</ReactMarkdown>
+                            <ReactMarkdown>{stripTags(msg.content)}</ReactMarkdown>
                           </div>
                         ) : (
                           <p>{msg.content}</p>

@@ -32,6 +32,63 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_log: {
+        Row: {
+          action: string
+          actor: string
+          created_at: string
+          details: Json | null
+          id: string
+          resource_id: string | null
+          resource_name: string | null
+          resource_type: string | null
+        }
+        Insert: {
+          action: string
+          actor?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          resource_id?: string | null
+          resource_name?: string | null
+          resource_type?: string | null
+        }
+        Update: {
+          action?: string
+          actor?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          resource_id?: string | null
+          resource_name?: string | null
+          resource_type?: string | null
+        }
+        Relationships: []
+      }
+      bot_misses: {
+        Row: {
+          created_at: string
+          id: string
+          question: string
+          resolved: boolean
+          user_role: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          question: string
+          resolved?: boolean
+          user_role?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          question?: string
+          resolved?: boolean
+          user_role?: string | null
+        }
+        Relationships: []
+      }
       script_ratings: {
         Row: {
           created_at: string

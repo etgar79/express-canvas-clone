@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter } from "lucide-react";
+import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { AnalyticsTab } from "@/components/AnalyticsTab";
 
 const SETTINGS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/settings`;
 
@@ -136,7 +137,7 @@ export default function TechDashboard() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
-  const [activeTab, setActiveTab] = useState<"settings" | "scripts">("scripts");
+  const [activeTab, setActiveTab] = useState<"settings" | "scripts" | "analytics">("scripts");
 
   // Scripts state
   const [scripts, setScripts] = useState<Script[]>([]);
@@ -357,10 +358,14 @@ export default function TechDashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button onClick={() => setActiveTab("scripts")}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "scripts" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <Terminal className="h-4 w-4 inline mr-1" /> סקריפטים
+          </button>
+          <button onClick={() => setActiveTab("analytics")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "analytics" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <BarChart3 className="h-4 w-4 inline mr-1" /> אנליטיקה
           </button>
           <button onClick={() => setActiveTab("settings")}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "settings" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
@@ -531,6 +536,9 @@ export default function TechDashboard() {
             </p>
           </div>
         )}
+
+        {/* Analytics Tab */}
+        {activeTab === "analytics" && <AnalyticsTab password={password} />}
 
         {/* Settings Tab */}
         {activeTab === "settings" && (
