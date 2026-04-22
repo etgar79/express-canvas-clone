@@ -119,6 +119,20 @@ serve(async (req) => {
       return json({ success: true, imported });
     }
 
+    if (action === "sync_from_onedrive") {
+      const { data: linkRow } = await supabase.from("app_settings").select("value").eq("key", "ONEDRIVE_FOLDER_LINK").single();
+      const folderLink = linkRow?.value?.trim();
+      if (!folderLink) return json({ error: "לא הוגדר לינק OneDrive בהגדרות" }, 400);
+
+      try {
+        const result = await syncFromOneDrive(folderLink, supabase);
+        return json({ success: true, ...result });
+      } catch (e) {
+        console.error("onedrive sync error:", e);
+        return json({ error: e instanceof Error ? e.message : "שגיאה בסנכרון מ-OneDrive" }, 500);
+      }
+    }
+
     return json({ error: "פעולה לא מוכרת" }, 400);
   } catch (e) {
     console.error("settings error:", e);
