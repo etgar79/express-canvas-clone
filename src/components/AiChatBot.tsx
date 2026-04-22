@@ -769,7 +769,12 @@ export const AiChatBot = () => {
       onDone: () => {
         setIsLoading(false);
         const sn = extractScriptContext(assistantSoFar);
-        if (sn) logUsage(sn, "suggested", userRole);
+        if (sn) {
+          logUsage(sn, "suggested", userRole);
+        } else if (isNoMatch(assistantSoFar)) {
+          // Log the user question for the techs to discover gaps
+          supabase.functions.invoke("log-bot-miss", { body: { question: text, userRole } }).then(() => {});
+        }
       },
       onError: (err) => {
         setMessages(prev => [...prev, { role: "assistant", content: `⚠️ ${err}` }]);
