@@ -198,7 +198,7 @@ async function syncFromOneDrive(
   const headers = gatewayHeaders(lovableKey, onedriveKey);
 
   // Resolve the shared folder via Graph "shares" endpoint, proxied through the Lovable gateway (handles OAuth)
-  const driveItemUrl = `${ONEDRIVE_GATEWAY}/v1.0/shares/${token}/driveItem`;
+  const driveItemUrl = `${ONEDRIVE_GATEWAY}/shares/${token}/driveItem`;
   const itemResp = await fetch(driveItemUrl, { headers });
   if (!itemResp.ok) {
     const body = await itemResp.text();
@@ -206,7 +206,7 @@ async function syncFromOneDrive(
   }
   const item = await itemResp.json() as OneDriveItem;
 
-  const childrenUrl = `${ONEDRIVE_GATEWAY}/v1.0/shares/${token}/driveItem/children?$top=200`;
+  const childrenUrl = `${ONEDRIVE_GATEWAY}/shares/${token}/driveItem/children?$top=200`;
   const childResp = await fetch(childrenUrl, { headers });
   if (!childResp.ok) {
     const body = await childResp.text();
