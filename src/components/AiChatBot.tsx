@@ -873,7 +873,7 @@ export const AiChatBot = () => {
                       }`}>
                         {msg.role === "assistant" ? (
                           <div className="prose prose-sm max-w-none [&_pre]:bg-background [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-2 [&_pre]:text-xs [&_pre]:overflow-x-auto [&_code]:text-accent [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1" dir="auto">
-                            <ReactMarkdown>{msg.content.replace(/\[SCRIPT_NAME:[^\]]+\]/g, "")}</ReactMarkdown>
+                            <ReactMarkdown>{stripTags(msg.content)}</ReactMarkdown>
                           </div>
                         ) : (
                           <p>{msg.content}</p>
