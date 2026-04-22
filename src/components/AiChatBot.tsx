@@ -112,6 +112,16 @@ function extractScriptContext(content: string): string | null {
   return null;
 }
 
+// Detect bot couldn't find a matching script
+function isNoMatch(content: string): boolean {
+  return /\[NO_MATCH\]/.test(content);
+}
+
+// Strip control tags from user-facing message
+function stripTags(content: string): string {
+  return content.replace(/\[SCRIPT_NAME:[^\]]+\]/g, "").replace(/\[NO_MATCH\]/g, "").trim();
+}
+
 // Extract code block content for copying
 function extractCodeBlock(content: string): string | null {
   const match = content.match(/```[\w]*\n?([\s\S]*?)```/);
