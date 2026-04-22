@@ -271,6 +271,10 @@ export default function TechDashboard() {
                 {syncing ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <RefreshCw className="h-4 w-4 mr-1" />}
                 ייבוא מגיליון
               </Button>
+              <Button onClick={syncFromOneDrive} disabled={syncing} variant="outline" size="sm" className="rounded-xl">
+                {syncing ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Cloud className="h-4 w-4 mr-1" />}
+                סנכרן מ-OneDrive
+              </Button>
               {syncResult && <span className="text-xs self-center">{syncResult}</span>}
             </div>
 
