@@ -208,6 +208,17 @@ serve(async (req) => {
 
     // CLIENT-SAFE: lookup endpoint by name with soft matching. Does NOT leak the endpoint list.
     if (action === "lookup") {
+      const ip = getClientIp(req);
+      const rl = checkRateLimit(ip, "lookup");
+      if (!rl.allowed) {
+        return new Response(
+          JSON.stringify({ error: `יותר מדי בקשות. נסה שוב בעוד ${rl.retryAfter} שניות.` }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(rl.retryAfter) },
+          }
+        );
+      }
       const rawName = url.searchParams.get("name") || "";
       const needle = normalizeName(rawName);
       if (!needle) {
