@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud } from "lucide-react";
+import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -34,7 +34,7 @@ async function apiCall(password: string, action: string, extra: Record<string, u
 
 // --- Script Editor Modal ---
 function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onSave: (s: Script) => void; onCancel: () => void }) {
-  const [form, setForm] = useState<Script>(script || { name: "", description: "", script: "", category: "כללי", is_public: true });
+  const [form, setForm] = useState<Script>(script || { name: "", description: "", script: "", category: "כללי", is_public: false });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl">
@@ -107,6 +107,16 @@ export default function TechDashboard() {
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState("");
   const [expandedScript, setExpandedScript] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyScript = async (s: Script) => {
+    try {
+      await navigator.clipboard.writeText(s.script);
+      setCopiedId(s.id || null);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch { /* ignore */ }
+  };
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -188,8 +198,16 @@ export default function TechDashboard() {
 
   const toggleShow = (key: string) => setShowSecrets(prev => ({ ...prev, [key]: !prev[key] }));
 
-  // Group scripts by category
-  const grouped = scripts.reduce((acc, s) => {
+  // Filter & group scripts by category
+  const q = searchQuery.trim().toLowerCase();
+  const filtered = q
+    ? scripts.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.description?.toLowerCase().includes(q) ||
+        s.category?.toLowerCase().includes(q) ||
+        s.script.toLowerCase().includes(q))
+    : scripts;
+  const grouped = filtered.reduce((acc, s) => {
     (acc[s.category] = acc[s.category] || []).push(s);
     return acc;
   }, {} as Record<string, Script[]>);
@@ -278,6 +296,27 @@ export default function TechDashboard() {
               {syncResult && <span className="text-xs self-center">{syncResult}</span>}
             </div>
 
+            {/* Search bar */}
+            <div className="relative">
+              <Search className="h-4 w-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="חיפוש לפי שם, תיאור, קטגוריה או תוכן..."
+                className="w-full pr-10 pl-10 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="נקה חיפוש"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
             {scriptsLoading ? (
               <div className="flex items-center justify-center py-12 text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin mr-2" /> טוען סקריפטים...
@@ -286,6 +325,11 @@ export default function TechDashboard() {
               <div className="text-center py-12 text-muted-foreground">
                 <Terminal className="h-10 w-10 mx-auto mb-3 opacity-30" />
                 <p>אין סקריפטים. הוסף חדש או ייבא מהגיליון.</p>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Search className="h-10 w-10 mx-auto mb-3 opacity-30" />
+                <p>לא נמצאו תוצאות עבור "{searchQuery}"</p>
               </div>
             ) : (
               Object.entries(grouped).map(([cat, catScripts]) => (
@@ -298,15 +342,31 @@ export default function TechDashboard() {
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                           <Terminal className="h-4 w-4 text-accent shrink-0" />
                           <span className="text-sm font-medium text-foreground truncate">{s.name}</span>
-                          {!s.is_public && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground border border-border">פרטי</span>}
+                          {s.is_public ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20 flex items-center gap-1 shrink-0">
+                              <Globe className="h-2.5 w-2.5" /> ציבורי
+                            </span>
+                          ) : (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground border border-border flex items-center gap-1 shrink-0">
+                              <Lock className="h-2.5 w-2.5" /> פרטי
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-1 shrink-0">
+                          <button onClick={(e) => { e.stopPropagation(); copyScript(s); }}
+                            className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
+                            aria-label="העתק סקריפט"
+                            title="העתק סקריפט">
+                            {copiedId === s.id ? <Check className="h-3.5 w-3.5 text-accent" /> : <Copy className="h-3.5 w-3.5" />}
+                          </button>
                           <button onClick={(e) => { e.stopPropagation(); setEditingScript(s); }}
-                            className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
+                            className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
+                            aria-label="ערוך סקריפט">
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
                           <button onClick={(e) => { e.stopPropagation(); deleteScript(s.id!); }}
-                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                            aria-label="מחק סקריפט">
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                           <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${expandedScript === s.id ? "rotate-180" : ""}`} />
