@@ -164,6 +164,17 @@ export default function TechDashboard() {
     loadScripts();
   };
 
+  const togglePublic = async (s: Script) => {
+    // Optimistic update
+    setScripts(prev => prev.map(x => x.id === s.id ? { ...x, is_public: !s.is_public } : x));
+    const updated = { ...s, is_public: !s.is_public };
+    const data = await apiCall(password, "save_script", { script: updated });
+    if (data?.error) {
+      // Revert on failure
+      setScripts(prev => prev.map(x => x.id === s.id ? s : x));
+    }
+  };
+
   const syncFromSheets = async () => {
     setSyncing(true);
     setSyncResult("");
@@ -343,13 +354,21 @@ export default function TechDashboard() {
                           <Terminal className="h-4 w-4 text-accent shrink-0" />
                           <span className="text-sm font-medium text-foreground truncate">{s.name}</span>
                           {s.is_public ? (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20 flex items-center gap-1 shrink-0">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); togglePublic(s); }}
+                              className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20 transition-colors flex items-center gap-1 shrink-0"
+                              title="לחץ כדי להפוך לפרטי"
+                              aria-label="שנה לפרטי">
                               <Globe className="h-2.5 w-2.5" /> ציבורי
-                            </span>
+                            </button>
                           ) : (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground border border-border flex items-center gap-1 shrink-0">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); togglePublic(s); }}
+                              className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground border border-border hover:bg-muted/70 hover:text-foreground transition-colors flex items-center gap-1 shrink-0"
+                              title="לחץ כדי להפוך לציבורי"
+                              aria-label="שנה לציבורי">
                               <Lock className="h-2.5 w-2.5" /> פרטי
-                            </span>
+                            </button>
                           )}
                         </div>
                         <div className="flex items-center gap-1 shrink-0">
