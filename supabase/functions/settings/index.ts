@@ -179,21 +179,39 @@ type OneDriveItem = {
   "@microsoft.graph.downloadUrl"?: string;
 };
 
-async function syncFromOneDrive(shareUrl: string, supabase: ReturnType<typeof getSupabase>) {
-  const token = shareLinkToToken(shareUrl);
-  // Use the public shares endpoint (anonymous, no auth needed for "anyone with the link" shares)
-  const driveItemUrl = `https://graph.microsoft.com/v1.0/shares/${token}/driveItem`;
+const ONEDRIVE_GATEWAY = "https://connector-gateway.lovable.dev/microsoft_onedrive";
 
-  const itemResp = await fetch(driveItemUrl);
+function gatewayHeaders(lovableKey: string, onedriveKey: string) {
+  return {
+    "Authorization": `Bearer ${lovableKey}`,
+    "X-Connection-Api-Key": onedriveKey,
+  };
+}
+
+async function syncFromOneDrive(
+  shareUrl: string,
+  supabase: ReturnType<typeof getSupabase>,
+  lovableKey: string,
+  onedriveKey: string,
+) {
+  const token = shareLinkToToken(shareUrl);
+  const headers = gatewayHeaders(lovableKey, onedriveKey);
+
+  // Resolve the shared folder via Graph "shares" endpoint, proxied through the Lovable gateway (handles OAuth)
+  const driveItemUrl = `${ONEDRIVE_GATEWAY}/v1.0/shares/${token}/driveItem`;
+  const itemResp = await fetch(driveItemUrl, { headers });
   if (!itemResp.ok) {
-    throw new Error(`OneDrive: לא ניתן לגשת ללינק (${itemResp.status}). ודא שהשיתוף מוגדר ל"כל מי שיש לו את הלינק".`);
+    const body = await itemResp.text();
+    throw new Error(`OneDrive: לא ניתן לגשת ללינק (${itemResp.status}). ${body.slice(0, 200)}`);
   }
   const item = await itemResp.json() as OneDriveItem;
 
-  // Fetch children of the folder
-  const childrenUrl = `https://graph.microsoft.com/v1.0/shares/${token}/driveItem/children?$top=200`;
-  const childResp = await fetch(childrenUrl);
-  if (!childResp.ok) throw new Error(`OneDrive: שגיאה בקריאת תוכן התיקייה (${childResp.status})`);
+  const childrenUrl = `${ONEDRIVE_GATEWAY}/v1.0/shares/${token}/driveItem/children?$top=200`;
+  const childResp = await fetch(childrenUrl, { headers });
+  if (!childResp.ok) {
+    const body = await childResp.text();
+    throw new Error(`OneDrive: שגיאה בקריאת תוכן התיקייה (${childResp.status}). ${body.slice(0, 200)}`);
+  }
   const childData = await childResp.json() as { value: OneDriveItem[] };
 
   const files = (childData.value || []).filter(f => f.file && /\.(ps1|txt)$/i.test(f.name));
@@ -209,6 +227,7 @@ async function syncFromOneDrive(shareUrl: string, supabase: ReturnType<typeof ge
       const dl = f["@microsoft.graph.downloadUrl"];
       if (!dl) { failed++; errors.push(`${f.name}: חסר downloadUrl`); continue; }
 
+      // downloadUrl is a pre-signed direct URL — no auth header needed
       const contentResp = await fetch(dl);
       if (!contentResp.ok) { failed++; errors.push(`${f.name}: ${contentResp.status}`); continue; }
       const raw = await contentResp.text();
