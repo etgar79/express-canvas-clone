@@ -198,8 +198,16 @@ export default function TechDashboard() {
 
   const toggleShow = (key: string) => setShowSecrets(prev => ({ ...prev, [key]: !prev[key] }));
 
-  // Group scripts by category
-  const grouped = scripts.reduce((acc, s) => {
+  // Filter & group scripts by category
+  const q = searchQuery.trim().toLowerCase();
+  const filtered = q
+    ? scripts.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.description?.toLowerCase().includes(q) ||
+        s.category?.toLowerCase().includes(q) ||
+        s.script.toLowerCase().includes(q))
+    : scripts;
+  const grouped = filtered.reduce((acc, s) => {
     (acc[s.category] = acc[s.category] || []).push(s);
     return acc;
   }, {} as Record<string, Script[]>);
