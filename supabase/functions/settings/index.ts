@@ -135,6 +135,7 @@ serve(async (req) => {
         }
         imported++;
       }
+      await logAudit(supabase, { action: "sync_from_sheets", resource_type: "scripts", details: { imported } });
       return json({ success: true, imported });
     }
 
@@ -150,11 +151,64 @@ serve(async (req) => {
 
       try {
         const result = await syncFromOneDrive(folderLink, supabase, LOVABLE_API_KEY, ONEDRIVE_API_KEY);
+        await logAudit(supabase, { action: "sync_from_onedrive", resource_type: "scripts", details: result as Record<string, unknown> });
         return json({ success: true, ...result });
       } catch (e) {
         console.error("onedrive sync error:", e);
         return json({ error: e instanceof Error ? e.message : "שגיאה בסנכרון מ-OneDrive" }, 500);
       }
+    }
+
+    if (action === "get_analytics") {
+      const days = Math.min(Math.max(Number(body.days) || 30, 1), 365);
+      const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+
+      const [usageRes, ratingsRes, missesRes, auditRes] = await Promise.all([
+        supabase.from("script_usage").select("script_name, event_type, created_at").gte("created_at", since),
+        supabase.from("script_ratings").select("script_name, rating, created_at").gte("created_at", since),
+        supabase.from("bot_misses").select("id, question, user_role, resolved, created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(100),
+        supabase.from("audit_log").select("id, action, resource_type, resource_name, actor, details, created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(100),
+      ]);
+
+      // Aggregate per-script counts and per-day counts
+      const scriptStats: Record<string, { suggested: number; copied: number; run: number; explained: number; up: number; down: number }> = {};
+      const ensure = (n: string) => (scriptStats[n] = scriptStats[n] || { suggested: 0, copied: 0, run: 0, explained: 0, up: 0, down: 0 });
+
+      const dailyVisits: Record<string, number> = {};
+      for (const u of usageRes.data || []) {
+        const s = ensure(u.script_name);
+        if (u.event_type in s) (s as Record<string, number>)[u.event_type]++;
+        const day = (u.created_at as string).slice(0, 10);
+        dailyVisits[day] = (dailyVisits[day] || 0) + 1;
+      }
+      for (const r of ratingsRes.data || []) {
+        if (!r.script_name) continue;
+        const s = ensure(r.script_name);
+        if (r.rating === 1) s.up++; else if (r.rating === -1) s.down++;
+      }
+
+      return json({
+        success: true,
+        stats: {
+          totalUsageEvents: (usageRes.data || []).length,
+          totalRatings: (ratingsRes.data || []).length,
+          totalMisses: (missesRes.data || []).length,
+          unresolvedMisses: (missesRes.data || []).filter(m => !m.resolved).length,
+        },
+        scriptStats,
+        dailyActivity: dailyVisits,
+        recentMisses: missesRes.data || [],
+        recentAudit: auditRes.data || [],
+      });
+    }
+
+    if (action === "resolve_miss") {
+      const { missId } = body;
+      if (!missId) return json({ error: "מזהה חסר" }, 400);
+      const { error } = await supabase.from("bot_misses").update({ resolved: true }).eq("id", missId);
+      if (error) return json({ error: error.message }, 500);
+      await logAudit(supabase, { action: "miss_resolved", resource_type: "bot_miss", resource_id: missId });
+      return json({ success: true });
     }
 
     return json({ error: "פעולה לא מוכרת" }, 400);
