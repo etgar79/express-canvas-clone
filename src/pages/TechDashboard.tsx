@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown } from "lucide-react";
+import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -20,6 +20,7 @@ const FIELD_LABELS: Record<string, string> = {
   ACTION1_CLIENT_SECRET: "Action1 Client Secret",
   ACTION1_ORG_ID: "Action1 Organization ID",
   TECH_PASSWORD: "סיסמת טכנאי",
+  ONEDRIVE_FOLDER_LINK: "לינק שיתוף תיקיית OneDrive",
 };
 
 async function apiCall(password: string, action: string, extra: Record<string, unknown> = {}) {
@@ -159,6 +160,28 @@ export default function TechDashboard() {
     const data = await apiCall(password, "sync_from_sheets");
     if (data.success) setSyncResult(`✅ יובאו ${data.imported} סקריפטים מהגיליון`);
     else setSyncResult(`❌ ${data.error}`);
+    setSyncing(false);
+    loadScripts();
+  };
+
+  const syncFromOneDrive = async () => {
+    if (!settings.ONEDRIVE_FOLDER_LINK) {
+      setSyncResult("❌ הגדר תחילה לינק OneDrive בלשונית 'הגדרות'");
+      return;
+    }
+    setSyncing(true);
+    setSyncResult("");
+    const data = await apiCall(password, "sync_from_onedrive");
+    if (data.success) {
+      const parts = [];
+      if (data.imported) parts.push(`${data.imported} חדשים`);
+      if (data.updated) parts.push(`${data.updated} עודכנו`);
+      if (data.failed) parts.push(`${data.failed} נכשלו`);
+      const summary = parts.length ? parts.join(", ") : (data.message || "אין שינויים");
+      setSyncResult(`✅ OneDrive (${data.folder || "תיקייה"}): ${summary}`);
+    } else {
+      setSyncResult(`❌ ${data.error}`);
+    }
     setSyncing(false);
     loadScripts();
   };
