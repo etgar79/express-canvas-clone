@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock, Settings } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock, Settings, Sparkles, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
+import { supabase } from "@/integrations/supabase/client";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Endpoint = { id: string; name: string; status: string; lanIp?: string };
@@ -12,6 +13,20 @@ const REMEMBERED_ENDPOINT_NAME_KEY = "techtherapy_remembered_endpoint_name";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
+
+// Simple stable hash for message content (used as dedupe key for ratings)
+function hashMessage(content: string): string {
+  let h = 0;
+  for (let i = 0; i < content.length; i++) {
+    h = (h * 31 + content.charCodeAt(i)) | 0;
+  }
+  return `m_${h}_${content.length}`;
+}
+
+// Log a usage event (fire-and-forget)
+function logUsage(scriptName: string, eventType: "suggested" | "copied" | "run" | "explained", userRole: string) {
+  supabase.from("script_usage").insert({ script_name: scriptName, event_type: eventType, user_role: userRole }).then(() => {});
+}
 
 async function streamChat({
   messages, onDelta, onDone, onError,
@@ -112,8 +127,7 @@ const TECH_PASSWORD = "06536368";
 
 type UserRole = "client" | "tech";
 
-// --- Copy Script Button ---
-function CopyScriptButton({ content }: { content: string }) {
+function CopyScriptButton({ content, scriptName, userRole }: { content: string; scriptName: string | null; userRole: UserRole }) {
   const [copied, setCopied] = useState(false);
   const code = extractCodeBlock(content);
   if (!code) return null;
@@ -121,6 +135,7 @@ function CopyScriptButton({ content }: { content: string }) {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(code);
     setCopied(true);
+    if (scriptName) logUsage(scriptName, "copied", userRole);
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -132,6 +147,111 @@ function CopyScriptButton({ content }: { content: string }) {
       {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
       {copied ? "הועתק!" : "העתק סקריפט"}
     </button>
+  );
+}
+
+// --- Explain Script Button (Hebrew explanation for non-technical users) ---
+function ExplainScriptButton({ content, scriptName, userRole }: { content: string; scriptName: string | null; userRole: UserRole }) {
+  const [loading, setLoading] = useState(false);
+  const [explanation, setExplanation] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const code = extractCodeBlock(content);
+  if (!code) return null;
+
+  const handleExplain = async () => {
+    if (explanation) {
+      setExplanation(null);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("explain-script", {
+        body: { script: code, scriptName: scriptName || "" },
+      });
+      if (fnError) throw fnError;
+      if (data?.error) throw new Error(data.error);
+      setExplanation(data?.explanation || "לא התקבל הסבר");
+      if (scriptName) logUsage(scriptName, "explained", userRole);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "שגיאה בקבלת הסבר");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <button
+        onClick={handleExplain}
+        disabled={loading}
+        className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-lg px-2 py-1 disabled:opacity-50"
+      >
+        {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+        {loading ? "מסביר..." : explanation ? "הסתר הסבר" : "הסבר לי בפשטות"}
+      </button>
+      {explanation && (
+        <div className="w-full mt-1 bg-primary/5 border border-primary/20 rounded-xl p-3 text-xs text-foreground/85 leading-relaxed">
+          <div className="flex items-center gap-1 mb-1 text-primary font-bold">
+            <Sparkles className="h-3 w-3" /> הסבר בפשטות
+          </div>
+          {explanation}
+        </div>
+      )}
+      {error && <div className="w-full mt-1 text-xs text-destructive">⚠️ {error}</div>}
+    </>
+  );
+}
+
+// --- Rating Buttons (👍/👎 on assistant messages) ---
+function RatingButtons({ content, scriptName, userRole }: { content: string; scriptName: string | null; userRole: UserRole }) {
+  const messageHash = hashMessage(content);
+  const storageKey = `rating_${messageHash}`;
+  const [rated, setRated] = useState<1 | -1 | null>(() => {
+    const v = localStorage.getItem(storageKey);
+    return v === "1" ? 1 : v === "-1" ? -1 : null;
+  });
+
+  const submit = async (rating: 1 | -1) => {
+    if (rated !== null) return;
+    setRated(rating);
+    localStorage.setItem(storageKey, String(rating));
+    await supabase.from("script_ratings").insert({
+      message_hash: messageHash,
+      script_name: scriptName,
+      rating,
+      user_role: userRole,
+    });
+  };
+
+  return (
+    <div className="flex items-center gap-1">
+      <button
+        onClick={() => submit(1)}
+        disabled={rated !== null}
+        aria-label="תשובה מועילה"
+        className={`flex items-center justify-center w-6 h-6 rounded-lg border transition-colors ${
+          rated === 1
+            ? "bg-accent/20 border-accent/40 text-accent"
+            : "bg-transparent border-border text-muted-foreground hover:border-accent/30 hover:text-accent disabled:opacity-40"
+        }`}
+      >
+        <ThumbsUp className="h-3 w-3" />
+      </button>
+      <button
+        onClick={() => submit(-1)}
+        disabled={rated !== null}
+        aria-label="תשובה לא מועילה"
+        className={`flex items-center justify-center w-6 h-6 rounded-lg border transition-colors ${
+          rated === -1
+            ? "bg-destructive/20 border-destructive/40 text-destructive"
+            : "bg-transparent border-border text-muted-foreground hover:border-destructive/30 hover:text-destructive disabled:opacity-40"
+        }`}
+      >
+        <ThumbsDown className="h-3 w-3" />
+      </button>
+    </div>
   );
 }
 
@@ -636,7 +756,11 @@ export const AiChatBot = () => {
     await streamChat({
       messages: newMessages,
       onDelta: (chunk) => upsertAssistant(chunk),
-      onDone: () => setIsLoading(false),
+      onDone: () => {
+        setIsLoading(false);
+        const sn = extractScriptContext(assistantSoFar);
+        if (sn) logUsage(sn, "suggested", userRole);
+      },
       onError: (err) => {
         setMessages(prev => [...prev, { role: "assistant", content: `⚠️ ${err}` }]);
         setIsLoading(false);
@@ -747,27 +871,39 @@ export const AiChatBot = () => {
                       </div>
                     </div>
 
-                    {/* Copy + Run buttons for assistant messages with code blocks */}
-                    {msg.role === "assistant" && hasCodeBlock(msg.content) && !isLoading && (
-                      <div className="mr-9 mt-1 flex flex-wrap gap-1">
-                        <CopyScriptButton content={msg.content} />
-                        {extractScriptContext(msg.content) && (
-                          runScriptIndex === i ? (
-                            <RunScriptPanel
-                              scriptName={extractScriptContext(msg.content) || "unknown"}
-                              onClose={() => setRunScriptIndex(null)}
-                              userRole={userRole}
-                            />
-                          ) : (
-                            <button
-                              onClick={() => setRunScriptIndex(i)}
-                              className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
-                            >
-                              <Play className="h-3 w-3" />
-                              הרץ על מחשב מרחוק
-                            </button>
-                          )
+                    {/* Action buttons + rating for assistant messages */}
+                    {msg.role === "assistant" && !isLoading && (
+                      <div className="mr-9 mt-1 flex flex-wrap items-center gap-1">
+                        {hasCodeBlock(msg.content) && (
+                          <>
+                            <CopyScriptButton content={msg.content} scriptName={extractScriptContext(msg.content)} userRole={userRole} />
+                            <ExplainScriptButton content={msg.content} scriptName={extractScriptContext(msg.content)} userRole={userRole} />
+                            {extractScriptContext(msg.content) && (
+                              runScriptIndex === i ? (
+                                <RunScriptPanel
+                                  scriptName={extractScriptContext(msg.content) || "unknown"}
+                                  onClose={() => setRunScriptIndex(null)}
+                                  userRole={userRole}
+                                />
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    setRunScriptIndex(i);
+                                    const sn = extractScriptContext(msg.content);
+                                    if (sn) logUsage(sn, "run", userRole);
+                                  }}
+                                  className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
+                                >
+                                  <Play className="h-3 w-3" />
+                                  הרץ על מחשב מרחוק
+                                </button>
+                              )
+                            )}
+                          </>
                         )}
+                        <div className="ms-auto">
+                          <RatingButtons content={msg.content} scriptName={extractScriptContext(msg.content)} userRole={userRole} />
+                        </div>
                       </div>
                     )}
                   </div>
