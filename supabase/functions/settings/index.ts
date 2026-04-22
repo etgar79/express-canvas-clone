@@ -124,8 +124,13 @@ serve(async (req) => {
       const folderLink = linkRow?.value?.trim();
       if (!folderLink) return json({ error: "לא הוגדר לינק OneDrive בהגדרות" }, 400);
 
+      const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+      const ONEDRIVE_API_KEY = Deno.env.get("MICROSOFT_ONEDRIVE_API_KEY");
+      if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY לא מוגדר" }, 500);
+      if (!ONEDRIVE_API_KEY) return json({ error: "חיבור OneDrive לא קיים. חבר אותו בהגדרות הפרויקט." }, 500);
+
       try {
-        const result = await syncFromOneDrive(folderLink, supabase);
+        const result = await syncFromOneDrive(folderLink, supabase, LOVABLE_API_KEY, ONEDRIVE_API_KEY);
         return json({ success: true, ...result });
       } catch (e) {
         console.error("onedrive sync error:", e);
