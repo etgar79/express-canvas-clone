@@ -164,6 +164,17 @@ export default function TechDashboard() {
     loadScripts();
   };
 
+  const togglePublic = async (s: Script) => {
+    // Optimistic update
+    setScripts(prev => prev.map(x => x.id === s.id ? { ...x, is_public: !s.is_public } : x));
+    const updated = { ...s, is_public: !s.is_public };
+    const data = await apiCall(password, "save_script", { script: updated });
+    if (data?.error) {
+      // Revert on failure
+      setScripts(prev => prev.map(x => x.id === s.id ? s : x));
+    }
+  };
+
   const syncFromSheets = async () => {
     setSyncing(true);
     setSyncResult("");
