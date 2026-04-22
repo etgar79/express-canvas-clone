@@ -280,6 +280,17 @@ serve(async (req) => {
 
     // Poll job status from Action1
     if (action === "status") {
+      const ip = getClientIp(req);
+      const rl = checkRateLimit(ip, "status");
+      if (!rl.allowed) {
+        return new Response(
+          JSON.stringify({ error: `יותר מדי בקשות. נסה שוב בעוד ${rl.retryAfter} שניות.` }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(rl.retryAfter) },
+          }
+        );
+      }
       const jobId = url.searchParams.get("jobId");
       if (!jobId) {
         return new Response(JSON.stringify({ error: "חסר jobId" }), {
