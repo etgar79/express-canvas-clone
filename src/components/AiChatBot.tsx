@@ -867,27 +867,39 @@ export const AiChatBot = () => {
                       </div>
                     </div>
 
-                    {/* Copy + Run buttons for assistant messages with code blocks */}
-                    {msg.role === "assistant" && hasCodeBlock(msg.content) && !isLoading && (
-                      <div className="mr-9 mt-1 flex flex-wrap gap-1">
-                        <CopyScriptButton content={msg.content} />
-                        {extractScriptContext(msg.content) && (
-                          runScriptIndex === i ? (
-                            <RunScriptPanel
-                              scriptName={extractScriptContext(msg.content) || "unknown"}
-                              onClose={() => setRunScriptIndex(null)}
-                              userRole={userRole}
-                            />
-                          ) : (
-                            <button
-                              onClick={() => setRunScriptIndex(i)}
-                              className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
-                            >
-                              <Play className="h-3 w-3" />
-                              הרץ על מחשב מרחוק
-                            </button>
-                          )
+                    {/* Action buttons + rating for assistant messages */}
+                    {msg.role === "assistant" && !isLoading && (
+                      <div className="mr-9 mt-1 flex flex-wrap items-center gap-1">
+                        {hasCodeBlock(msg.content) && (
+                          <>
+                            <CopyScriptButton content={msg.content} scriptName={extractScriptContext(msg.content)} userRole={userRole} />
+                            <ExplainScriptButton content={msg.content} scriptName={extractScriptContext(msg.content)} userRole={userRole} />
+                            {extractScriptContext(msg.content) && (
+                              runScriptIndex === i ? (
+                                <RunScriptPanel
+                                  scriptName={extractScriptContext(msg.content) || "unknown"}
+                                  onClose={() => setRunScriptIndex(null)}
+                                  userRole={userRole}
+                                />
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    setRunScriptIndex(i);
+                                    const sn = extractScriptContext(msg.content);
+                                    if (sn) logUsage(sn, "run", userRole);
+                                  }}
+                                  className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg px-2 py-1"
+                                >
+                                  <Play className="h-3 w-3" />
+                                  הרץ על מחשב מרחוק
+                                </button>
+                              )
+                            )}
+                          </>
                         )}
+                        <div className="ms-auto">
+                          <RatingButtons content={msg.content} scriptName={extractScriptContext(msg.content)} userRole={userRole} />
+                        </div>
                       </div>
                     )}
                   </div>
