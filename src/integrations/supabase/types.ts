@@ -32,6 +32,57 @@ export type Database = {
         }
         Relationships: []
       }
+      script_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          message_hash: string
+          rating: number
+          script_name: string | null
+          user_role: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_hash: string
+          rating: number
+          script_name?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_hash?: string
+          rating?: number
+          script_name?: string | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
+      script_usage: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          script_name: string
+          user_role: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          script_name: string
+          user_role?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          script_name?: string
+          user_role?: string | null
+        }
+        Relationships: []
+      }
       scripts: {
         Row: {
           category: string
