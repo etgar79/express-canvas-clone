@@ -1,15 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock, Settings, Sparkles, ThumbsUp, ThumbsDown } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock, Settings, Sparkles, ThumbsUp, ThumbsDown, Trash2, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
+import { MarkdownRenderer } from "@/components/chatbot/MarkdownRenderer";
+import { TypingIndicator } from "@/components/chatbot/TypingIndicator";
+import { SUGGESTED_QUESTIONS, IDLE_SUGGESTIONS } from "@/components/chatbot/SuggestedQuestions";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Endpoint = { id: string; name: string; status: string; lanIp?: string };
 
 const REMEMBERED_ENDPOINT_ID_KEY = "techtherapy_remembered_endpoint_id";
 const REMEMBERED_ENDPOINT_NAME_KEY = "techtherapy_remembered_endpoint_name";
+const HISTORY_KEY = "techtherapy_bot_history";
+const HISTORY_MAX = 30; // keep last 30 messages in localStorage
+const IDLE_TIMEOUT_MS = 35000; // 35s of silence before nudge
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
