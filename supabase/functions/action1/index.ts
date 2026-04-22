@@ -67,6 +67,47 @@ async function getAction1Token(): Promise<{ token: string; orgId: string }> {
   return { token: cachedToken.token, orgId: config.orgId };
 }
 
+// In-memory rate limiter (per edge function instance, resets on cold start).
+// Limit: 30 requests per minute per IP per action.
+const RATE_LIMIT_MAX = 30;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const rateLimitBuckets = new Map<string, number[]>();
+
+function getClientIp(req: Request): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return req.headers.get("cf-connecting-ip")
+    || req.headers.get("x-real-ip")
+    || "unknown";
+}
+
+function checkRateLimit(ip: string, action: string): { allowed: boolean; retryAfter: number } {
+  const key = `${action}:${ip}`;
+  const now = Date.now();
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const timestamps = (rateLimitBuckets.get(key) || []).filter(t => t > cutoff);
+
+  if (timestamps.length >= RATE_LIMIT_MAX) {
+    const retryAfter = Math.ceil((timestamps[0] + RATE_LIMIT_WINDOW_MS - now) / 1000);
+    rateLimitBuckets.set(key, timestamps);
+    return { allowed: false, retryAfter: Math.max(retryAfter, 1) };
+  }
+
+  timestamps.push(now);
+  rateLimitBuckets.set(key, timestamps);
+
+  // Opportunistic cleanup to prevent unbounded growth
+  if (rateLimitBuckets.size > 5000) {
+    for (const [k, v] of rateLimitBuckets) {
+      const filtered = v.filter(t => t > cutoff);
+      if (filtered.length === 0) rateLimitBuckets.delete(k);
+      else rateLimitBuckets.set(k, filtered);
+    }
+  }
+
+  return { allowed: true, retryAfter: 0 };
+}
+
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = "";
@@ -167,6 +208,17 @@ serve(async (req) => {
 
     // CLIENT-SAFE: lookup endpoint by name with soft matching. Does NOT leak the endpoint list.
     if (action === "lookup") {
+      const ip = getClientIp(req);
+      const rl = checkRateLimit(ip, "lookup");
+      if (!rl.allowed) {
+        return new Response(
+          JSON.stringify({ error: `יותר מדי בקשות. נסה שוב בעוד ${rl.retryAfter} שניות.` }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(rl.retryAfter) },
+          }
+        );
+      }
       const rawName = url.searchParams.get("name") || "";
       const needle = normalizeName(rawName);
       if (!needle) {
@@ -228,6 +280,17 @@ serve(async (req) => {
 
     // Poll job status from Action1
     if (action === "status") {
+      const ip = getClientIp(req);
+      const rl = checkRateLimit(ip, "status");
+      if (!rl.allowed) {
+        return new Response(
+          JSON.stringify({ error: `יותר מדי בקשות. נסה שוב בעוד ${rl.retryAfter} שניות.` }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(rl.retryAfter) },
+          }
+        );
+      }
       const jobId = url.searchParams.get("jobId");
       if (!jobId) {
         return new Response(JSON.stringify({ error: "חסר jobId" }), {
