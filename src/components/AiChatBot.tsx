@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock, Settings } from "lucide-react";
+import { X, Send, Bot, User, Loader2, Play, Monitor, Shield, UserCheck, Copy, Check, CircleAlert, CircleCheck, Clock, Settings, Sparkles, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
+import { supabase } from "@/integrations/supabase/client";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Endpoint = { id: string; name: string; status: string; lanIp?: string };
@@ -12,6 +13,20 @@ const REMEMBERED_ENDPOINT_NAME_KEY = "techtherapy_remembered_endpoint_name";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
+
+// Simple stable hash for message content (used as dedupe key for ratings)
+function hashMessage(content: string): string {
+  let h = 0;
+  for (let i = 0; i < content.length; i++) {
+    h = (h * 31 + content.charCodeAt(i)) | 0;
+  }
+  return `m_${h}_${content.length}`;
+}
+
+// Log a usage event (fire-and-forget)
+function logUsage(scriptName: string, eventType: "suggested" | "copied" | "run" | "explained", userRole: string) {
+  supabase.from("script_usage").insert({ script_name: scriptName, event_type: eventType, user_role: userRole }).then(() => {});
+}
 
 async function streamChat({
   messages, onDelta, onDone, onError,
