@@ -756,7 +756,11 @@ export const AiChatBot = () => {
     await streamChat({
       messages: newMessages,
       onDelta: (chunk) => upsertAssistant(chunk),
-      onDone: () => setIsLoading(false),
+      onDone: () => {
+        setIsLoading(false);
+        const sn = extractScriptContext(assistantSoFar);
+        if (sn) logUsage(sn, "suggested", userRole);
+      },
       onError: (err) => {
         setMessages(prev => [...prev, { role: "assistant", content: `⚠️ ${err}` }]);
         setIsLoading(false);
