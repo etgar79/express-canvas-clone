@@ -249,3 +249,29 @@ html {
   background-image: radial-gradient(circle, hsl(220 55% 40% / 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
+
+/* Chatbot typing indicator dots */
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.typing-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: hsl(var(--accent));
+  animation: typing-bounce 1.2s infinite ease-in-out;
+}
+
+/* Suggested question chip pop-in */
+@keyframes chip-pop-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chip-pop-in {
+  animation: chip-pop-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
