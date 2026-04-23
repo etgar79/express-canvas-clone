@@ -593,6 +593,72 @@ export default function TechDashboard() {
                 );
               })}
             </div>
+
+            {/* Bot Budget Section */}
+            <div className="pt-4 border-t border-border space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-accent" /> תקציב בוט AI
+                </h2>
+                <button
+                  type="button"
+                  onClick={loadBotUsage}
+                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                  title="רענן שימוש"
+                >
+                  <RefreshCw className="h-3 w-3" /> רענן
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                כששימוש הבוט עובר את הסף, הבוט עובר אוטומטית למודל חסכוני (Flash-Lite) להמשך פעילות במחיר מופחת.
+              </p>
+
+              {/* Usage display */}
+              {botUsage && (
+                <div className="grid grid-cols-2 gap-3">
+                  {([
+                    { label: "שיחות היום", used: botUsage.daily, limit: parseInt(settings.budget_daily_limit || "500", 10) },
+                    { label: "שיחות החודש", used: botUsage.monthly, limit: parseInt(settings.budget_monthly_limit || "8000", 10) },
+                  ] as const).map((row) => {
+                    const pct = Math.min(100, Math.round((row.used / Math.max(1, row.limit)) * 100));
+                    const color = pct >= 100 ? "bg-destructive" : pct >= 80 ? "bg-yellow-500" : "bg-accent";
+                    return (
+                      <div key={row.label} className="bg-background border border-border rounded-xl p-3 space-y-2">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="text-xs text-muted-foreground">{row.label}</span>
+                          <span className="text-sm font-bold text-foreground tabular-nums">
+                            {row.used.toLocaleString()} <span className="text-muted-foreground font-normal">/ {row.limit.toLocaleString()}</span>
+                          </span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div className={`h-full ${color} transition-all`} style={{ width: `${pct}%` }} />
+                        </div>
+                        <div className="text-[10px] text-muted-foreground text-left tabular-nums">{pct}%</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Budget thresholds */}
+              <div className="space-y-3">
+                {BUDGET_FIELDS.map(({ key, label, hint }) => (
+                  <div key={key} className="space-y-1">
+                    <label className="text-xs font-medium text-foreground/70">{label}</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={settings[key] || ""}
+                      onChange={(e) => setSettings(prev => ({ ...prev, [key]: e.target.value }))}
+                      placeholder="לדוגמה: 500"
+                      className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50 font-mono"
+                      dir="ltr"
+                    />
+                    <p className="text-[10px] text-muted-foreground">{hint}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="flex items-center gap-3 pt-2">
               <Button onClick={saveSettings} disabled={saving} className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Save className="h-4 w-4 mr-1" />}
