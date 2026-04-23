@@ -26,6 +26,11 @@ const FIELD_LABELS: Record<string, string> = {
   ONEDRIVE_FOLDER_LINK: "לינק שיתוף תיקיית OneDrive",
 };
 
+const BUDGET_FIELDS: { key: string; label: string; hint: string }[] = [
+  { key: "budget_daily_limit", label: "סף יומי (שיחות)", hint: "מעל הסף — מעבר אוטומטי למודל חסכוני" },
+  { key: "budget_monthly_limit", label: "סף חודשי (שיחות)", hint: "מעל הסף — מעבר אוטומטי למודל חסכוני" },
+];
+
 async function apiCall(password: string, action: string, extra: Record<string, unknown> = {}) {
   const resp = await fetch(SETTINGS_URL, {
     method: "POST",
@@ -150,6 +155,7 @@ export default function TechDashboard() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [publicOnly, setPublicOnly] = useState(false);
+  const [botUsage, setBotUsage] = useState<{ daily: number; monthly: number } | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const copyScript = async (s: Script) => {
@@ -170,11 +176,29 @@ export default function TechDashboard() {
       setSettings(data.settings || {});
       setIsUnlocked(true);
       loadScripts();
+      loadBotUsage();
     } catch {
       setPasswordError(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadBotUsage = async () => {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const month = today.slice(0, 7);
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/bot_usage_counter?period_key=in.(${today},${month})&select=period_key,count`, {
+        headers: {
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+      });
+      const rows: { period_key: string; count: number }[] = await resp.json();
+      const daily = rows.find(r => r.period_key === today)?.count || 0;
+      const monthly = rows.find(r => r.period_key === month)?.count || 0;
+      setBotUsage({ daily, monthly });
+    } catch { /* ignore */ }
   };
 
   const loadScripts = async () => {
@@ -367,7 +391,7 @@ export default function TechDashboard() {
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "analytics" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <BarChart3 className="h-4 w-4 inline mr-1" /> אנליטיקה
           </button>
-          <button onClick={() => setActiveTab("settings")}
+          <button onClick={() => { setActiveTab("settings"); loadBotUsage(); }}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "settings" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <Settings className="h-4 w-4 inline mr-1" /> הגדרות
           </button>
@@ -568,6 +592,72 @@ export default function TechDashboard() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* Bot Budget Section */}
+            <div className="pt-4 border-t border-border space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-accent" /> תקציב בוט AI
+                </h2>
+                <button
+                  type="button"
+                  onClick={loadBotUsage}
+                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                  title="רענן שימוש"
+                >
+                  <RefreshCw className="h-3 w-3" /> רענן
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                כששימוש הבוט עובר את הסף, הבוט עובר אוטומטית למודל חסכוני (Flash-Lite) להמשך פעילות במחיר מופחת.
+              </p>
+
+              {/* Usage display */}
+              {botUsage && (
+                <div className="grid grid-cols-2 gap-3">
+                  {([
+                    { label: "שיחות היום", used: botUsage.daily, limit: parseInt(settings.budget_daily_limit || "500", 10) },
+                    { label: "שיחות החודש", used: botUsage.monthly, limit: parseInt(settings.budget_monthly_limit || "8000", 10) },
+                  ] as const).map((row) => {
+                    const pct = Math.min(100, Math.round((row.used / Math.max(1, row.limit)) * 100));
+                    const color = pct >= 100 ? "bg-destructive" : pct >= 80 ? "bg-yellow-500" : "bg-accent";
+                    return (
+                      <div key={row.label} className="bg-background border border-border rounded-xl p-3 space-y-2">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="text-xs text-muted-foreground">{row.label}</span>
+                          <span className="text-sm font-bold text-foreground tabular-nums">
+                            {row.used.toLocaleString()} <span className="text-muted-foreground font-normal">/ {row.limit.toLocaleString()}</span>
+                          </span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div className={`h-full ${color} transition-all`} style={{ width: `${pct}%` }} />
+                        </div>
+                        <div className="text-[10px] text-muted-foreground text-left tabular-nums">{pct}%</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Budget thresholds */}
+              <div className="space-y-3">
+                {BUDGET_FIELDS.map(({ key, label, hint }) => (
+                  <div key={key} className="space-y-1">
+                    <label className="text-xs font-medium text-foreground/70">{label}</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={settings[key] || ""}
+                      onChange={(e) => setSettings(prev => ({ ...prev, [key]: e.target.value }))}
+                      placeholder="לדוגמה: 500"
+                      className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50 font-mono"
+                      dir="ltr"
+                    />
+                    <p className="text-[10px] text-muted-foreground">{hint}</p>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex items-center gap-3 pt-2">
               <Button onClick={saveSettings} disabled={saving} className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
