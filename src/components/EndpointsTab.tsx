@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Search, Save, X, Pencil, Trash2, Plus, Tag, Building2, RefreshCw, Users, Phone, FileText, Activity } from "lucide-react";
+import { Loader2, Search, Save, X, Pencil, Trash2, Plus, Tag, Building2, RefreshCw, Users, Phone, FileText, Activity, Terminal, Play, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const MANAGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-endpoints`;
