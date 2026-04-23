@@ -1,9 +1,88 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Expose-Headers": "x-budget-mode, x-budget-daily, x-budget-monthly, x-budget-daily-limit, x-budget-monthly-limit",
 };
+
+// ===== Budget control =====
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+const DEFAULT_DAILY_LIMIT = 500;
+const DEFAULT_MONTHLY_LIMIT = 8000;
+
+function todayKey(): string {
+  return `daily:${new Date().toISOString().slice(0, 10)}`; // daily:YYYY-MM-DD
+}
+function monthKey(): string {
+  return `monthly:${new Date().toISOString().slice(0, 7)}`; // monthly:YYYY-MM
+}
+
+let limitsCache: { daily: number; monthly: number; ts: number } | null = null;
+const LIMITS_TTL_MS = 60_000;
+
+async function getBudgetLimits(): Promise<{ daily: number; monthly: number }> {
+  if (limitsCache && Date.now() - limitsCache.ts < LIMITS_TTL_MS) {
+    return { daily: limitsCache.daily, monthly: limitsCache.monthly };
+  }
+  try {
+    const { data } = await supabaseAdmin
+      .from("app_settings")
+      .select("key,value")
+      .in("key", ["budget_daily_limit", "budget_monthly_limit"]);
+    const map = new Map<string, string>((data ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
+    const daily = parseInt(map.get("budget_daily_limit") ?? "") || DEFAULT_DAILY_LIMIT;
+    const monthly = parseInt(map.get("budget_monthly_limit") ?? "") || DEFAULT_MONTHLY_LIMIT;
+    limitsCache = { daily, monthly, ts: Date.now() };
+    return { daily, monthly };
+  } catch {
+    return { daily: DEFAULT_DAILY_LIMIT, monthly: DEFAULT_MONTHLY_LIMIT };
+  }
+}
+
+async function getCurrentUsage(): Promise<{ daily: number; monthly: number }> {
+  try {
+    const { data } = await supabaseAdmin
+      .from("bot_usage_counter")
+      .select("period_key,count")
+      .in("period_key", [todayKey(), monthKey()]);
+    const map = new Map<string, number>((data ?? []).map((r: { period_key: string; count: number }) => [r.period_key, r.count]));
+    return { daily: map.get(todayKey()) ?? 0, monthly: map.get(monthKey()) ?? 0 };
+  } catch {
+    return { daily: 0, monthly: 0 };
+  }
+}
+
+async function incrementUsage(): Promise<void> {
+  // Upsert + increment for both daily and monthly counters (fire-and-forget pattern, but awaited briefly)
+  const keys = [todayKey(), monthKey()];
+  for (const k of keys) {
+    try {
+      // Try to increment; if row doesn't exist, insert it.
+      const { data: existing } = await supabaseAdmin
+        .from("bot_usage_counter")
+        .select("count")
+        .eq("period_key", k)
+        .maybeSingle();
+      if (existing) {
+        await supabaseAdmin
+          .from("bot_usage_counter")
+          .update({ count: existing.count + 1, updated_at: new Date().toISOString() })
+          .eq("period_key", k);
+      } else {
+        await supabaseAdmin
+          .from("bot_usage_counter")
+          .insert({ period_key: k, count: 1 });
+      }
+    } catch (e) {
+      console.error("incrementUsage error for", k, e);
+    }
+  }
+}
 
 const SHEET_ID = "1mR7NpQPcIxwURMKTrSP4scD7eYI4vYXnt2lBkyFNWxc";
 
@@ -125,11 +204,24 @@ serve(async (req) => {
     const lastUserMsg = [...messages].reverse().find((m: { role: string; content: string }) => m.role === "user");
     const lastUserText = lastUserMsg?.content?.trim() ?? "";
 
-    // ===== 1. Cache hit for very common greetings (zero AI cost) =====
+    // ===== Budget check (parallel) =====
+    const [limits, usage] = await Promise.all([getBudgetLimits(), getCurrentUsage()]);
+    const overDaily = usage.daily >= limits.daily;
+    const overMonthly = usage.monthly >= limits.monthly;
+    const budgetMode = overDaily || overMonthly; // when true → force cheap model
+
+    const budgetHeaders: Record<string, string> = {
+      "x-budget-mode": budgetMode ? "1" : "0",
+      "x-budget-daily": String(usage.daily),
+      "x-budget-monthly": String(usage.monthly),
+      "x-budget-daily-limit": String(limits.daily),
+      "x-budget-monthly-limit": String(limits.monthly),
+    };
+
+    // ===== 1. Cache hit (zero AI cost — no usage increment) =====
     const cacheKey = normalizeForCache(lastUserText);
     if (messages.length === 1 && COMMON_REPLIES[cacheKey]) {
       const cached = COMMON_REPLIES[cacheKey];
-      // Return as a fake SSE stream so client can treat it identically
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
         start(controller) {
@@ -140,18 +232,19 @@ serve(async (req) => {
         },
       });
       return new Response(stream, {
-        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+        headers: { ...corsHeaders, ...budgetHeaders, "Content-Type": "text/event-stream" },
       });
     }
 
-    // ===== 2. Truncate conversation to last N messages (saves tokens) =====
+    // ===== 2. Truncate conversation =====
     const trimmedMessages = messages.length > MAX_CONVERSATION_MESSAGES
       ? messages.slice(-MAX_CONVERSATION_MESSAGES)
       : messages;
 
-    // ===== 3. Intent-based model & context selection =====
+    // ===== 3. Intent → model (budget mode forces cheap model) =====
     const intent = classifyIntent(lastUserText);
-    const useFastModel = intent === "greeting" || intent === "smalltalk" || intent === "contact" || intent === "company_info";
+    const intentWantsFast = intent === "greeting" || intent === "smalltalk" || intent === "contact" || intent === "company_info";
+    const useFastModel = budgetMode || intentWantsFast;
     const needsIssuesContext = intent === "technical";
 
     let issuesContext = "";
@@ -162,7 +255,7 @@ serve(async (req) => {
       ).join("\n\n");
     }
 
-    // ===== 4. Warm, human system prompt =====
+    // ===== 4. System prompt =====
     const systemPrompt = `אתה "אתגר" — הבוט החם והאנושי של טק תרפי מחשבים. אתה מומחה תמיכה טכנית, אבל לפני הכל — אתה בנאדם.
 
 הסגנון שלך:
@@ -221,8 +314,11 @@ ${issuesContext}
       });
     }
 
+    // Count successful AI call toward budget (fire-and-forget)
+    incrementUsage().catch((e) => console.error("usage inc failed:", e));
+
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...corsHeaders, ...budgetHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (e) {
     console.error("ai-chat error:", e);

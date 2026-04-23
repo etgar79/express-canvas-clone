@@ -33,13 +33,22 @@ function logUsage(scriptName: string, eventType: "suggested" | "copied" | "run" 
   supabase.from("script_usage").insert({ script_name: scriptName, event_type: eventType, user_role: userRole }).then(() => {});
 }
 
+type BudgetInfo = {
+  active: boolean;
+  daily: number;
+  monthly: number;
+  dailyLimit: number;
+  monthlyLimit: number;
+};
+
 async function streamChat({
-  messages, onDelta, onDone, onError,
+  messages, onDelta, onDone, onError, onBudget,
 }: {
   messages: Msg[];
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
+  onBudget?: (info: BudgetInfo) => void;
 }) {
   try {
     const resp = await fetch(CHAT_URL, {
@@ -50,6 +59,20 @@ async function streamChat({
       },
       body: JSON.stringify({ messages }),
     });
+
+    // Read budget headers (exposed via Access-Control-Expose-Headers)
+    if (onBudget) {
+      const mode = resp.headers.get("x-budget-mode");
+      if (mode !== null) {
+        onBudget({
+          active: mode === "1",
+          daily: parseInt(resp.headers.get("x-budget-daily") || "0") || 0,
+          monthly: parseInt(resp.headers.get("x-budget-monthly") || "0") || 0,
+          dailyLimit: parseInt(resp.headers.get("x-budget-daily-limit") || "0") || 0,
+          monthlyLimit: parseInt(resp.headers.get("x-budget-monthly-limit") || "0") || 0,
+        });
+      }
+    }
 
     if (!resp.ok) {
       const data = await resp.json().catch(() => ({}));
@@ -729,6 +752,8 @@ export const AiChatBot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [runScriptIndex, setRunScriptIndex] = useState<number | null>(null);
   const [showIdleNudge, setShowIdleNudge] = useState(false);
+  const [budgetInfo, setBudgetInfo] = useState<BudgetInfo | null>(null);
+  const [budgetBannerDismissed, setBudgetBannerDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -812,6 +837,11 @@ export const AiChatBot = () => {
     await streamChat({
       messages: newMessages,
       onDelta: (chunk) => upsertAssistant(chunk),
+      onBudget: (info) => {
+        setBudgetInfo(info);
+        // If budget mode just turned on, re-show the banner
+        if (info.active) setBudgetBannerDismissed(false);
+      },
       onDone: () => {
         setIsLoading(false);
         const sn = extractScriptContext(assistantSoFar);
@@ -938,6 +968,29 @@ export const AiChatBot = () => {
                     <p className="text-[10px] text-muted-foreground mt-4">
                       או פשוט כתוב לי בשפה חופשית 👇
                     </p>
+                  </div>
+                )}
+
+                {/* Budget mode banner — shown when daily/monthly chat budget reached */}
+                {budgetInfo?.active && !budgetBannerDismissed && (
+                  <div className="animate-fade-in flex items-start gap-2 rounded-xl border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-foreground/90">
+                    <CircleAlert className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                    <div className="flex-1 leading-relaxed">
+                      <div className="font-bold text-accent mb-0.5">מצב חיסכון פעיל</div>
+                      <div>
+                        השגנו את מכסת השיחות {budgetInfo.daily >= budgetInfo.dailyLimit ? "היומית" : "החודשית"} ({budgetInfo.daily >= budgetInfo.dailyLimit ? `${budgetInfo.daily}/${budgetInfo.dailyLimit}` : `${budgetInfo.monthly}/${budgetInfo.monthlyLimit}`}). הבוט ממשיך לעבוד עם מודל מהיר וחסכוני.{" "}
+                        <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-accent">
+                          לתמיכה אישית בוואטסאפ
+                        </a>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setBudgetBannerDismissed(true)}
+                      aria-label="סגור התראה"
+                      className="shrink-0 text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 )}
 
