@@ -346,25 +346,34 @@ serve(async (req) => {
 
     if (action === "run") {
       const body = await req.json();
-      const { scriptName, endpointId, endpointIds, groupId, userRole, triggeredBy } = body;
+      const { scriptName, scriptContent: adHocScript, endpointId, endpointIds, groupId, userRole, triggeredBy } = body;
       
       // Support both single endpointId (backward compat) and multiple endpointIds
       const targetIds: string[] = endpointIds && Array.isArray(endpointIds) && endpointIds.length > 0
         ? endpointIds
         : (endpointId ? [endpointId] : []);
 
-      if (!scriptName || targetIds.length === 0) {
+      // Either a saved script name OR raw script content (ad-hoc paste) is required
+      const hasAdHoc = typeof adHocScript === "string" && adHocScript.trim().length > 0;
+      if ((!scriptName && !hasAdHoc) || targetIds.length === 0) {
         return new Response(JSON.stringify({ error: "חסרים פרטים" }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      const scriptContent = await getScript(scriptName);
+      // Resolve script content: ad-hoc takes precedence; otherwise look up by name
+      let scriptContent: string | null = hasAdHoc ? adHocScript : null;
+      if (!scriptContent && scriptName) {
+        scriptContent = await getScript(scriptName);
+      }
       if (!scriptContent) {
         return new Response(JSON.stringify({ error: "הסקריפט לא נמצא" }), {
           status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+
+      // Display name for logs (ad-hoc gets a clear label)
+      const logScriptName = scriptName || `ad-hoc (${adHocScript.trim().split("\n")[0].slice(0, 40)})`;
 
       const { token, orgId } = await getAction1Token();
       
