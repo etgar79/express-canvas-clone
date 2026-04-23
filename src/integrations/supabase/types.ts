@@ -89,6 +89,24 @@ export type Database = {
         }
         Relationships: []
       }
+      bot_usage_counter: {
+        Row: {
+          count: number
+          period_key: string
+          updated_at: string
+        }
+        Insert: {
+          count?: number
+          period_key: string
+          updated_at?: string
+        }
+        Update: {
+          count?: number
+          period_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       script_ratings: {
         Row: {
           created_at: string
