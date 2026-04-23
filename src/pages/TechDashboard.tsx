@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter, BarChart3 } from "lucide-react";
+import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter, BarChart3, Monitor, Activity, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { AnalyticsTab } from "@/components/AnalyticsTab";
+import { EndpointsTab } from "@/components/EndpointsTab";
+import { HealthTab } from "@/components/HealthTab";
+import { HistoryTab } from "@/components/HistoryTab";
+import { MissAnalyzer } from "@/components/MissAnalyzer";
 
 const SETTINGS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/settings`;
 
