@@ -146,7 +146,7 @@ export default function TechDashboard() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
-  const [activeTab, setActiveTab] = useState<"settings" | "scripts" | "analytics">("scripts");
+  const [activeTab, setActiveTab] = useState<"settings" | "scripts" | "analytics" | "endpoints" | "health" | "history">("scripts");
 
   // Scripts state
   const [scripts, setScripts] = useState<Script[]>([]);
