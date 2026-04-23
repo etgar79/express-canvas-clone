@@ -313,6 +313,16 @@ export function EndpointsTab({ password }: { password: string }) {
           onCancel={() => setEditingGroup(null)}
         />
       )}
+
+      {/* Ad-hoc script runner modal */}
+      {showRunner && (
+        <AdHocScriptRunner
+          endpoints={endpoints}
+          metadata={metadata}
+          groups={groups}
+          onClose={() => setShowRunner(false)}
+        />
+      )}
     </div>
   );
 }
