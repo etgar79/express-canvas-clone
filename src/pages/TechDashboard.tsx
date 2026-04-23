@@ -391,7 +391,7 @@ export default function TechDashboard() {
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "analytics" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <BarChart3 className="h-4 w-4 inline mr-1" /> אנליטיקה
           </button>
-          <button onClick={() => setActiveTab("settings")}
+          <button onClick={() => { setActiveTab("settings"); loadBotUsage(); }}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "settings" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <Settings className="h-4 w-4 inline mr-1" /> הגדרות
           </button>
