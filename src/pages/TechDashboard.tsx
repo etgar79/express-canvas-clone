@@ -26,6 +26,11 @@ const FIELD_LABELS: Record<string, string> = {
   ONEDRIVE_FOLDER_LINK: "לינק שיתוף תיקיית OneDrive",
 };
 
+const BUDGET_FIELDS: { key: string; label: string; hint: string }[] = [
+  { key: "budget_daily_limit", label: "סף יומי (שיחות)", hint: "מעל הסף — מעבר אוטומטי למודל חסכוני" },
+  { key: "budget_monthly_limit", label: "סף חודשי (שיחות)", hint: "מעל הסף — מעבר אוטומטי למודל חסכוני" },
+];
+
 async function apiCall(password: string, action: string, extra: Record<string, unknown> = {}) {
   const resp = await fetch(SETTINGS_URL, {
     method: "POST",
