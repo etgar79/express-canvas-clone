@@ -837,6 +837,11 @@ export const AiChatBot = () => {
     await streamChat({
       messages: newMessages,
       onDelta: (chunk) => upsertAssistant(chunk),
+      onBudget: (info) => {
+        setBudgetInfo(info);
+        // If budget mode just turned on, re-show the banner
+        if (info.active) setBudgetBannerDismissed(false);
+      },
       onDone: () => {
         setIsLoading(false);
         const sn = extractScriptContext(assistantSoFar);
