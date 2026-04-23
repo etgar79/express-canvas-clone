@@ -391,6 +391,18 @@ export default function TechDashboard() {
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "scripts" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <Terminal className="h-4 w-4 inline mr-1" /> סקריפטים
           </button>
+          <button onClick={() => setActiveTab("endpoints")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "endpoints" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <Monitor className="h-4 w-4 inline mr-1" /> מחשבים
+          </button>
+          <button onClick={() => setActiveTab("health")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "health" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <Activity className="h-4 w-4 inline mr-1" /> מצב בריאות
+          </button>
+          <button onClick={() => setActiveTab("history")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "history" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <History className="h-4 w-4 inline mr-1" /> היסטוריה
+          </button>
           <button onClick={() => setActiveTab("analytics")}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "analytics" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <BarChart3 className="h-4 w-4 inline mr-1" /> אנליטיקה
