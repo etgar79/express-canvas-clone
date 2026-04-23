@@ -18,6 +18,7 @@ type Metadata = {
   endpoint_id: string;
   alias?: string | null;
   office?: string | null;
+  contact_phone?: string | null;
 };
 
 function timeAgo(iso?: string): string {
