@@ -155,6 +155,7 @@ export default function TechDashboard() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [publicOnly, setPublicOnly] = useState(false);
+  const [botUsage, setBotUsage] = useState<{ daily: number; monthly: number } | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const copyScript = async (s: Script) => {
