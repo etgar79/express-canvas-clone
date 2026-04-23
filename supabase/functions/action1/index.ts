@@ -486,6 +486,21 @@ serve(async (req) => {
         })
         .eq("job_id", jobId)
         .eq("status", "queued");
+
+      // Trigger failure alert if status is failed (fire-and-forget)
+      if (status === "failed") {
+        try {
+          fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/alert-failure`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+            },
+            body: JSON.stringify({ jobId }),
+          }).catch(e => console.error("alert dispatch failed:", e));
+        } catch (e) { console.error("alert dispatch error:", e); }
+      }
+
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
