@@ -176,11 +176,29 @@ export default function TechDashboard() {
       setSettings(data.settings || {});
       setIsUnlocked(true);
       loadScripts();
+      loadBotUsage();
     } catch {
       setPasswordError(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadBotUsage = async () => {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const month = today.slice(0, 7);
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/bot_usage_counter?period_key=in.(${today},${month})&select=period_key,count`, {
+        headers: {
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+      });
+      const rows: { period_key: string; count: number }[] = await resp.json();
+      const daily = rows.find(r => r.period_key === today)?.count || 0;
+      const monthly = rows.find(r => r.period_key === month)?.count || 0;
+      setBotUsage({ daily, monthly });
+    } catch { /* ignore */ }
   };
 
   const loadScripts = async () => {
