@@ -204,11 +204,24 @@ serve(async (req) => {
     const lastUserMsg = [...messages].reverse().find((m: { role: string; content: string }) => m.role === "user");
     const lastUserText = lastUserMsg?.content?.trim() ?? "";
 
-    // ===== 1. Cache hit for very common greetings (zero AI cost) =====
+    // ===== Budget check (parallel) =====
+    const [limits, usage] = await Promise.all([getBudgetLimits(), getCurrentUsage()]);
+    const overDaily = usage.daily >= limits.daily;
+    const overMonthly = usage.monthly >= limits.monthly;
+    const budgetMode = overDaily || overMonthly; // when true → force cheap model
+
+    const budgetHeaders: Record<string, string> = {
+      "x-budget-mode": budgetMode ? "1" : "0",
+      "x-budget-daily": String(usage.daily),
+      "x-budget-monthly": String(usage.monthly),
+      "x-budget-daily-limit": String(limits.daily),
+      "x-budget-monthly-limit": String(limits.monthly),
+    };
+
+    // ===== 1. Cache hit (zero AI cost — no usage increment) =====
     const cacheKey = normalizeForCache(lastUserText);
     if (messages.length === 1 && COMMON_REPLIES[cacheKey]) {
       const cached = COMMON_REPLIES[cacheKey];
-      // Return as a fake SSE stream so client can treat it identically
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
         start(controller) {
@@ -219,18 +232,19 @@ serve(async (req) => {
         },
       });
       return new Response(stream, {
-        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+        headers: { ...corsHeaders, ...budgetHeaders, "Content-Type": "text/event-stream" },
       });
     }
 
-    // ===== 2. Truncate conversation to last N messages (saves tokens) =====
+    // ===== 2. Truncate conversation =====
     const trimmedMessages = messages.length > MAX_CONVERSATION_MESSAGES
       ? messages.slice(-MAX_CONVERSATION_MESSAGES)
       : messages;
 
-    // ===== 3. Intent-based model & context selection =====
+    // ===== 3. Intent → model (budget mode forces cheap model) =====
     const intent = classifyIntent(lastUserText);
-    const useFastModel = intent === "greeting" || intent === "smalltalk" || intent === "contact" || intent === "company_info";
+    const intentWantsFast = intent === "greeting" || intent === "smalltalk" || intent === "contact" || intent === "company_info";
+    const useFastModel = budgetMode || intentWantsFast;
     const needsIssuesContext = intent === "technical";
 
     let issuesContext = "";
@@ -241,7 +255,7 @@ serve(async (req) => {
       ).join("\n\n");
     }
 
-    // ===== 4. Warm, human system prompt =====
+    // ===== 4. System prompt =====
     const systemPrompt = `אתה "אתגר" — הבוט החם והאנושי של טק תרפי מחשבים. אתה מומחה תמיכה טכנית, אבל לפני הכל — אתה בנאדם.
 
 הסגנון שלך:
@@ -300,8 +314,11 @@ ${issuesContext}
       });
     }
 
+    // Count successful AI call toward budget (fire-and-forget)
+    incrementUsage().catch((e) => console.error("usage inc failed:", e));
+
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...corsHeaders, ...budgetHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (e) {
     console.error("ai-chat error:", e);
