@@ -394,6 +394,23 @@ serve(async (req) => {
         groupName = g?.name || null;
       }
 
+      const jobName = `BotRun_${(scriptName || "adhoc").replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 40)}_${Date.now()}`;
+      const jobPayload = {
+        name: jobName,
+        schedule: { type: "NOW" },
+        retry_strategy: { type: "NONE" },
+        retry_minutes: "60",
+        endpoints: targetIds.map(id => ({ id, type: "Endpoint" })),
+        actions: [
+          {
+            name: "Run Script",
+            template_id: "run_powershell",
+            params: { script_content: scriptContent }
+          }
+        ]
+      };
+      console.log("Action1 job payload:", JSON.stringify(jobPayload).slice(0, 500));
+
       const jobResp = await fetch(
         `https://app.eu.action1.com/api/3.0/automations/instances/${orgId}`,
         {
@@ -402,18 +419,7 @@ serve(async (req) => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            name: `BotRun_${(scriptName || "adhoc").replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 40)}_${Date.now()}`,
-            retry_minutes: "60",
-            endpoints: targetIds.map(id => ({ id, type: "Endpoint" })),
-            actions: [
-              {
-                name: "Run Script",
-                template_id: "run_powershell",
-                params: { script_content: scriptContent }
-              }
-            ]
-          }),
+          body: JSON.stringify(jobPayload),
         }
       );
 
