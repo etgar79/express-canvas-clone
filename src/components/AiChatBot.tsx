@@ -18,6 +18,7 @@ const IDLE_TIMEOUT_MS = 35000; // 35s of silence before nudge
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
+const MANAGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-endpoints`;
 
 // Simple stable hash for message content (used as dedupe key for ratings)
 function hashMessage(content: string): string {
@@ -293,15 +294,26 @@ function RatingButtons({ content, scriptName, userRole }: { content: string; scr
   );
 }
 
-// --- Shared: run a script on a specific endpoint ID ---
-async function runScriptOnEndpoint(scriptName: string, endpointId: string) {
+// --- Shared: run a script on one or more endpoint IDs ---
+async function runScriptOnEndpoint(
+  scriptName: string,
+  endpointIdOrIds: string | string[],
+  opts?: { groupId?: string | null; userRole?: string; triggeredBy?: string }
+) {
+  const isArr = Array.isArray(endpointIdOrIds);
+  const body: Record<string, unknown> = { scriptName };
+  if (isArr) body.endpointIds = endpointIdOrIds;
+  else body.endpointId = endpointIdOrIds;
+  if (opts?.groupId) body.groupId = opts.groupId;
+  if (opts?.userRole) body.userRole = opts.userRole;
+  if (opts?.triggeredBy) body.triggeredBy = opts.triggeredBy;
   const resp = await fetch(`${ACTION1_URL}?action=run`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ scriptName, endpointId }),
+    body: JSON.stringify(body),
   });
   return resp.json();
 }
@@ -616,44 +628,125 @@ function RunScriptPanelClient({ scriptName, onClose }: { scriptName: string; onC
 }
 
 // --- Run Script Panel (TECH) ---
-// Technicians can see all endpoints and choose any.
+// Technicians can pick a single endpoint, multiple endpoints, or a saved group.
+type GroupOption = { id: string; name: string; color?: string | null };
+type EndpointMeta = { endpoint_id: string; alias?: string | null; office?: string | null; group_id?: string | null };
+type BulkResult = { endpointId: string; endpointName: string; status: "queued" | "running" | "completed" | "failed"; error?: string };
+
 function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClose: () => void }) {
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
+  const [groups, setGroups] = useState<GroupOption[]>([]);
+  const [metaMap, setMetaMap] = useState<Map<string, EndpointMeta>>(new Map());
   const [loading, setLoading] = useState(true);
+  const [mode, setMode] = useState<"single" | "multi" | "group">("single");
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
+  const [selectedSet, setSelectedSet] = useState<Set<string>>(new Set());
+  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
+  const [filter, setFilter] = useState("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
+  const [bulkRows, setBulkRows] = useState<BulkResult[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await fetch(`${ACTION1_URL}?action=endpoints&role=tech`, {
-          headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        const headers = { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` };
+        const [epResp, mgResp] = await Promise.all([
+          fetch(`${ACTION1_URL}?action=endpoints&role=tech`, { headers }),
+          fetch(MANAGE_URL, {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "list_groups", password: TECH_PASSWORD }),
+          }),
+        ]);
+        const epData = await epResp.json();
+        const mgData = await mgResp.json();
+        if (epData.endpoints) {
+          setEndpoints(epData.endpoints);
+          if (epData.endpoints.length > 0) setSelectedEndpoint(epData.endpoints[0].id);
+        }
+        if (mgData.groups) setGroups(mgData.groups);
+
+        // Load metadata to map endpoints → groups
+        const metaResp = await fetch(MANAGE_URL, {
+          method: "POST",
+          headers: { ...headers, "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "list_metadata", password: TECH_PASSWORD }),
         });
-        const data = await resp.json();
-        if (data.endpoints) {
-          setEndpoints(data.endpoints);
-          if (data.endpoints.length > 0) setSelectedEndpoint(data.endpoints[0].id);
+        const metaData = await metaResp.json();
+        if (metaData.metadata) {
+          const m = new Map<string, EndpointMeta>();
+          for (const row of metaData.metadata) m.set(row.endpoint_id, row);
+          setMetaMap(m);
         }
       } catch {
-        setResult({ success: false, message: "שגיאה בטעינת מחשבים" });
+        setResult({ success: false, message: "שגיאה בטעינת נתונים" });
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
+  // Compute target IDs for the current selection
+  const targetIds = (() => {
+    if (mode === "single") return selectedEndpoint ? [selectedEndpoint] : [];
+    if (mode === "multi") return Array.from(selectedSet);
+    if (mode === "group" && selectedGroupId) {
+      const ids: string[] = [];
+      for (const ep of endpoints) {
+        const meta = metaMap.get(ep.id);
+        if (meta?.group_id === selectedGroupId) ids.push(ep.id);
+      }
+      return ids;
+    }
+    return [];
+  })();
+
+  const filteredEndpoints = filter
+    ? endpoints.filter(ep => {
+        const meta = metaMap.get(ep.id);
+        const hay = `${ep.name} ${meta?.alias || ""} ${meta?.office || ""}`.toLowerCase();
+        return hay.includes(filter.toLowerCase());
+      })
+    : endpoints;
+
+  const toggleEndpoint = (id: string) => {
+    setSelectedSet(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   const run = async () => {
-    if (!selectedEndpoint) return;
+    if (targetIds.length === 0) return;
     setRunning(true);
     setResult(null);
     setJobId(null);
+    setBulkRows([]);
     try {
-      const data = await runScriptOnEndpoint(scriptName, selectedEndpoint);
+      const data = await runScriptOnEndpoint(scriptName, targetIds, {
+        groupId: mode === "group" ? selectedGroupId : null,
+        userRole: "tech",
+        triggeredBy: "chatbot-tech",
+      });
       if (data.success) {
-        setResult({ success: true, message: `✅ הסקריפט נשלח (Job: ${data.jobId}). עוקב אחר ההרצה...` });
+        const count = data.targetCount || targetIds.length;
+        setResult({ success: true, message: `✅ הסקריפט נשלח ל־${count} מחשבים. עוקב אחר ההרצה...` });
         if (data.jobId) setJobId(data.jobId);
+        // Build per-endpoint tracking rows
+        const rows: BulkResult[] = targetIds.map(id => {
+          const ep = endpoints.find(e => e.id === id);
+          const meta = metaMap.get(id);
+          return {
+            endpointId: id,
+            endpointName: meta?.alias || ep?.name || id,
+            status: "queued",
+          };
+        });
+        setBulkRows(rows);
       } else {
         setResult({ success: false, message: `❌ ${data.error || "שגיאה בהרצה"}` });
       }
@@ -664,7 +757,64 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
     }
   };
 
-  const selectedName = endpoints.find(e => e.id === selectedEndpoint)?.name || "";
+  // Poll per-endpoint status when we have a jobId + bulkRows
+  useEffect(() => {
+    if (!jobId || jobId === "sent" || bulkRows.length === 0) return;
+    let cancelled = false;
+    const startedAt = Date.now();
+
+    const poll = async () => {
+      try {
+        const resp = await fetch(
+          `${ACTION1_URL}?action=status&jobId=${encodeURIComponent(jobId)}`,
+          { headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` } }
+        );
+        const data = await resp.json();
+        if (cancelled) return;
+        const perEp: Array<{ id: string; status: string }> = data.endpoints || [];
+        if (perEp.length > 0) {
+          setBulkRows(prev => prev.map(row => {
+            const match = perEp.find(p => p.id === row.endpointId);
+            if (!match) return row;
+            const s = match.status.toLowerCase();
+            let next: BulkResult["status"] = row.status;
+            if (["running", "in_progress", "executing"].includes(s)) next = "running";
+            else if (["completed", "success", "succeeded", "finished", "done"].includes(s)) next = "completed";
+            else if (["failed", "error", "failure", "cancelled", "timeout"].includes(s)) next = "failed";
+            return { ...row, status: next };
+          }));
+        } else {
+          // Fall back to overall job state
+          const overall = data.status as BulkResult["status"];
+          if (overall === "completed" || overall === "failed") {
+            setBulkRows(prev => prev.map(row => ({ ...row, status: overall })));
+            return;
+          }
+          if (overall === "running") {
+            setBulkRows(prev => prev.map(row => row.status === "queued" ? { ...row, status: "running" } : row));
+          }
+        }
+
+        const allDone = bulkRows.every(r => r.status === "completed" || r.status === "failed");
+        if (allDone) return;
+        if (Date.now() - startedAt > 5 * 60 * 1000) return;
+        setTimeout(poll, 4000);
+      } catch {
+        if (!cancelled) setTimeout(poll, 6000);
+      }
+    };
+    setTimeout(poll, 2000);
+    return () => { cancelled = true; };
+  }, [jobId, bulkRows.length]);
+
+  const statusIcon = (s: BulkResult["status"]) => {
+    if (s === "completed") return <CircleCheck className="h-3 w-3 text-accent" />;
+    if (s === "failed") return <CircleAlert className="h-3 w-3 text-destructive" />;
+    if (s === "running") return <Loader2 className="h-3 w-3 animate-spin text-primary" />;
+    return <Clock className="h-3 w-3 text-muted-foreground" />;
+  };
+  const statusLabel = (s: BulkResult["status"]) =>
+    s === "completed" ? "הצליח" : s === "failed" ? "נכשל" : s === "running" ? "רץ" : "ממתין";
 
   return (
     <div className="bg-accent/5 border border-accent/20 rounded-xl p-3 mt-2 space-y-2">
@@ -672,41 +822,132 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
         <span className="text-xs font-bold text-accent flex items-center gap-1">
           <Play className="h-3 w-3" /> הרצה מרחוק (טכנאי)
         </span>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground" aria-label="סגור">
           <X className="h-3 w-3" />
         </button>
       </div>
 
       {loading ? (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Loader2 className="h-3 w-3 animate-spin" /> טוען מחשבים...
+          <Loader2 className="h-3 w-3 animate-spin" /> טוען מחשבים וקבוצות...
         </div>
       ) : endpoints.length === 0 ? (
         <p className="text-xs text-destructive">לא נמצאו מחשבים מחוברים</p>
       ) : (
         <div className="space-y-2">
-          <label className="text-xs text-foreground/70">בחר מחשב להרצה:</label>
-          <select
-            value={selectedEndpoint}
-            onChange={(e) => setSelectedEndpoint(e.target.value)}
-            className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
-          >
-            {endpoints.map((ep) => (
-              <option key={ep.id} value={ep.id}>
-                {ep.name} ({ep.status}) {ep.lanIp ? `- ${ep.lanIp}` : ""}
-              </option>
+          {/* Mode tabs */}
+          <div className="flex gap-1 p-0.5 rounded-lg bg-background/50 border border-border">
+            {([
+              { key: "single", label: "מחשב יחיד" },
+              { key: "multi", label: "מספר מחשבים" },
+              { key: "group", label: "קבוצה" },
+            ] as const).map(opt => (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => setMode(opt.key)}
+                className={`flex-1 px-2 py-1 text-[11px] rounded-md transition-colors ${
+                  mode === opt.key
+                    ? "bg-accent text-accent-foreground font-bold"
+                    : "text-foreground/70 hover:text-foreground"
+                }`}
+              >
+                {opt.label}
+              </button>
             ))}
-          </select>
+          </div>
+
+          {mode === "single" && (
+            <select
+              value={selectedEndpoint}
+              onChange={(e) => setSelectedEndpoint(e.target.value)}
+              className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+            >
+              {endpoints.map((ep) => {
+                const meta = metaMap.get(ep.id);
+                const display = meta?.alias ? `${meta.alias} (${ep.name})` : ep.name;
+                return (
+                  <option key={ep.id} value={ep.id}>
+                    {display} — {ep.status}
+                  </option>
+                );
+              })}
+            </select>
+          )}
+
+          {mode === "multi" && (
+            <div className="space-y-1">
+              <input
+                type="text"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="סנן לפי שם / כינוי / משרד..."
+                className="w-full px-2 py-1 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+              />
+              <div className="max-h-40 overflow-y-auto border border-border rounded-lg bg-background/50">
+                {filteredEndpoints.map((ep) => {
+                  const meta = metaMap.get(ep.id);
+                  const checked = selectedSet.has(ep.id);
+                  return (
+                    <label
+                      key={ep.id}
+                      className="flex items-center gap-2 px-2 py-1 text-[11px] hover:bg-accent/5 cursor-pointer border-b border-border/50 last:border-b-0"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleEndpoint(ep.id)}
+                        className="accent-accent"
+                      />
+                      <span className="flex-1 truncate">
+                        {meta?.alias ? `${meta.alias} (${ep.name})` : ep.name}
+                        {meta?.office ? ` · ${meta.office}` : ""}
+                      </span>
+                      <span className="text-muted-foreground">{ep.status}</span>
+                    </label>
+                  );
+                })}
+              </div>
+              <p className="text-[10px] text-muted-foreground">{selectedSet.size} נבחרו</p>
+            </div>
+          )}
+
+          {mode === "group" && (
+            groups.length === 0 ? (
+              <p className="text-xs text-muted-foreground">
+                לא הוגדרו קבוצות. הוסף קבוצות בטאב "מחשבים" שבדשבורד הטכנאי.
+              </p>
+            ) : (
+              <div className="space-y-1">
+                <select
+                  value={selectedGroupId}
+                  onChange={(e) => setSelectedGroupId(e.target.value)}
+                  className="w-full px-2 py-1.5 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+                >
+                  <option value="">בחר קבוצה...</option>
+                  {groups.map(g => (
+                    <option key={g.id} value={g.id}>{g.name}</option>
+                  ))}
+                </select>
+                {selectedGroupId && (
+                  <p className="text-[10px] text-muted-foreground">
+                    {targetIds.length} מחשבים בקבוצה זו
+                  </p>
+                )}
+              </div>
+            )
+          )}
+
           <Button
             size="sm"
             onClick={run}
-            disabled={running || !selectedEndpoint}
+            disabled={running || targetIds.length === 0}
             className="w-full rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
           >
             {running ? (
               <><Loader2 className="h-3 w-3 animate-spin mr-1" /> מריץ...</>
             ) : (
-              <><Play className="h-3 w-3 mr-1" /> הרץ על {selectedName || "המחשב"}</>
+              <><Play className="h-3 w-3 mr-1" /> הרץ על {targetIds.length || 0} מחשבים</>
             )}
           </Button>
         </div>
@@ -718,7 +959,22 @@ function RunScriptPanelTech({ scriptName, onClose }: { scriptName: string; onClo
         </p>
       )}
 
-      {jobId && <JobStatusIndicator jobId={jobId} />}
+      {/* Per-endpoint progress for bulk runs */}
+      {bulkRows.length > 0 && (
+        <div className="mt-2 space-y-1 max-h-48 overflow-y-auto border border-border/50 rounded-lg bg-background/50 p-2">
+          <p className="text-[10px] font-bold text-foreground/70 mb-1">התקדמות פר־מחשב:</p>
+          {bulkRows.map(row => (
+            <div key={row.endpointId} className="flex items-center gap-2 text-[11px]">
+              {statusIcon(row.status)}
+              <span className="flex-1 truncate">{row.endpointName}</span>
+              <span className="text-muted-foreground">{statusLabel(row.status)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Single-job indicator only when not bulk */}
+      {jobId && bulkRows.length === 0 && <JobStatusIndicator jobId={jobId} />}
     </div>
   );
 }
