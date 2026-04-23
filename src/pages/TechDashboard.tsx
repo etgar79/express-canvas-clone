@@ -577,8 +577,22 @@ export default function TechDashboard() {
           </div>
         )}
 
+        {/* Endpoints Tab */}
+        {activeTab === "endpoints" && <EndpointsTab password={password} />}
+
+        {/* Health Tab */}
+        {activeTab === "health" && <HealthTab password={password} />}
+
+        {/* History Tab */}
+        {activeTab === "history" && <HistoryTab password={password} />}
+
         {/* Analytics Tab */}
-        {activeTab === "analytics" && <AnalyticsTab password={password} />}
+        {activeTab === "analytics" && (
+          <div className="space-y-6">
+            <AnalyticsTab password={password} />
+            <MissAnalyzer password={password} />
+          </div>
+        )}
 
         {/* Settings Tab */}
         {activeTab === "settings" && (
