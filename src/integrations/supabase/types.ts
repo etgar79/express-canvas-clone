@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      alert_settings: {
+        Row: {
+          alert_type: string
+          config: Json | null
+          enabled: boolean
+          id: string
+          recipient_email: string | null
+          updated_at: string
+        }
+        Insert: {
+          alert_type: string
+          config?: Json | null
+          enabled?: boolean
+          id?: string
+          recipient_email?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alert_type?: string
+          config?: Json | null
+          enabled?: boolean
+          id?: string
+          recipient_email?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       app_settings: {
         Row: {
           key: string
@@ -104,6 +131,135 @@ export type Database = {
           count?: number
           period_key?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      endpoint_groups: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      endpoints_metadata: {
+        Row: {
+          alias: string | null
+          client: string | null
+          contact_phone: string | null
+          created_at: string
+          endpoint_id: string
+          endpoint_name: string
+          group_id: string | null
+          notes: string | null
+          office: string | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          alias?: string | null
+          client?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          endpoint_id: string
+          endpoint_name: string
+          group_id?: string | null
+          notes?: string | null
+          office?: string | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          alias?: string | null
+          client?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          endpoint_id?: string
+          endpoint_name?: string
+          group_id?: string | null
+          notes?: string | null
+          office?: string | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      script_executions: {
+        Row: {
+          alert_sent: boolean | null
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          endpoint_alias: string | null
+          endpoint_id: string | null
+          endpoint_name: string | null
+          error_message: string | null
+          group_id: string | null
+          group_name: string | null
+          id: string
+          job_id: string | null
+          result_summary: string | null
+          script_name: string
+          status: string
+          triggered_by: string | null
+          user_role: string | null
+        }
+        Insert: {
+          alert_sent?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          endpoint_alias?: string | null
+          endpoint_id?: string | null
+          endpoint_name?: string | null
+          error_message?: string | null
+          group_id?: string | null
+          group_name?: string | null
+          id?: string
+          job_id?: string | null
+          result_summary?: string | null
+          script_name: string
+          status?: string
+          triggered_by?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          alert_sent?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          endpoint_alias?: string | null
+          endpoint_id?: string | null
+          endpoint_name?: string | null
+          error_message?: string | null
+          group_id?: string | null
+          group_name?: string | null
+          id?: string
+          job_id?: string | null
+          result_summary?: string | null
+          script_name?: string
+          status?: string
+          triggered_by?: string | null
+          user_role?: string | null
         }
         Relationships: []
       }

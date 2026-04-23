@@ -345,8 +345,15 @@ serve(async (req) => {
     }
 
     if (action === "run") {
-      const { scriptName, endpointId } = await req.json();
-      if (!scriptName || !endpointId) {
+      const body = await req.json();
+      const { scriptName, endpointId, endpointIds, groupId, userRole, triggeredBy } = body;
+      
+      // Support both single endpointId (backward compat) and multiple endpointIds
+      const targetIds: string[] = endpointIds && Array.isArray(endpointIds) && endpointIds.length > 0
+        ? endpointIds
+        : (endpointId ? [endpointId] : []);
+
+      if (!scriptName || targetIds.length === 0) {
         return new Response(JSON.stringify({ error: "חסרים פרטים" }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -360,6 +367,24 @@ serve(async (req) => {
       }
 
       const { token, orgId } = await getAction1Token();
+      
+      // Fetch endpoint names + metadata for logging
+      const supabase = getSupabase();
+      const allEndpoints = await fetchAllEndpoints();
+      const endpointMap = new Map(allEndpoints.map((e: any) => [e.id, e]));
+      
+      const { data: metadataRows } = await supabase
+        .from("endpoints_metadata")
+        .select("endpoint_id, alias, office, client")
+        .in("endpoint_id", targetIds);
+      const metaMap = new Map((metadataRows || []).map(m => [m.endpoint_id, m]));
+      
+      let groupName: string | null = null;
+      if (groupId) {
+        const { data: g } = await supabase.from("endpoint_groups").select("name").eq("id", groupId).maybeSingle();
+        groupName = g?.name || null;
+      }
+
       const jobResp = await fetch(
         `https://app.eu.action1.com/api/3.0/automations/instances/${orgId}`,
         {
@@ -371,16 +396,12 @@ serve(async (req) => {
           body: JSON.stringify({
             name: `BotRun_${scriptName}_${Date.now()}`,
             retry_minutes: "60",
-            endpoints: [
-              { id: endpointId, type: "Endpoint" }
-            ],
+            endpoints: targetIds.map(id => ({ id, type: "Endpoint" })),
             actions: [
               {
                 name: "Run Script",
                 template_id: "run_powershell",
-                params: {
-                  script_content: scriptContent,
-                }
+                params: { script_content: scriptContent }
               }
             ]
           }),
@@ -389,16 +410,85 @@ serve(async (req) => {
 
       if (jobResp.ok) {
         const result = await jobResp.json();
-        return new Response(JSON.stringify({ success: true, jobId: result.id || "sent" }), {
+        const jobId = result.id || "sent";
+        
+        // Log execution(s) to script_executions table — one row per endpoint
+        const executionRows = targetIds.map(epId => {
+          const ep: any = endpointMap.get(epId);
+          const meta: any = metaMap.get(epId);
+          return {
+            script_name: scriptName,
+            endpoint_id: epId,
+            endpoint_name: ep?.name || epId,
+            endpoint_alias: meta?.alias || null,
+            group_id: groupId || null,
+            group_name: groupName,
+            job_id: jobId,
+            status: "queued",
+            user_role: userRole || "unknown",
+            triggered_by: triggeredBy || (userRole === "tech" ? "tech-dashboard" : "chatbot"),
+          };
+        });
+        await supabase.from("script_executions").insert(executionRows);
+        
+        return new Response(JSON.stringify({ 
+          success: true, 
+          jobId, 
+          targetCount: targetIds.length 
+        }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       } else {
         const errText = await jobResp.text();
         console.error("Action1 job error:", jobResp.status, errText);
+        
+        // Log failed attempt
+        const failRows = targetIds.map(epId => {
+          const ep: any = endpointMap.get(epId);
+          const meta: any = metaMap.get(epId);
+          return {
+            script_name: scriptName,
+            endpoint_id: epId,
+            endpoint_name: ep?.name || epId,
+            endpoint_alias: meta?.alias || null,
+            group_id: groupId || null,
+            group_name: groupName,
+            status: "failed",
+            user_role: userRole || "unknown",
+            triggered_by: triggeredBy || "unknown",
+            error_message: `Action1 API error ${jobResp.status}`,
+          };
+        });
+        await supabase.from("script_executions").insert(failRows);
+        
         return new Response(JSON.stringify({ error: "שגיאה בשליחת הסקריפט" }), {
           status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+    }
+
+    // Update execution status (called from frontend after polling completes)
+    if (action === "update_execution") {
+      const { jobId, status, errorMessage, durationMs } = await req.json();
+      if (!jobId || !status) {
+        return new Response(JSON.stringify({ error: "חסרים פרטים" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const supabase = getSupabase();
+      await supabase
+        .from("script_executions")
+        .update({
+          status,
+          error_message: errorMessage || null,
+          duration_ms: durationMs || null,
+          completed_at: new Date().toISOString(),
+        })
+        .eq("job_id", jobId)
+        .eq("status", "queued");
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     return new Response(JSON.stringify({ error: "פעולה לא מוכרת" }), {
