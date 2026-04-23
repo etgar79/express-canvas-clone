@@ -397,7 +397,6 @@ serve(async (req) => {
       const jobName = `BotRun_${(scriptName || "adhoc").replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 40)}_${Date.now()}`;
       const jobPayload = {
         name: jobName,
-        schedule: { type: "NOW" },
         retry_strategy: { type: "NONE" },
         retry_minutes: "60",
         endpoints: targetIds.map(id => ({ id, type: "Endpoint" })),
