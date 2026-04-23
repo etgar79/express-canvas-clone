@@ -487,3 +487,319 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </div>
   );
 }
+
+type TargetMode = "single" | "multi" | "group" | "office" | "all";
+
+function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
+  endpoints: Endpoint[];
+  metadata: Map<string, Metadata>;
+  groups: Group[];
+  onClose: () => void;
+}) {
+  const [script, setScript] = useState("");
+  const [mode, setMode] = useState<TargetMode>("single");
+  const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
+  const [selectedEndpoints, setSelectedEndpoints] = useState<Set<string>>(new Set());
+  const [selectedGroup, setSelectedGroup] = useState<string>("");
+  const [selectedOffice, setSelectedOffice] = useState<string>("");
+  const [search, setSearch] = useState("");
+  const [confirmText, setConfirmText] = useState("");
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; message: string; jobId?: string } | null>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !running) onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, running]);
+
+  const offices = useMemo(() => {
+    const set = new Set<string>();
+    metadata.forEach(m => { if (m.office) set.add(m.office); });
+    return Array.from(set).sort();
+  }, [metadata]);
+
+  const onlineCount = useMemo(
+    () => endpoints.filter(e => e.status?.toLowerCase().includes("online") || e.status?.toLowerCase().includes("connect")).length,
+    [endpoints]
+  );
+
+  const filteredEndpoints = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return endpoints;
+    return endpoints.filter(ep => {
+      const meta = metadata.get(ep.id);
+      return ep.name.toLowerCase().includes(q) ||
+        meta?.alias?.toLowerCase().includes(q) ||
+        meta?.office?.toLowerCase().includes(q);
+    });
+  }, [endpoints, metadata, search]);
+
+  // Resolve target IDs based on mode
+  const targetIds = useMemo<string[]>(() => {
+    if (mode === "single") return selectedEndpoint ? [selectedEndpoint] : [];
+    if (mode === "multi") return Array.from(selectedEndpoints);
+    if (mode === "group" && selectedGroup) {
+      const ids: string[] = [];
+      metadata.forEach((m, id) => { if (m.group_id === selectedGroup) ids.push(id); });
+      return ids;
+    }
+    if (mode === "office" && selectedOffice) {
+      const ids: string[] = [];
+      metadata.forEach((m, id) => { if (m.office === selectedOffice) ids.push(id); });
+      return ids;
+    }
+    if (mode === "all") return endpoints.map(e => e.id);
+    return [];
+  }, [mode, selectedEndpoint, selectedEndpoints, selectedGroup, selectedOffice, metadata, endpoints]);
+
+  const targetCount = targetIds.length;
+  const requiresConfirm = targetCount >= 5 || mode === "all";
+  const canRun = !running && script.trim().length > 0 && targetCount > 0 &&
+    (!requiresConfirm || confirmText.trim() === "אני מאשר");
+
+  const runScript = async () => {
+    setRunning(true);
+    setResult(null);
+    try {
+      const resp = await fetch(`${ACTION1_URL}?action=run`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          scriptContent: script,
+          endpointIds: targetIds,
+          groupId: mode === "group" ? selectedGroup : undefined,
+          userRole: "tech",
+          triggeredBy: "tech-dashboard-adhoc",
+        }),
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        setResult({ ok: true, message: `הסקריפט נשלח בהצלחה ל-${data.targetCount} מחשבים`, jobId: data.jobId });
+      } else {
+        setResult({ ok: false, message: data.error || "שגיאה בשליחה" });
+      }
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "שגיאה ברשת";
+      setResult({ ok: false, message: msg });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl" onClick={() => !running && onClose()}>
+      <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl space-y-4" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Terminal className="h-5 w-5 text-accent" />
+            <h3 className="text-base font-bold text-foreground">הרצת סקריפט מותאם</h3>
+          </div>
+          <button onClick={onClose} disabled={running} className="text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label="סגור">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          הדבק כאן סקריפט PowerShell, בחר את היעד, ולחץ הרצה. הסקריפט יישלח דרך Action1 וירוץ על כל המחשבים שבחרת.
+          {" "}<span className="text-foreground/80">{onlineCount} מתוך {endpoints.length} מחשבים זמינים כעת.</span>
+        </p>
+
+        {result ? (
+          <div className={`rounded-xl p-4 border ${result.ok ? "bg-accent/10 border-accent/30" : "bg-destructive/10 border-destructive/30"}`}>
+            <div className="flex items-start gap-2">
+              {result.ok
+                ? <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                : <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />}
+              <div className="flex-1 space-y-2">
+                <p className="text-sm font-medium text-foreground">{result.message}</p>
+                {result.jobId && (
+                  <p className="text-[11px] text-muted-foreground font-mono" dir="ltr">Job ID: {result.jobId}</p>
+                )}
+                <p className="text-xs text-muted-foreground">תוכל לעקוב אחר ההתקדמות בלשונית "היסטוריה".</p>
+              </div>
+            </div>
+            <div className="flex gap-2 pt-3 mt-3 border-t border-border">
+              <Button onClick={() => { setResult(null); setScript(""); setConfirmText(""); }} variant="outline" size="sm" className="rounded-xl">
+                הרץ סקריפט נוסף
+              </Button>
+              <Button onClick={onClose} size="sm" className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
+                סגור
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <Field label="קוד הסקריפט (PowerShell)">
+              <textarea
+                value={script}
+                onChange={(e) => setScript(e.target.value)}
+                placeholder={'# הדבק כאן את הסקריפט\nGet-Service | Where-Object Status -eq "Running"'}
+                rows={8}
+                dir="ltr"
+                className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-xs font-mono focus:outline-none focus:border-accent/50 resize-y"
+                autoFocus
+              />
+            </Field>
+
+            <Field label="בחר יעד">
+              <div className="flex flex-wrap gap-1.5">
+                {([
+                  { v: "single", l: "מחשב יחיד" },
+                  { v: "multi", l: "מספר מחשבים" },
+                  { v: "group", l: "קבוצה" },
+                  { v: "office", l: "משרד" },
+                  { v: "all", l: "כל המחשבים" },
+                ] as { v: TargetMode; l: string }[]).map(opt => (
+                  <button
+                    key={opt.v}
+                    type="button"
+                    onClick={() => { setMode(opt.v); setConfirmText(""); }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-colors ${
+                      mode === opt.v
+                        ? "bg-accent text-accent-foreground border-accent"
+                        : "bg-background text-foreground border-border hover:border-accent/50"
+                    }`}
+                  >
+                    {opt.l}
+                  </button>
+                ))}
+              </div>
+            </Field>
+
+            {mode === "single" && (
+              <Field label="בחר מחשב">
+                <select
+                  value={selectedEndpoint}
+                  onChange={(e) => setSelectedEndpoint(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50"
+                >
+                  <option value="">— בחר —</option>
+                  {endpoints.map(ep => {
+                    const meta = metadata.get(ep.id);
+                    return (
+                      <option key={ep.id} value={ep.id}>
+                        {meta?.alias || ep.name}{meta?.office ? ` (${meta.office})` : ""}
+                      </option>
+                    );
+                  })}
+                </select>
+              </Field>
+            )}
+
+            {mode === "multi" && (
+              <Field label={`בחר מחשבים (${selectedEndpoints.size} נבחרו)`}>
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Search className="h-3.5 w-3.5 text-muted-foreground absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="חיפוש..."
+                      className="w-full pr-8 pl-3 py-1.5 rounded-xl border border-border bg-background text-foreground text-xs focus:outline-none focus:border-accent/50"
+                    />
+                  </div>
+                  <div className="max-h-44 overflow-y-auto border border-border rounded-xl divide-y divide-border">
+                    {filteredEndpoints.map(ep => {
+                      const meta = metadata.get(ep.id);
+                      const checked = selectedEndpoints.has(ep.id);
+                      return (
+                        <label key={ep.id} className="flex items-center gap-2 px-3 py-2 hover:bg-muted/40 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={(e) => {
+                              setSelectedEndpoints(prev => {
+                                const next = new Set(prev);
+                                if (e.target.checked) next.add(ep.id); else next.delete(ep.id);
+                                return next;
+                              });
+                            }}
+                            className="accent-accent"
+                          />
+                          <span className="text-xs text-foreground flex-1 truncate">
+                            {meta?.alias || ep.name}
+                            {meta?.office && <span className="text-muted-foreground"> · {meta.office}</span>}
+                          </span>
+                        </label>
+                      );
+                    })}
+                    {filteredEndpoints.length === 0 && (
+                      <div className="text-center py-3 text-xs text-muted-foreground">לא נמצאו מחשבים</div>
+                    )}
+                  </div>
+                </div>
+              </Field>
+            )}
+
+            {mode === "group" && (
+              <Field label="בחר קבוצה">
+                <select
+                  value={selectedGroup}
+                  onChange={(e) => setSelectedGroup(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50"
+                >
+                  <option value="">— בחר קבוצה —</option>
+                  {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+                </select>
+              </Field>
+            )}
+
+            {mode === "office" && (
+              <Field label="בחר משרד">
+                <select
+                  value={selectedOffice}
+                  onChange={(e) => setSelectedOffice(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent/50"
+                >
+                  <option value="">— בחר משרד —</option>
+                  {offices.map(o => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </Field>
+            )}
+
+            <div className="rounded-xl bg-muted/40 border border-border px-3 py-2 text-xs text-foreground">
+              <span className="font-medium">יעד נוכחי: </span>
+              <span className="text-accent font-bold">{targetCount}</span> מחשבים יקבלו את הסקריפט
+            </div>
+
+            {requiresConfirm && (
+              <div className="rounded-xl bg-destructive/10 border border-destructive/30 p-3 space-y-2">
+                <div className="flex items-center gap-2 text-destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span className="text-xs font-bold">אישור נדרש - הרצה רחבה</span>
+                </div>
+                <p className="text-xs text-foreground/80">
+                  כדי לאשר הרצה על {targetCount} מחשבים, הקלד <span className="font-bold">"אני מאשר"</span> בתיבה למטה:
+                </p>
+                <input
+                  type="text"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  placeholder="אני מאשר"
+                  className="w-full px-3 py-1.5 rounded-xl border border-destructive/40 bg-background text-foreground text-sm focus:outline-none focus:border-destructive"
+                />
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-2 border-t border-border">
+              <Button
+                onClick={runScript}
+                disabled={!canRun}
+                className="flex-1 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground"
+              >
+                {running ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Play className="h-4 w-4 mr-1" />}
+                {running ? "שולח..." : `הרץ על ${targetCount} מחשבים`}
+              </Button>
+              <Button variant="outline" onClick={onClose} disabled={running} className="rounded-xl">ביטול</Button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
