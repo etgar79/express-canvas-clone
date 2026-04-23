@@ -293,15 +293,26 @@ function RatingButtons({ content, scriptName, userRole }: { content: string; scr
   );
 }
 
-// --- Shared: run a script on a specific endpoint ID ---
-async function runScriptOnEndpoint(scriptName: string, endpointId: string) {
+// --- Shared: run a script on one or more endpoint IDs ---
+async function runScriptOnEndpoint(
+  scriptName: string,
+  endpointIdOrIds: string | string[],
+  opts?: { groupId?: string | null; userRole?: string; triggeredBy?: string }
+) {
+  const isArr = Array.isArray(endpointIdOrIds);
+  const body: Record<string, unknown> = { scriptName };
+  if (isArr) body.endpointIds = endpointIdOrIds;
+  else body.endpointId = endpointIdOrIds;
+  if (opts?.groupId) body.groupId = opts.groupId;
+  if (opts?.userRole) body.userRole = opts.userRole;
+  if (opts?.triggeredBy) body.triggeredBy = opts.triggeredBy;
   const resp = await fetch(`${ACTION1_URL}?action=run`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ scriptName, endpointId }),
+    body: JSON.stringify(body),
   });
   return resp.json();
 }
