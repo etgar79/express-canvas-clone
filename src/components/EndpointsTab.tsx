@@ -56,6 +56,7 @@ export function EndpointsTab({ password }: { password: string }) {
   const [editing, setEditing] = useState<{ ep: Endpoint; meta: Metadata } | null>(null);
   const [showGroups, setShowGroups] = useState(false);
   const [editingGroup, setEditingGroup] = useState<Group | "new" | null>(null);
+  const [showRunner, setShowRunner] = useState(false);
 
   const loadAll = async () => {
     setLoading(true);
@@ -144,6 +145,9 @@ export function EndpointsTab({ password }: { password: string }) {
         </Button>
         <Button onClick={() => setShowGroups(s => !s)} variant="outline" size="sm" className="rounded-xl">
           <Users className="h-4 w-4 mr-1" /> ניהול קבוצות ({groups.length})
+        </Button>
+        <Button onClick={() => setShowRunner(true)} size="sm" className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
+          <Terminal className="h-4 w-4 mr-1" /> הרץ סקריפט מותאם
         </Button>
         <span className="text-xs text-muted-foreground mr-auto">
           {filtered.length} מתוך {endpoints.length} מחשבים
