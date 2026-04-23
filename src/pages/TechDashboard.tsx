@@ -146,7 +146,7 @@ export default function TechDashboard() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
-  const [activeTab, setActiveTab] = useState<"settings" | "scripts" | "analytics">("scripts");
+  const [activeTab, setActiveTab] = useState<"settings" | "scripts" | "analytics" | "endpoints" | "health" | "history">("scripts");
 
   // Scripts state
   const [scripts, setScripts] = useState<Script[]>([]);
@@ -366,7 +366,7 @@ export default function TechDashboard() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8" dir="rtl">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -390,6 +390,18 @@ export default function TechDashboard() {
           <button onClick={() => setActiveTab("scripts")}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "scripts" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             <Terminal className="h-4 w-4 inline mr-1" /> סקריפטים
+          </button>
+          <button onClick={() => setActiveTab("endpoints")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "endpoints" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <Monitor className="h-4 w-4 inline mr-1" /> מחשבים
+          </button>
+          <button onClick={() => setActiveTab("health")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "health" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <Activity className="h-4 w-4 inline mr-1" /> מצב בריאות
+          </button>
+          <button onClick={() => setActiveTab("history")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "history" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            <History className="h-4 w-4 inline mr-1" /> היסטוריה
           </button>
           <button onClick={() => setActiveTab("analytics")}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "analytics" ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
@@ -565,8 +577,22 @@ export default function TechDashboard() {
           </div>
         )}
 
+        {/* Endpoints Tab */}
+        {activeTab === "endpoints" && <EndpointsTab password={password} />}
+
+        {/* Health Tab */}
+        {activeTab === "health" && <HealthTab password={password} />}
+
+        {/* History Tab */}
+        {activeTab === "history" && <HistoryTab password={password} />}
+
         {/* Analytics Tab */}
-        {activeTab === "analytics" && <AnalyticsTab password={password} />}
+        {activeTab === "analytics" && (
+          <div className="space-y-6">
+            <AnalyticsTab password={password} />
+            <MissAnalyzer password={password} />
+          </div>
+        )}
 
         {/* Settings Tab */}
         {activeTab === "settings" && (
