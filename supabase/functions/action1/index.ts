@@ -403,7 +403,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: `BotRun_${scriptName}_${Date.now()}`,
+            name: `BotRun_${(scriptName || "adhoc").replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 40)}_${Date.now()}`,
             retry_minutes: "60",
             endpoints: targetIds.map(id => ({ id, type: "Endpoint" })),
             actions: [
@@ -426,7 +426,7 @@ serve(async (req) => {
           const ep: any = endpointMap.get(epId);
           const meta: any = metaMap.get(epId);
           return {
-            script_name: scriptName,
+            script_name: logScriptName,
             endpoint_id: epId,
             endpoint_name: ep?.name || epId,
             endpoint_alias: meta?.alias || null,
@@ -456,7 +456,7 @@ serve(async (req) => {
           const ep: any = endpointMap.get(epId);
           const meta: any = metaMap.get(epId);
           return {
-            script_name: scriptName,
+            script_name: logScriptName,
             endpoint_id: epId,
             endpoint_name: ep?.name || epId,
             endpoint_alias: meta?.alias || null,
