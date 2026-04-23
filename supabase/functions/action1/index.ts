@@ -324,20 +324,31 @@ serve(async (req) => {
         normalized = "queued";
       }
 
-      // Try to derive per-endpoint outcome if available
       const endpoints = data.endpoints || data.results || data.targets || [];
       const endpointSummary = Array.isArray(endpoints)
         ? endpoints.map((e: any) => ({
             id: e.id || e.endpoint_id || "",
             name: e.name || e.endpoint_name || "",
             status: String(e.status || e.state || e.result || "").toLowerCase(),
+            errorMessage: e.error_message || e.errorMessage || e.message || null,
           }))
         : [];
+
+      const errorMessage = [
+        data.error_message,
+        data.errorMessage,
+        data.message,
+        data.developer_message,
+        data.user_message,
+        data.result_summary,
+        endpointSummary.find((e: any) => e.errorMessage)?.errorMessage,
+      ].find((value): value is string => typeof value === "string" && value.trim().length > 0) || null;
 
       return new Response(JSON.stringify({
         jobId,
         status: normalized,
         rawStatus,
+        errorMessage,
         endpoints: endpointSummary,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

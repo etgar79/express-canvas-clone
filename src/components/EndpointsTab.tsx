@@ -506,6 +506,9 @@ function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
   const [confirmText, setConfirmText] = useState("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; message: string; jobId?: string } | null>(null);
+  const [jobState, setJobState] = useState<"queued" | "running" | "completed" | "failed" | null>(null);
+  const [jobError, setJobError] = useState<string | null>(null);
+  const [elapsedSec, setElapsedSec] = useState(0);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !running) onClose(); };
@@ -535,7 +538,6 @@ function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
     });
   }, [endpoints, metadata, search]);
 
-  // Resolve target IDs based on mode
   const targetIds = useMemo<string[]>(() => {
     if (mode === "single") return selectedEndpoint ? [selectedEndpoint] : [];
     if (mode === "multi") return Array.from(selectedEndpoints);
@@ -558,9 +560,107 @@ function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
   const canRun = !running && script.trim().length > 0 && targetCount > 0 &&
     (!requiresConfirm || confirmText.trim() === "אני מאשר");
 
+  useEffect(() => {
+    const jobId = result?.jobId;
+    if (!result?.ok || !jobId || jobId === "sent") return;
+
+    let cancelled = false;
+    const startedAt = Date.now();
+    setJobState("queued");
+    setJobError(null);
+    setElapsedSec(0);
+
+    const elapsedTimer = window.setInterval(() => {
+      setElapsedSec(Math.floor((Date.now() - startedAt) / 1000));
+    }, 1000);
+
+    const syncExecution = async (status: "completed" | "failed", errorMessage?: string | null) => {
+      try {
+        await fetch(`${ACTION1_URL}?action=update_execution`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            jobId,
+            status,
+            errorMessage: errorMessage || null,
+            durationMs: Date.now() - startedAt,
+          }),
+        });
+      } catch {
+        // Ignore sync errors; user-facing status still comes from polling.
+      }
+    };
+
+    const poll = async () => {
+      try {
+        const resp = await fetch(
+          `${ACTION1_URL}?action=status&jobId=${encodeURIComponent(jobId)}`,
+          { headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` } }
+        );
+        const data = await resp.json();
+        if (cancelled) return;
+
+        if (data.error) {
+          setJobState("failed");
+          setJobError(data.error);
+          setResult(prev => prev?.jobId === jobId ? { ok: false, message: data.error, jobId } : prev);
+          await syncExecution("failed", data.error);
+          return;
+        }
+
+        const next = data.status as "queued" | "running" | "completed" | "failed";
+        const nextError = typeof data.errorMessage === "string" && data.errorMessage.trim()
+          ? data.errorMessage.trim()
+          : null;
+
+        setJobState(next);
+        setJobError(next === "failed" ? nextError : null);
+
+        if (next === "completed") {
+          setResult(prev => prev?.jobId === jobId ? { ok: true, message: "ההרצה הושלמה בהצלחה", jobId } : prev);
+          await syncExecution("completed");
+          return;
+        }
+
+        if (next === "failed") {
+          const message = nextError || "Action1 דיווח על כשל בהרצת הסקריפט";
+          setResult(prev => prev?.jobId === jobId ? { ok: false, message, jobId } : prev);
+          await syncExecution("failed", message);
+          return;
+        }
+
+        if (Date.now() - startedAt > 5 * 60 * 1000) {
+          const timeoutMessage = "פג הזמן לבדיקת סטטוס ההרצה";
+          setJobState("failed");
+          setJobError(timeoutMessage);
+          setResult(prev => prev?.jobId === jobId ? { ok: false, message: timeoutMessage, jobId } : prev);
+          await syncExecution("failed", timeoutMessage);
+          return;
+        }
+
+        window.setTimeout(poll, 3000);
+      } catch {
+        if (!cancelled) window.setTimeout(poll, 5000);
+      }
+    };
+
+    poll();
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(elapsedTimer);
+    };
+  }, [result?.jobId, result?.ok]);
+
   const runScript = async () => {
     setRunning(true);
     setResult(null);
+    setJobState(null);
+    setJobError(null);
+    setElapsedSec(0);
     try {
       const resp = await fetch(`${ACTION1_URL}?action=run`, {
         method: "POST",
@@ -578,7 +678,7 @@ function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
-        setResult({ ok: true, message: `הסקריפט נשלח בהצלחה ל-${data.targetCount} מחשבים`, jobId: data.jobId });
+        setResult({ ok: true, message: `הסקריפט נשלח ל-${data.targetCount} מחשבים, בודק סטטוס...`, jobId: data.jobId });
       } else {
         setResult({ ok: false, message: data.error || "שגיאה בשליחה" });
       }
@@ -589,6 +689,32 @@ function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
       setRunning(false);
     }
   };
+
+  const statusMeta = jobError || jobState === "failed"
+    ? {
+        icon: <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />,
+        label: jobError || "ההרצה נכשלה",
+        boxClass: "bg-destructive/10 border-destructive/30",
+      }
+    : jobState === "completed"
+      ? {
+          icon: <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />,
+          label: "ההרצה הושלמה בהצלחה",
+          boxClass: "bg-accent/10 border-accent/30",
+        }
+      : jobState === "running"
+        ? {
+            icon: <Loader2 className="h-4 w-4 text-accent shrink-0 animate-spin" />,
+            label: "Action1 מריץ כעת את הסקריפט",
+            boxClass: "bg-accent/10 border-accent/30",
+          }
+        : jobState === "queued"
+          ? {
+              icon: <Activity className="h-4 w-4 text-muted-foreground shrink-0" />,
+              label: "ההרצה ממתינה בתור של Action1",
+              boxClass: "bg-muted/30 border-border",
+            }
+          : null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl" onClick={() => !running && onClose()}>
@@ -619,11 +745,24 @@ function AdHocScriptRunner({ endpoints, metadata, groups, onClose }: {
                 {result.jobId && (
                   <p className="text-[11px] text-muted-foreground font-mono" dir="ltr">Job ID: {result.jobId}</p>
                 )}
-                <p className="text-xs text-muted-foreground">תוכל לעקוב אחר ההתקדמות בלשונית "היסטוריה".</p>
+                {result.jobId && statusMeta && (
+                  <div className={`rounded-lg border px-3 py-2 ${statusMeta.boxClass}`}>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-2 text-xs text-foreground">
+                        {statusMeta.icon}
+                        <span>{statusMeta.label}</span>
+                      </span>
+                      {(jobState === "queued" || jobState === "running") && (
+                        <span className="text-[11px] text-muted-foreground whitespace-nowrap">{elapsedSec}s</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">תוכל לעקוב אחר ההתקדמות גם בלשונית "היסטוריה".</p>
               </div>
             </div>
             <div className="flex gap-2 pt-3 mt-3 border-t border-border">
-              <Button onClick={() => { setResult(null); setScript(""); setConfirmText(""); }} variant="outline" size="sm" className="rounded-xl">
+              <Button onClick={() => { setResult(null); setScript(""); setConfirmText(""); setJobState(null); setJobError(null); setElapsedSec(0); }} variant="outline" size="sm" className="rounded-xl">
                 הרץ סקריפט נוסף
               </Button>
               <Button onClick={onClose} size="sm" className="rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground">
