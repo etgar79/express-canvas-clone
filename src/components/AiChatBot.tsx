@@ -33,13 +33,22 @@ function logUsage(scriptName: string, eventType: "suggested" | "copied" | "run" 
   supabase.from("script_usage").insert({ script_name: scriptName, event_type: eventType, user_role: userRole }).then(() => {});
 }
 
+type BudgetInfo = {
+  active: boolean;
+  daily: number;
+  monthly: number;
+  dailyLimit: number;
+  monthlyLimit: number;
+};
+
 async function streamChat({
-  messages, onDelta, onDone, onError,
+  messages, onDelta, onDone, onError, onBudget,
 }: {
   messages: Msg[];
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
+  onBudget?: (info: BudgetInfo) => void;
 }) {
   try {
     const resp = await fetch(CHAT_URL, {
@@ -50,6 +59,20 @@ async function streamChat({
       },
       body: JSON.stringify({ messages }),
     });
+
+    // Read budget headers (exposed via Access-Control-Expose-Headers)
+    if (onBudget) {
+      const mode = resp.headers.get("x-budget-mode");
+      if (mode !== null) {
+        onBudget({
+          active: mode === "1",
+          daily: parseInt(resp.headers.get("x-budget-daily") || "0") || 0,
+          monthly: parseInt(resp.headers.get("x-budget-monthly") || "0") || 0,
+          dailyLimit: parseInt(resp.headers.get("x-budget-daily-limit") || "0") || 0,
+          monthlyLimit: parseInt(resp.headers.get("x-budget-monthly-limit") || "0") || 0,
+        });
+      }
+    }
 
     if (!resp.ok) {
       const data = await resp.json().catch(() => ({}));
