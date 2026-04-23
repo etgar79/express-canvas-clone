@@ -18,6 +18,7 @@ const IDLE_TIMEOUT_MS = 35000; // 35s of silence before nudge
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 const ACTION1_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/action1`;
+const MANAGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-endpoints`;
 
 // Simple stable hash for message content (used as dedupe key for ratings)
 function hashMessage(content: string): string {
