@@ -971,6 +971,29 @@ export const AiChatBot = () => {
                   </div>
                 )}
 
+                {/* Budget mode banner — shown when daily/monthly chat budget reached */}
+                {budgetInfo?.active && !budgetBannerDismissed && (
+                  <div className="animate-fade-in flex items-start gap-2 rounded-xl border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-foreground/90">
+                    <CircleAlert className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                    <div className="flex-1 leading-relaxed">
+                      <div className="font-bold text-accent mb-0.5">מצב חיסכון פעיל</div>
+                      <div>
+                        השגנו את מכסת השיחות {budgetInfo.daily >= budgetInfo.dailyLimit ? "היומית" : "החודשית"} ({budgetInfo.daily >= budgetInfo.dailyLimit ? `${budgetInfo.daily}/${budgetInfo.dailyLimit}` : `${budgetInfo.monthly}/${budgetInfo.monthlyLimit}`}). הבוט ממשיך לעבוד עם מודל מהיר וחסכוני.{" "}
+                        <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-accent">
+                          לתמיכה אישית בוואטסאפ
+                        </a>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setBudgetBannerDismissed(true)}
+                      aria-label="סגור התראה"
+                      className="shrink-0 text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+
                 {messages.map((msg, i) => (
                   <div key={i} className="animate-fade-in">
                     <div className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
