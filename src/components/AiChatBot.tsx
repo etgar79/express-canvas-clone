@@ -752,6 +752,8 @@ export const AiChatBot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [runScriptIndex, setRunScriptIndex] = useState<number | null>(null);
   const [showIdleNudge, setShowIdleNudge] = useState(false);
+  const [budgetInfo, setBudgetInfo] = useState<BudgetInfo | null>(null);
+  const [budgetBannerDismissed, setBudgetBannerDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
