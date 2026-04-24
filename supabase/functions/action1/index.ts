@@ -311,6 +311,32 @@ serve(async (req) => {
       }
       const data = await resp.json();
       console.log("Action1 status response:", JSON.stringify(data).slice(0, 2000));
+
+      let endpointResultsPayload: any = null;
+      const endpointResultsUrl =
+        typeof data.endpoint_results === "string" && data.endpoint_results.trim().length > 0
+          ? data.endpoint_results.trim()
+          : typeof data.endpointResults === "string" && data.endpointResults.trim().length > 0
+            ? data.endpointResults.trim()
+            : null;
+
+      if (endpointResultsUrl) {
+        try {
+          const endpointResp = await fetch(endpointResultsUrl, {
+            headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+          });
+          if (endpointResp.ok) {
+            endpointResultsPayload = await endpointResp.json();
+            console.log("Action1 endpoint results response:", JSON.stringify(endpointResultsPayload).slice(0, 2000));
+          } else {
+            const endpointErr = await endpointResp.text();
+            console.error("Action1 endpoint results error:", endpointResp.status, endpointErr);
+          }
+        } catch (endpointError) {
+          console.error("Action1 endpoint results fetch failed:", endpointError);
+        }
+      }
+
       // Action1 returns status fields like: status, state, result, etc.
       // Normalize to a simple state machine: queued | running | completed | failed
       const rawStatus = String(data.status || data.state || "").toLowerCase();
@@ -325,16 +351,59 @@ serve(async (req) => {
         normalized = "queued";
       }
 
-      const endpoints = data.endpoints || data.results || data.targets || [];
-      const endpointSummary = Array.isArray(endpoints)
-        ? endpoints.map((e: any) => ({
-            id: e.id || e.endpoint_id || "",
-            name: e.name || e.endpoint_name || "",
-            status: String(e.status || e.state || e.result || "").toLowerCase(),
-            errorMessage: e.error_message || e.errorMessage || e.message || e.output || e.stderr || e.result_message || null,
-            exitCode: e.exit_code ?? e.exitCode ?? null,
-          }))
+      const endpointResults = endpointResultsPayload?.items
+        || endpointResultsPayload?.results
+        || endpointResultsPayload?.endpoints
+        || endpointResultsPayload?.data
+        || data.endpoints
+        || data.results
+        || data.targets
+        || [];
+
+      const endpointSummary = Array.isArray(endpointResults)
+        ? endpointResults.map((e: any) => {
+            const endpointInfo = e.endpoint || e.target || e.device || {};
+            const status = String(
+              e.status
+              || e.state
+              || e.result
+              || e.execution_status
+              || e.outcome
+              || endpointInfo.status
+              || ""
+            ).toLowerCase();
+
+            const errorMessage = [
+              e.error_message,
+              e.errorMessage,
+              e.failure_reason,
+              e.result_message,
+              e.message,
+              e.stderr,
+              e.output,
+              e.details?.message,
+              e.last_error,
+              endpointInfo.error_message,
+            ].find((value): value is string => typeof value === "string" && value.trim().length > 0) || null;
+
+            return {
+              id: e.id || e.endpoint_id || e.endpointId || endpointInfo.id || "",
+              name: e.name || e.endpoint_name || e.endpointName || endpointInfo.name || endpointInfo.device_name || "",
+              status,
+              errorMessage,
+              exitCode: e.exit_code ?? e.exitCode ?? e.result_code ?? null,
+            };
+          })
         : [];
+
+      const failedEndpoint = endpointSummary.find((e: any) => (
+        ["failed", "error", "failure", "cancelled", "canceled", "timeout"].includes(e.status)
+        || (typeof e.exitCode === "number" && e.exitCode !== 0)
+      ));
+
+      if (normalized !== "failed" && failedEndpoint) {
+        normalized = "failed";
+      }
 
       // Try to extract a meaningful error from many possible fields Action1 uses
       const errorMessage = [
@@ -346,8 +415,9 @@ serve(async (req) => {
         data.result_summary,
         data.error,
         data.failure_reason,
-        endpointSummary.find((e: any) => e.errorMessage)?.errorMessage,
-        endpointSummary.find((e: any) => e.exitCode && e.exitCode !== 0) ? `Exit code: ${endpointSummary.find((e: any) => e.exitCode && e.exitCode !== 0)?.exitCode}` : null,
+        failedEndpoint?.name && failedEndpoint?.errorMessage ? `${failedEndpoint.name}: ${failedEndpoint.errorMessage}` : null,
+        failedEndpoint?.errorMessage,
+        typeof failedEndpoint?.exitCode === "number" && failedEndpoint.exitCode !== 0 ? `${failedEndpoint.name || "Script"}: Exit code ${failedEndpoint.exitCode}` : null,
       ].find((value): value is string => typeof value === "string" && value.trim().length > 0) || null;
 
       return new Response(JSON.stringify({
