@@ -310,6 +310,7 @@ serve(async (req) => {
         });
       }
       const data = await resp.json();
+      console.log("Action1 status response:", JSON.stringify(data).slice(0, 2000));
       // Action1 returns status fields like: status, state, result, etc.
       // Normalize to a simple state machine: queued | running | completed | failed
       const rawStatus = String(data.status || data.state || "").toLowerCase();
