@@ -352,6 +352,7 @@ serve(async (req) => {
       }
 
       const endpointResults = endpointResultsPayload?.items
+        || endpointResultsPayload?.items
         || endpointResultsPayload?.results
         || endpointResultsPayload?.endpoints
         || endpointResultsPayload?.data
@@ -374,6 +375,7 @@ serve(async (req) => {
             ).toLowerCase();
 
             const errorMessage = [
+              e.description, // Action1 puts the real error here for endpoint_results items
               e.error_message,
               e.errorMessage,
               e.failure_reason,
@@ -383,6 +385,7 @@ serve(async (req) => {
               e.output,
               e.details?.message,
               e.last_error,
+              e.action_name && status !== "completed" && status !== "success" ? null : null, // placeholder
               endpointInfo.error_message,
             ].find((value): value is string => typeof value === "string" && value.trim().length > 0) || null;
 
