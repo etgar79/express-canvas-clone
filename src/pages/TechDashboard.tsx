@@ -226,6 +226,7 @@ export default function TechDashboard() {
   const [expandedScript, setExpandedScript] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [runningScript, setRunningScript] = useState<Script | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [publicOnly, setPublicOnly] = useState(false);
   const [botUsage, setBotUsage] = useState<{ daily: number; monthly: number } | null>(null);
