@@ -198,6 +198,14 @@ export function HistoryTab({ password }: { password: string }) {
             {executions.map(ex => (
               <div key={ex.id} className="bg-card border border-border rounded-xl p-3 space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={() => setRunScriptName(ex.script_name)}
+                    className="shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-lg bg-accent/10 text-accent hover:bg-accent hover:text-accent-foreground transition-colors"
+                    title={`הרץ שוב את ${ex.script_name} ב-Action1`}
+                    aria-label={`הרץ שוב את ${ex.script_name}`}
+                  >
+                    <Play className="h-3 w-3" />
+                  </button>
                   <StatusBadge status={ex.status} />
                   <span className="text-sm font-medium text-foreground">{ex.script_name}</span>
                   <span className="text-xs text-muted-foreground">→</span>
@@ -224,6 +232,14 @@ export function HistoryTab({ password }: { password: string }) {
           </div>
         )}
       </div>
+
+      {runScriptName && (
+        <RunOnAction1Panel
+          scriptName={runScriptName}
+          password={password}
+          onClose={() => setRunScriptName(null)}
+        />
+      )}
     </div>
   );
 }
