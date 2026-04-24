@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, RefreshCw, History, CheckCircle2, XCircle, Clock, AlertCircle, Filter, TrendingUp } from "lucide-react";
+import { Loader2, RefreshCw, History, CheckCircle2, XCircle, Clock, AlertCircle, Filter, TrendingUp, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RunOnAction1Panel } from "@/components/RunOnAction1Panel";
 
 const MANAGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-endpoints`;
 
@@ -56,6 +57,7 @@ export function HistoryTab({ password }: { password: string }) {
   const [loading, setLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterScript, setFilterScript] = useState<string>("");
+  const [runScriptName, setRunScriptName] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -154,8 +156,16 @@ export function HistoryTab({ password }: { password: string }) {
           <div className="space-y-2">
             {topScripts.map(s => (
               <div key={s.name} className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-foreground font-medium truncate flex-1 ml-2">{s.name}</span>
+                <div className="flex items-center justify-between text-xs gap-2">
+                  <button
+                    onClick={() => setRunScriptName(s.name)}
+                    className="shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-lg bg-accent/10 text-accent hover:bg-accent hover:text-accent-foreground transition-colors"
+                    title={`הרץ ${s.name} ב-Action1`}
+                    aria-label={`הרץ ${s.name} ב-Action1`}
+                  >
+                    <Play className="h-3 w-3" />
+                  </button>
+                  <span className="text-foreground font-medium truncate flex-1">{s.name}</span>
                   <span className="text-muted-foreground tabular-nums shrink-0">
                     {s.success}/{s.total} ({s.rate}%)
                   </span>
@@ -188,6 +198,14 @@ export function HistoryTab({ password }: { password: string }) {
             {executions.map(ex => (
               <div key={ex.id} className="bg-card border border-border rounded-xl p-3 space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={() => setRunScriptName(ex.script_name)}
+                    className="shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-lg bg-accent/10 text-accent hover:bg-accent hover:text-accent-foreground transition-colors"
+                    title={`הרץ שוב את ${ex.script_name} ב-Action1`}
+                    aria-label={`הרץ שוב את ${ex.script_name}`}
+                  >
+                    <Play className="h-3 w-3" />
+                  </button>
                   <StatusBadge status={ex.status} />
                   <span className="text-sm font-medium text-foreground">{ex.script_name}</span>
                   <span className="text-xs text-muted-foreground">→</span>
@@ -214,6 +232,14 @@ export function HistoryTab({ password }: { password: string }) {
           </div>
         )}
       </div>
+
+      {runScriptName && (
+        <RunOnAction1Panel
+          scriptName={runScriptName}
+          password={password}
+          onClose={() => setRunScriptName(null)}
+        />
+      )}
     </div>
   );
 }
