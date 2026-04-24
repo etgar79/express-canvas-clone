@@ -57,6 +57,7 @@ export function HistoryTab({ password }: { password: string }) {
   const [loading, setLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterScript, setFilterScript] = useState<string>("");
+  const [runScriptName, setRunScriptName] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
