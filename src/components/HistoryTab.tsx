@@ -156,8 +156,16 @@ export function HistoryTab({ password }: { password: string }) {
           <div className="space-y-2">
             {topScripts.map(s => (
               <div key={s.name} className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-foreground font-medium truncate flex-1 ml-2">{s.name}</span>
+                <div className="flex items-center justify-between text-xs gap-2">
+                  <button
+                    onClick={() => setRunScriptName(s.name)}
+                    className="shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-lg bg-accent/10 text-accent hover:bg-accent hover:text-accent-foreground transition-colors"
+                    title={`הרץ ${s.name} ב-Action1`}
+                    aria-label={`הרץ ${s.name} ב-Action1`}
+                  >
+                    <Play className="h-3 w-3" />
+                  </button>
+                  <span className="text-foreground font-medium truncate flex-1">{s.name}</span>
                   <span className="text-muted-foreground tabular-nums shrink-0">
                     {s.success}/{s.total} ({s.rate}%)
                   </span>
