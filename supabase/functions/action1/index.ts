@@ -310,6 +310,7 @@ serve(async (req) => {
         });
       }
       const data = await resp.json();
+      console.log("Action1 status response:", JSON.stringify(data).slice(0, 2000));
       // Action1 returns status fields like: status, state, result, etc.
       // Normalize to a simple state machine: queued | running | completed | failed
       const rawStatus = String(data.status || data.state || "").toLowerCase();
@@ -330,10 +331,12 @@ serve(async (req) => {
             id: e.id || e.endpoint_id || "",
             name: e.name || e.endpoint_name || "",
             status: String(e.status || e.state || e.result || "").toLowerCase(),
-            errorMessage: e.error_message || e.errorMessage || e.message || null,
+            errorMessage: e.error_message || e.errorMessage || e.message || e.output || e.stderr || e.result_message || null,
+            exitCode: e.exit_code ?? e.exitCode ?? null,
           }))
         : [];
 
+      // Try to extract a meaningful error from many possible fields Action1 uses
       const errorMessage = [
         data.error_message,
         data.errorMessage,
@@ -341,7 +344,10 @@ serve(async (req) => {
         data.developer_message,
         data.user_message,
         data.result_summary,
+        data.error,
+        data.failure_reason,
         endpointSummary.find((e: any) => e.errorMessage)?.errorMessage,
+        endpointSummary.find((e: any) => e.exitCode && e.exitCode !== 0) ? `Exit code: ${endpointSummary.find((e: any) => e.exitCode && e.exitCode !== 0)?.exitCode}` : null,
       ].find((value): value is string => typeof value === "string" && value.trim().length > 0) || null;
 
       return new Response(JSON.stringify({
@@ -350,6 +356,7 @@ serve(async (req) => {
         rawStatus,
         errorMessage,
         endpoints: endpointSummary,
+        raw: data, // include full response for debugging
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
