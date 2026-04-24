@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter, BarChart3, Monitor, Activity, History } from "lucide-react";
+import { Settings, Eye, EyeOff, Save, Loader2, Lock, ArrowRight, Shield, Plus, Pencil, Trash2, RefreshCw, Terminal, X, ChevronDown, Cloud, Search, Copy, Check, Globe, Download, Filter, BarChart3, Monitor, Activity, History, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -9,6 +9,7 @@ import { EndpointsTab } from "@/components/EndpointsTab";
 import { HealthTab } from "@/components/HealthTab";
 import { HistoryTab } from "@/components/HistoryTab";
 import { MissAnalyzer } from "@/components/MissAnalyzer";
+import { RunOnAction1Panel } from "@/components/RunOnAction1Panel";
 
 const SETTINGS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/settings`;
 
@@ -225,6 +226,7 @@ export default function TechDashboard() {
   const [expandedScript, setExpandedScript] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [runningScript, setRunningScript] = useState<Script | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [publicOnly, setPublicOnly] = useState(false);
   const [botUsage, setBotUsage] = useState<{ daily: number; monthly: number } | null>(null);
@@ -604,6 +606,12 @@ export default function TechDashboard() {
                             title="הורד כקובץ .ps1">
                             <Download className="h-3.5 w-3.5" />
                           </button>
+                          <button onClick={(e) => { e.stopPropagation(); setRunningScript(s); }}
+                            className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
+                            aria-label="הרץ ב-Action1"
+                            title="הרץ ב-Action1">
+                            <Play className="h-3.5 w-3.5" />
+                          </button>
                           <button onClick={(e) => { e.stopPropagation(); setEditingScript(s); }}
                             className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
                             aria-label="ערוך סקריפט">
@@ -774,6 +782,15 @@ export default function TechDashboard() {
           script={editingScript === "new" ? null : editingScript}
           onSave={saveScript}
           onCancel={() => setEditingScript(null)}
+        />
+      )}
+
+      {/* Run on Action1 Modal */}
+      {runningScript && (
+        <RunOnAction1Panel
+          scriptName={runningScript.name}
+          password={password}
+          onClose={() => setRunningScript(null)}
         />
       )}
     </div>
