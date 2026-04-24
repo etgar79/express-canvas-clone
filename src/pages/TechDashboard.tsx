@@ -18,6 +18,7 @@ type Script = {
   name: string;
   description: string;
   script: string;
+  script_action1?: string | null;
   category: string;
   is_public: boolean;
 };
@@ -68,7 +69,10 @@ function downloadScriptFile(s: Script) {
 
 // --- Script Editor Modal ---
 function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onSave: (s: Script) => void; onCancel: () => void }) {
-  const [form, setForm] = useState<Script>(script || { name: "", description: "", script: "", category: "כללי", is_public: false });
+  const [form, setForm] = useState<Script>(
+    script || { name: "", description: "", script: "", script_action1: "", category: "כללי", is_public: false }
+  );
+  const [scriptTab, setScriptTab] = useState<"manual" | "action1">("manual");
 
   // Esc to close
   useEffect(() => {
@@ -83,9 +87,17 @@ function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onS
     return () => window.removeEventListener("keydown", onKey);
   }, [form, onCancel, onSave]);
 
+  const action1Value = form.script_action1 || "";
+  const hasAction1 = action1Value.trim().length > 0;
+
+  const copyManualToAction1 = () => {
+    setForm(p => ({ ...p, script_action1: p.script }));
+    setScriptTab("action1");
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" dir="rtl" onClick={onCancel}>
-      <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl space-y-4" onClick={e => e.stopPropagation()}>
+      <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl space-y-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-foreground">{script?.id ? "עריכת סקריפט" : "סקריפט חדש"}</h3>
           <button onClick={onCancel} className="text-muted-foreground hover:text-foreground" aria-label="סגור"><X className="h-5 w-5" /></button>
@@ -116,10 +128,66 @@ function ScriptEditor({ script, onSave, onCancel }: { script: Script | null; onS
               </label>
             </div>
           </div>
+
+          {/* Script version tabs */}
           <div>
-            <label className="text-xs font-medium text-foreground/70 block mb-1">סקריפט (PowerShell)</label>
-            <textarea value={form.script} onChange={e => setForm(p => ({ ...p, script: e.target.value }))} rows={10}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-xs font-mono focus:outline-none focus:border-accent/50" dir="ltr" />
+            <div className="flex items-center gap-1 border-b border-border mb-2">
+              <button
+                type="button"
+                onClick={() => setScriptTab("manual")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-t-lg transition-colors ${scriptTab === "manual" ? "bg-accent/10 text-accent border-b-2 border-accent -mb-px" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                📋 ידני (העתק-הדבק)
+              </button>
+              <button
+                type="button"
+                onClick={() => setScriptTab("action1")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-t-lg transition-colors flex items-center gap-1.5 ${scriptTab === "action1" ? "bg-accent/10 text-accent border-b-2 border-accent -mb-px" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                ⚡ Action1
+                {hasAction1 && <span className="w-1.5 h-1.5 rounded-full bg-accent" title="קיימת גרסה ייעודית" />}
+              </button>
+              <div className="flex-1" />
+              {scriptTab === "action1" && !hasAction1 && (
+                <button
+                  type="button"
+                  onClick={copyManualToAction1}
+                  className="text-[10px] text-accent hover:underline"
+                  title="העתק את הגרסה הידנית כנקודת התחלה"
+                >
+                  ↗ העתק מהגרסה הידנית
+                </button>
+              )}
+            </div>
+
+            {scriptTab === "manual" ? (
+              <>
+                <p className="text-[10px] text-muted-foreground mb-1">
+                  גרסה להרצה ידנית (PowerShell ISE / Terminal). חובה.
+                </p>
+                <textarea
+                  value={form.script}
+                  onChange={e => setForm(p => ({ ...p, script: e.target.value }))}
+                  rows={12}
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-xs font-mono focus:outline-none focus:border-accent/50"
+                  dir="ltr"
+                />
+              </>
+            ) : (
+              <>
+                <p className="text-[10px] text-muted-foreground mb-1">
+                  גרסה ל-Action1: ללא לולאות אינסופיות, ללא <code>Read-Host</code>/<code>Get-Credential</code>, מסתיים ב-<code>exit 0</code>. אם ריק — Action1 ישתמש בגרסה הידנית.
+                </p>
+                <textarea
+                  value={action1Value}
+                  onChange={e => setForm(p => ({ ...p, script_action1: e.target.value }))}
+                  rows={12}
+                  placeholder="# גרסה מותאמת ל-Action1 (אופציונלי)&#10;# אם משאירים ריק — Action1 ישתמש בגרסה הידנית"
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-foreground text-xs font-mono focus:outline-none focus:border-accent/50"
+                  dir="ltr"
+                />
+              </>
+            )}
           </div>
         </div>
 
