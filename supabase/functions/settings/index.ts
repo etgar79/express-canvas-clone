@@ -81,10 +81,12 @@ serve(async (req) => {
       const { script } = body;
       if (!script?.name || !script?.script) return json({ error: "שם וסקריפט חובה" }, 400);
       
+      const action1Raw = typeof script.script_action1 === "string" ? script.script_action1.trim() : "";
       const row = {
         name: script.name.trim().slice(0, 200),
         description: (script.description || "").trim().slice(0, 500),
         script: script.script.trim(),
+        script_action1: action1Raw.length > 0 ? action1Raw : null,
         category: (script.category || "כללי").trim().slice(0, 50),
         is_public: script.is_public !== false,
         updated_at: new Date().toISOString(),

@@ -1,0 +1,1 @@
+ALTER TABLE public.scripts ADD COLUMN IF NOT EXISTS script_action1 text;

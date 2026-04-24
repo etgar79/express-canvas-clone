@@ -133,10 +133,18 @@ function parseCSVLine(line: string): string[] {
 }
 
 async function getScript(scriptName: string): Promise<string | null> {
-  // Try DB first
+  // Try DB first — prefer Action1-optimized version, fall back to manual version
   const supabase = getSupabase();
-  const { data } = await supabase.from("scripts").select("script").eq("name", scriptName).maybeSingle();
-  if (data?.script) return data.script;
+  const { data } = await supabase
+    .from("scripts")
+    .select("script, script_action1")
+    .eq("name", scriptName)
+    .maybeSingle();
+  if (data) {
+    const action1 = typeof data.script_action1 === "string" ? data.script_action1.trim() : "";
+    if (action1) return action1;
+    if (data.script) return data.script;
+  }
 
   // Fallback to Google Sheets
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;

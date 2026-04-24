@@ -323,6 +323,7 @@ export type Database = {
           is_public: boolean
           name: string
           script: string
+          script_action1: string | null
           updated_at: string | null
         }
         Insert: {
@@ -333,6 +334,7 @@ export type Database = {
           is_public?: boolean
           name: string
           script: string
+          script_action1?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -343,6 +345,7 @@ export type Database = {
           is_public?: boolean
           name?: string
           script?: string
+          script_action1?: string | null
           updated_at?: string | null
         }
         Relationships: []
