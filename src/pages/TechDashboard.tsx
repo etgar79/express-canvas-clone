@@ -784,6 +784,15 @@ export default function TechDashboard() {
           onCancel={() => setEditingScript(null)}
         />
       )}
+
+      {/* Run on Action1 Modal */}
+      {runningScript && (
+        <RunOnAction1Panel
+          scriptName={runningScript.name}
+          password={password}
+          onClose={() => setRunningScript(null)}
+        />
+      )}
     </div>
   );
 }
