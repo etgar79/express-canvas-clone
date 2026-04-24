@@ -606,6 +606,12 @@ export default function TechDashboard() {
                             title="הורד כקובץ .ps1">
                             <Download className="h-3.5 w-3.5" />
                           </button>
+                          <button onClick={(e) => { e.stopPropagation(); setRunningScript(s); }}
+                            className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
+                            aria-label="הרץ ב-Action1"
+                            title="הרץ ב-Action1">
+                            <Play className="h-3.5 w-3.5" />
+                          </button>
                           <button onClick={(e) => { e.stopPropagation(); setEditingScript(s); }}
                             className="p-1.5 rounded-lg hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors"
                             aria-label="ערוך סקריפט">
