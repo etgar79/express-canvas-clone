@@ -494,7 +494,9 @@ serve(async (req) => {
           {
             name: "Run Script",
             template_id: "run_powershell",
-            params: { script_content: scriptContent }
+            // Action1's run_powershell template expects `script_text` (not script_content).
+            // We send both keys for forward/back compatibility with template variants.
+            params: { script_text: scriptContent, script_content: scriptContent }
           }
         ]
       };
