@@ -116,6 +116,28 @@ export const Header = () => {
         </div>
       </div>
 
+      {/* Mobile quick remote-support buttons (always visible on mobile) */}
+      <div className="md:hidden flex gap-2 px-4 pb-2 bg-background/95 border-t border-border/50">
+        <Button variant="default" size="sm" className="flex-1 font-bold bg-primary text-primary-foreground text-xs" asChild>
+          <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
+            <Mail className="ml-1 h-4 w-4" />
+            תמיכה מרחוק
+          </a>
+        </Button>
+        <Button variant="outline" size="sm" className="flex-1 text-xs border-primary/40" asChild>
+          <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאנדרואיד">
+            <Smartphone className="ml-1 h-4 w-4" />
+            אנדרואיד
+          </a>
+        </Button>
+        <Button variant="outline" size="sm" className="flex-1 text-xs border-primary/40" asChild>
+          <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאייפון">
+            <Apple className="ml-1 h-4 w-4" />
+            אייפון
+          </a>
+        </Button>
+      </div>
+
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border p-4 space-y-2 bg-background/98">
