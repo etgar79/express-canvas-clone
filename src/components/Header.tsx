@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X } from "lucide-react";
+import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X, Smartphone, Apple } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -61,6 +61,18 @@ export const Header = () => {
             <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
               <Mail className="ml-2 h-5 w-5" />
               תמיכה מרחוק
+            </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאנדרואיד">
+            <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאנדרואיד">
+              <Smartphone className="ml-1 h-4 w-4" />
+              אנדרואיד
+            </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאייפון">
+            <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאייפון">
+              <Apple className="ml-1 h-4 w-4" />
+              אייפון
             </a>
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild>

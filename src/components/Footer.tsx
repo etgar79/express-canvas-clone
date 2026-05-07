@@ -1,4 +1,4 @@
-import { Phone, Mail, MessageCircle, Facebook, Linkedin, Terminal, Heart, Settings } from "lucide-react";
+import { Phone, Mail, MessageCircle, Facebook, Linkedin, Terminal, Heart, Settings, Smartphone, Apple } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
@@ -61,6 +61,14 @@ export const Footer = () => {
               <li className="flex items-center gap-2 text-foreground/40">
                 <Mail className="h-4 w-4 text-accent" />
                 <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">תמיכה מרחוק</a>
+              </li>
+              <li className="flex items-center gap-2 text-foreground/40">
+                <Smartphone className="h-4 w-4 text-accent" />
+                <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">תמיכה מרחוק לאנדרואיד</a>
+              </li>
+              <li className="flex items-center gap-2 text-foreground/40">
+                <Apple className="h-4 w-4 text-accent" />
+                <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">תמיכה מרחוק לאייפון</a>
               </li>
             </ul>
           </div>
