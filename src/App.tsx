@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 
 const Diagnostics = lazy(() => import("./pages/Diagnostics"));
 const TechDashboard = lazy(() => import("./pages/TechDashboard"));
+const AiServices = lazy(() => import("./pages/AiServices"));
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,14 @@ const App = () => (
             element={
               <Suspense fallback={<AppLoading />}>
                 <TechDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/ai-services"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <AiServices />
               </Suspense>
             }
           />
