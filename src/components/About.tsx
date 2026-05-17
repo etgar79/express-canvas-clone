@@ -45,10 +45,10 @@ export const About = () => {
           </h2>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
             אנחנו מאמינים שטכנולוגיה צריכה להיות פשוטה, נגישה ומשרתת את האנשים שמשתמשים בה. 
-            לכן הקמנו את Tech Therapy - כדי לתת לעסקים ליווי טכנולוגי אישי ואנושי.
+            לכן הקמנו את Tech Therapy - כדי לתת לעסקים ולפרטיים בפרדס חנה ובאיזור ליווי טכנולוגי אישי ואנושי.
           </p>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
-            עם למעלה מ-10 שנות ניסיון, אנחנו מלווים כל לקוח מהצעד הראשון ועד להטמעה מלאה,
+            עם למעלה מ-10 שנות ניסיון, אנחנו מלווים לקוחות בפרדס חנה והסביבה מהצעד הראשון ועד להטמעה מלאה,
             עם סבלנות, מקצועיות והרבה אכפתיות.
           </p>
           <div className="inline-block p-6 rounded-2xl mt-4 border border-accent/15 bg-accent/5">
