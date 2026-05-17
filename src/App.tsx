@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 
 const Diagnostics = lazy(() => import("./pages/Diagnostics"));
 const TechDashboard = lazy(() => import("./pages/TechDashboard"));
+const AiServices = lazy(() => import("./pages/AiServices"));
 
 const queryClient = new QueryClient();
 
