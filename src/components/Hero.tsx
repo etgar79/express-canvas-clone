@@ -29,7 +29,7 @@ export const Hero = () => {
             {/* Warm welcome tag */}
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent/25 bg-accent/8 mb-8 text-sm text-accent animate-fade-in">
               <Heart className="h-4 w-4" />
-              <span>הטכנולוגיה שעובדת בשבילך</span>
+              <span>שירותי AI וטכנאי מחשבים בפרדס חנה ובאיזור</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in leading-tight tracking-tight">
@@ -45,7 +45,7 @@ export const Hero = () => {
             </h1>
             
             <p className="text-lg md:text-xl mb-10 leading-relaxed text-foreground/60 animate-fade-in max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
-              ליווי אישי, פתרונות מותאמים ותמיכה אנושית - כי טכנולוגיה צריכה לשרת אתכם, לא להפך
+              טכנאי מחשבים מקצועי בפרדס חנה, שירותי AI וייעוץ IT אישי - כי טכנולוגיה צריכה לשרת אתכם, לא להפך
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>

@@ -1,14 +1,21 @@
 import { ServiceCard } from "./ServiceCard";
-import { Monitor, Server, Bot, Wrench, Lightbulb, Building2 } from "lucide-react";
+import { Monitor, Server, Bot, Wrench, Lightbulb, Building2, Sparkles } from "lucide-react";
 
 export const Services = () => {
   const services = [
     {
+      icon: Sparkles,
+      title: "שירותי AI",
+      question: "רוצים לשלב בינה מלאכותית בעסק?",
+      description: "ייעוץ והטמעת פתרונות AI לעסקים: צ'אטבוטים חכמים, אוטומציה מבוססת AI, יצירת תוכן, ניתוח נתונים והטמעת כלי בינה מלאכותית.",
+      benefit: "עסק חכם ומתקדם"
+    },
+    {
       icon: Monitor,
-      title: "שירותי מחשוב",
-      question: "צריכים תמיכה טכנית מקצועית?",
-      description: "אבחון ותיקון מחשבים, התקנת מערכות הפעלה, שדרוגי חומרה ותוכנה, שחזור מידע ותחזוקה מונעת לעסקים.",
-      benefit: "מחשוב אמין ויציב"
+      title: "תיקוני מחשבים",
+      question: "המחשב לא עובד כמו שצריך?",
+      description: "אבחון ותיקון מחשבים נייחים וניידים, התקנת מערכות הפעלה, שדרוגי חומרה ותוכנה, שחזור מידע ותחזוקה מונעת בפרדס חנה ובאיזור.",
+      benefit: "מחשבים אמינים ויציבים"
     },
     {
       icon: Building2,
@@ -32,17 +39,10 @@ export const Services = () => {
       benefit: "החלטות חכמות"
     },
     {
-      icon: Server,
-      title: "הטמעת טכנולוגיות",
-      question: "רוצים לשדרג את הארגון?",
-      description: "הטמעת מערכות חדשות בארגונים: CRM, ERP, כלי ניהול פרויקטים, מערכות ענן והדרכת עובדים.",
-      benefit: "ארגון מתקדם ויעיל"
-    },
-    {
       icon: Wrench,
       title: "תחזוקה שוטפת",
       question: "רוצים שמישהו ידאג לטכנולוגיה?",
-      description: "חבילות תחזוקה חודשיות: ניטור מערכות, עדכוני אבטחה, גיבויים, ותמיכה טכנית בזמינות מלאה.",
+      description: "חבילות תחזוקה חודשיות: ניטור מערכות, עדכוני אבטחה, גיבויים, ותמיכה טכנית בזמינות מלאה בפרדס חנה ובסביבה.",
       benefit: "ראש שקט מהטכנולוגיה"
     }
   ];
@@ -62,7 +62,7 @@ export const Services = () => {
             איך נוכל <span className="text-accent">לעזור</span> לכם?
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-            פתרונות טכנולוגיים עם גישה אישית - כל שירות מותאם בדיוק לצרכים שלכם
+            שירותי AI, תיקוני מחשבים ופתרונות טכנולוגיים בפרדס חנה - עם גישה אישית לכל לקוח
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

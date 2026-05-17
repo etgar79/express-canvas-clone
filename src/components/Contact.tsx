@@ -19,7 +19,7 @@ export const Contact = () => {
               נשמח <span className="text-accent">לשמוע</span> מכם
             </h2>
             <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-              השאירו פרטים ונחזור אליכם בהקדם, או פשוט שלחו הודעה בוואטסאפ
+              טכנאי מחשבים ושירותי AI בפרדס חנה ובאיזור - צרו קשר בוואטסאפ, טלפון או מייל
             </p>
           </div>
 
