@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Accessibility, Plus, Minus, Eye, Link2, Moon, Sun, X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Accessibility, Plus, Minus, Eye, Link2, Moon, Sun } from "lucide-react";
 
 export const AccessibilityMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,24 +54,31 @@ export const AccessibilityMenu = () => {
   return (
     <>
       <Button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(true)}
         className="fixed bottom-24 left-4 z-50 h-14 w-14 rounded-full bg-primary shadow-lg hover:bg-primary/90"
-        aria-label="תפריט נגישות"
+        aria-label="פתח תפריט נגישות"
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Accessibility className="h-6 w-6" />}
+        <Accessibility className="h-6 w-6" />
       </Button>
 
-      {isOpen && (
-        <Card className="fixed bottom-40 left-4 z-50 p-6 shadow-2xl w-80 bg-background/95 backdrop-blur">
-          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <Accessibility className="h-5 w-5" />
-            תפריט נגישות
-          </h2>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-sm rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg">
+              <Accessibility className="h-5 w-5 text-accent" />
+              תפריט נגישות
+            </DialogTitle>
+            <DialogDescription>
+              התאם את האתר לצרכיך: גודל טקסט, ניגודיות, הדגשת קישורים ומצב תצוגה.
+            </DialogDescription>
+          </DialogHeader>
 
           <div className="space-y-4">
             {/* Font Size */}
             <div>
-              <label className="text-sm font-medium mb-2 block">גודל טקסט</label>
+              <label className="text-sm font-medium mb-2 block" htmlFor="a11y-fontsize-label">
+                גודל טקסט
+              </label>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
@@ -75,7 +88,9 @@ export const AccessibilityMenu = () => {
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="text-sm flex-1 text-center">{fontSize}%</span>
+                <span id="a11y-fontsize-label" className="text-sm flex-1 text-center" aria-live="polite">
+                  {fontSize}%
+                </span>
                 <Button
                   variant="outline"
                   size="sm"
@@ -92,6 +107,7 @@ export const AccessibilityMenu = () => {
               variant={highContrast ? "default" : "outline"}
               className="w-full justify-start"
               onClick={() => setHighContrast(!highContrast)}
+              aria-pressed={highContrast}
             >
               <Eye className="h-4 w-4 ml-2" />
               ניגודיות גבוהה
@@ -102,6 +118,7 @@ export const AccessibilityMenu = () => {
               variant={highlightLinks ? "default" : "outline"}
               className="w-full justify-start"
               onClick={() => setHighlightLinks(!highlightLinks)}
+              aria-pressed={highlightLinks}
             >
               <Link2 className="h-4 w-4 ml-2" />
               הדגש קישורים
@@ -112,22 +129,19 @@ export const AccessibilityMenu = () => {
               variant={isDark ? "default" : "outline"}
               className="w-full justify-start"
               onClick={() => setIsDark(!isDark)}
+              aria-pressed={isDark}
             >
               {isDark ? <Sun className="h-4 w-4 ml-2" /> : <Moon className="h-4 w-4 ml-2" />}
               {isDark ? "מצב בהיר" : "מצב כהה"}
             </Button>
 
             {/* Reset */}
-            <Button
-              variant="secondary"
-              className="w-full"
-              onClick={resetAll}
-            >
+            <Button variant="secondary" className="w-full" onClick={resetAll}>
               אפס הגדרות
             </Button>
           </div>
-        </Card>
-      )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
