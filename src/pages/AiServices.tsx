@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
+import { SkipLink } from "@/components/SkipLink";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -83,8 +84,9 @@ const AiServices = () => {
 
   return (
     <div className="min-h-screen" dir="rtl">
+      <SkipLink />
       <Header />
-      <main className="pt-[72px]">
+      <main id="main-content" className="pt-[72px]">
         {/* Hero */}
         <section className="bg-gradient-to-b from-background to-muted py-16 md:py-24">
           <div className="container mx-auto px-4 max-w-5xl text-center">

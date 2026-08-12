@@ -32,6 +32,11 @@ export const Footer = () => {
               <li><a href="#about" className="text-foreground/40 hover:text-accent transition-colors text-sm">אודות</a></li>
               <li><a href="#contact" className="text-foreground/40 hover:text-accent transition-colors text-sm">צור קשר</a></li>
               <li>
+                <Link to="/accessibility" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                  הצהרת נגישות
+                </Link>
+              </li>
+              <li>
                 <Link to="/diagnostics" className="text-primary/70 hover:text-primary transition-colors text-sm flex items-center gap-1">
                   <Terminal className="h-3 w-3" />
                   מאבחן תקלות
