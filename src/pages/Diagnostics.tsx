@@ -287,6 +287,8 @@ export default function Diagnostics() {
           </div>
         </div>
       </div>
+      </div>
+      <AccessibilityMenu />
     </div>
   );
 }
