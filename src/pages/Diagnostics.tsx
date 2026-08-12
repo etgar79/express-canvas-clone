@@ -101,6 +101,7 @@ export default function Diagnostics() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <SkipLink />
       
       {/* Header */}
       <div className="border-b border-border/50 bg-card/80 backdrop-blur-md sticky top-0 z-10">
