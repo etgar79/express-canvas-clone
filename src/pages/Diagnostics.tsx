@@ -7,6 +7,8 @@ import {
   Copy, CheckCircle, Bot, User, RefreshCw, Terminal, Search, Filter
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SkipLink } from "@/components/SkipLink";
+import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 
 type Issue = {
   id: number;
@@ -101,6 +103,7 @@ export default function Diagnostics() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <SkipLink />
       
       {/* Header */}
       <div className="border-b border-border/50 bg-card/80 backdrop-blur-md sticky top-0 z-10">
@@ -284,6 +287,7 @@ export default function Diagnostics() {
           </div>
         </div>
       </div>
+      <AccessibilityMenu />
     </div>
   );
 }

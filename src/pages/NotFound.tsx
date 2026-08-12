@@ -1,22 +1,35 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Home, Terminal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SkipLink } from "@/components/SkipLink";
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-gray-600">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 underline hover:text-blue-700">
-          Return to Home
-        </a>
-      </div>
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center" dir="rtl">
+      <SkipLink />
+      <main id="main-content" className="text-center px-4">
+        <p className="text-7xl md:text-8xl font-extrabold text-accent mb-4">404</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+          העמוד לא נמצא
+        </h1>
+        <p className="text-foreground/60 mb-8 max-w-md mx-auto leading-relaxed">
+          מצטערים, העמוד שחיפשת אינו קיים או הוסר. ניתן לחזור לדף הבית או להשתמש במאבחן התקלות.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button asChild size="lg">
+            <Link to="/">
+              <Home className="ml-2 h-5 w-5" />
+              חזרה לדף הבית
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link to="/diagnostics">
+              <Terminal className="ml-2 h-5 w-5" />
+              מאבחן תקלות
+            </Link>
+          </Button>
+        </div>
+      </main>
     </div>
   );
 };
