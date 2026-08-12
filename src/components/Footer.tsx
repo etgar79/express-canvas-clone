@@ -37,6 +37,11 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/privacy" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                  מדיניות פרטיות
+                </Link>
+              </li>
+              <li>
                 <Link to="/diagnostics" className="text-primary/70 hover:text-primary transition-colors text-sm flex items-center gap-1">
                   <Terminal className="h-3 w-3" />
                   מאבחן תקלות

@@ -11,6 +11,7 @@ const Diagnostics = lazy(() => import("./pages/Diagnostics"));
 const TechDashboard = lazy(() => import("./pages/TechDashboard"));
 const AiServices = lazy(() => import("./pages/AiServices"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
 const queryClient = new QueryClient();
 
@@ -81,6 +82,14 @@ const App = () => (
             element={
               <Suspense fallback={<AppLoading />}>
                 <AccessibilityStatement />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/privacy"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <PrivacyPolicy />
               </Suspense>
             }
           />
