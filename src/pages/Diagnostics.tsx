@@ -191,6 +191,7 @@ export default function Diagnostics() {
                               <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/30" />
                               <input
                                 type="text"
+                                aria-label="חיפוש תקלה"
                                 placeholder="חיפוש תקלה..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}

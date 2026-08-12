@@ -102,8 +102,15 @@ const AccessibilityStatement = () => {
                   <span className="font-semibold text-foreground">info@1979.co.il</span>
                 </a>
               </div>
-              <p className="text-sm text-foreground/50 mt-6 text-center">
-                רכז הנגישות: אתגר אהרוני · Tech Therapy Computers
+              <p className="text-sm text-foreground/60 mt-6 text-center leading-relaxed">
+                רכז הנגישות: <strong className="text-foreground">אתגר אהרוני</strong> · Tech Therapy Computers, פרדס חנה-כרכור
+                <br />
+                טלפון: 054-536-8629 · דוא"ל: info@1979.co.il
+                <br />
+                זמן טיפול מקובל בפנייה: עד 7 ימי עסקים.
+              </p>
+              <p className="text-sm text-foreground/50 mt-4 text-center">
+                תאריך עדכון ההצהרה: 12 באוגוסט 2026
               </p>
             </Card>
           </div>
