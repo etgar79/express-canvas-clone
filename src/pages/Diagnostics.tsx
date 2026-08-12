@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SkipLink } from "@/components/SkipLink";
+import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 
 type Issue = {
   id: number;
