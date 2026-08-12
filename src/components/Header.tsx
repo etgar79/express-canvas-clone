@@ -84,11 +84,14 @@ export const Header = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <Button
+          variant="ghost"
+          size="sm"
           className="md:hidden text-primary"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
+          aria-label={mobileMenuOpen ? "סגור תפריט" : "פתח תפריט"}
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -140,7 +143,7 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border p-4 space-y-2 bg-background/98">
+        <div id="mobile-menu" className="md:hidden border-t border-border p-4 space-y-2 bg-background/98" role="region" aria-label="תפריט ניווט">
           <a href="#hero" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>בית</a>
           <a href="#services" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>שירותים</a>
           <a href="#about" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>אודות</a>

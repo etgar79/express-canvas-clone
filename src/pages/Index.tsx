@@ -10,6 +10,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
+import { SkipLink } from "@/components/SkipLink";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -39,8 +40,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen" dir="rtl">
+      <SkipLink />
       <Header />
-      <main className="pt-[72px]">
+      <main id="main-content" className="pt-[72px]">
         <section id="hero">
           <Hero />
         </section>
