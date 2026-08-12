@@ -99,9 +99,9 @@ export const Header = () => {
         {/* Logo & Brand */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col gap-0.5 text-left">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight text-accent">
+            <span className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight text-accent">
               Tech Therapy
-            </h1>
+            </span>
             <p className="text-xs md:text-sm text-foreground/50">
               ייעוץ · אוטומציה · IT
             </p>
