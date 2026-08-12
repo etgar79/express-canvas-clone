@@ -151,9 +151,37 @@ All colors MUST be HSL.
     0 1px 4px hsl(30 90% 52% / 0.05);
 }
 
+/* Skip link — accessibility */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  right: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: 0 0 0.75rem 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.2s ease;
+  box-shadow: 0 4px 24px hsl(220 35% 18% / 0.2);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 3px solid hsl(var(--accent));
+  outline-offset: 2px;
+}
+
 /* Accessibility Styles */
 .high-contrast {
   filter: contrast(1.5);
+}
+
+.high-contrast img,
+.high-contrast video {
+  filter: contrast(1.2);
 }
 
 .highlight-links a,
@@ -166,6 +194,18 @@ All colors MUST be HSL.
 *:focus-visible {
   outline: 3px solid hsl(var(--primary));
   outline-offset: 2px;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Toast animations and styles */
