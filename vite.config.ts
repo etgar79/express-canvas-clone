@@ -3,19 +3,18 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// In dev, index.html must load the TSX entry directly.
-// In production it loads the built /assets/index.js + /assets/index.css,
-// which lets GitHub Pages serve the repo root as a static site.
-const devEntry = (): Plugin => ({
-  name: "dev-entry-rewrite",
-  apply: "serve",
-  transformIndexHtml(html) {
-    return html
-      .replace(
-        /<link rel="stylesheet" href="\/assets\/index\.css"\s*\/?>\s*/,
-        "",
-      )
-      .replace('src="/assets/index.js"', 'src="/src/main.tsx"');
+// index.html references the built /assets/index.js + /assets/index.css so the
+// repo root can be served as a plain static site (GitHub Pages).
+// Both in dev and during the build the entry is rewritten back to the TSX source.
+const sourceEntry = (): Plugin => ({
+  name: "source-entry-rewrite",
+  transformIndexHtml: {
+    order: "pre",
+    handler(html) {
+      return html
+        .replace(/<link rel="stylesheet" href="\/assets\/index\.css"\s*\/?>\s*/, "")
+        .replace('src="/assets/index.js"', 'src="/src/main.tsx"');
+    },
   },
 });
 
