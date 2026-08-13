@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), devEntry(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react(), sourceEntry(), mode === "development" && componentTagger()].filter(Boolean),
   build: {
     rollupOptions: {
       output: {
