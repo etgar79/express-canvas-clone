@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X, Smartphone, Apple } from "lucide-react";
+import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X, Smartphone, Apple, Package } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -35,6 +35,12 @@ export const Header = () => {
               <Phone className="ml-1 h-4 w-4" />
               צור קשר
             </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-primary/80 hover:text-primary hover:bg-primary/10 text-xs border border-primary/30" asChild>
+            <Link to="/diagnostics">
+              <Terminal className="ml-1 h-4 w-4" />
+              מאבחן תקלות
+            </Link>
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer">
