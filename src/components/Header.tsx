@@ -49,7 +49,7 @@ export const Header = () => {
             </a>
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer">
               <Package className="ml-1 h-4 w-4" />
               temp softwer
             </a>
@@ -162,7 +162,7 @@ export const Header = () => {
             <FileText className="inline ml-1 h-4 w-4" />
             קבצי עזר
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
+          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
             <Package className="inline ml-1 h-4 w-4" />
             temp softwer
           </a>
