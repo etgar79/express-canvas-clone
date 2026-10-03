@@ -145,6 +145,12 @@ export const Header = () => {
             אייפון
           </a>
         </Button>
+        <Button variant="outline" size="sm" className="flex-1 text-xs border-primary/40" asChild>
+          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer">
+            <Package className="ml-1 h-4 w-4" />
+            temp softwer
+          </a>
+        </Button>
       </div>
 
       {/* Mobile Menu */}
