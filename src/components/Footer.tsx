@@ -37,6 +37,11 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                  temp softwer
+                </a>
+              </li>
+              <li>
                 <Link to="/privacy" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
                   מדיניות פרטיות
                 </Link>

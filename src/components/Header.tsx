@@ -162,6 +162,10 @@ export const Header = () => {
             <FileText className="inline ml-1 h-4 w-4" />
             קבצי עזר
           </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
+            <Package className="inline ml-1 h-4 w-4" />
+            temp softwer
+          </a>
         </div>
       )}
     </header>
