@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X, Smartphone, Apple } from "lucide-react";
+import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X, Smartphone, Apple, Package } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -46,6 +46,12 @@ export const Header = () => {
             <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer">
               <FileText className="ml-1 h-4 w-4" />
               קבצי עזר
+            </a>
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
+            <a href="#" target="_blank" rel="noopener noreferrer">
+              <Package className="ml-1 h-4 w-4" />
+              temp softwer
             </a>
           </Button>
         </nav>
@@ -155,6 +161,10 @@ export const Header = () => {
           <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
             <FileText className="inline ml-1 h-4 w-4" />
             קבצי עזר
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
+            <Package className="inline ml-1 h-4 w-4" />
+            temp softwer
           </a>
         </div>
       )}
