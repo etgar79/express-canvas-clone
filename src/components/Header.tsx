@@ -126,7 +126,7 @@ export const Header = () => {
       </div>
 
       {/* Mobile quick remote-support buttons (always visible on mobile) */}
-      <div className="md:hidden flex gap-2 px-4 pb-2 bg-background/95 border-t border-border/50">
+      <div className="md:hidden grid grid-cols-2 gap-2 px-4 pb-2 bg-background/95 border-t border-border/50">
         <Button variant="default" size="sm" className="flex-1 font-bold bg-primary text-primary-foreground text-xs" asChild>
           <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
             <Mail className="ml-1 h-4 w-4" />
@@ -143,6 +143,12 @@ export const Header = () => {
           <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאייפון">
             <Apple className="ml-1 h-4 w-4" />
             אייפון
+          </a>
+        </Button>
+        <Button variant="outline" size="sm" className="flex-1 text-xs border-primary/40" asChild>
+          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer">
+            <Package className="ml-1 h-4 w-4" />
+            temp softwer
           </a>
         </Button>
       </div>
