@@ -11,7 +11,7 @@ export const Header = () => {
     <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-xl border-b border-border bg-background/95">
       <div className="container px-4 py-3 flex justify-between items-center">
         {/* Navigation Links */}
-        <nav className="hidden md:flex gap-1 items-center">
+        <nav className="hidden lg:flex gap-1 items-center">
           <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="#hero">
               <Home className="ml-1 h-4 w-4" />
@@ -57,7 +57,7 @@ export const Header = () => {
         </nav>
 
         {/* Action Buttons */}
-        <div className="hidden md:flex gap-2 items-center">
+        <div className="hidden lg:flex gap-2 items-center">
           <Button 
             variant="default" 
             size="default" 
@@ -79,7 +79,7 @@ export const Header = () => {
               <Apple className="h-4 w-4" />
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild>
+          <Button variant="ghost" size="sm" className="hidden xl:inline-flex text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="https://script.google.com/macros/s/AKfycbyD2n-9G0ncG_fEYvvN9ZzeJQqQ5QVdRBge4Jz1PCnRejUojUb33bUaTjfEbpo8dcLmDQ/exec" target="_blank" rel="noopener noreferrer">
               <Bot className="ml-2 h-4 w-4" />
               בוט טכנאים
@@ -91,7 +91,7 @@ export const Header = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="md:hidden text-primary"
+          className="lg:hidden text-primary"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-menu"
@@ -124,7 +124,7 @@ export const Header = () => {
       </div>
 
       {/* Mobile quick remote-support buttons (always visible on mobile) */}
-      <div className="md:hidden grid grid-cols-2 gap-2 px-4 pb-2 bg-background/95 border-t border-border/50">
+      <div className="lg:hidden grid grid-cols-2 gap-2 px-4 pb-2 bg-background/95 border-t border-border/50">
         <Button variant="default" size="sm" className="flex-1 font-bold bg-primary text-primary-foreground text-xs" asChild>
           <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
             <Mail className="ml-1 h-4 w-4" />
@@ -153,7 +153,7 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div id="mobile-menu" className="md:hidden border-t border-border p-4 space-y-2 bg-background/98" role="region" aria-label="תפריט ניווט">
+        <div id="mobile-menu" className="lg:hidden border-t border-border p-4 space-y-2 bg-background/98" role="region" aria-label="תפריט ניווט">
           <a href="#hero" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>בית</a>
           <a href="#services" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>שירותים</a>
           <a href="#about" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>אודות</a>
