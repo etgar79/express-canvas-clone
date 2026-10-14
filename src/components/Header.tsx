@@ -9,9 +9,9 @@ export const Header = () => {
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-xl border-b border-border bg-background/95">
-      <div className="container px-4 py-3 flex justify-between items-center">
+      <div className="container px-3 py-3 flex justify-between items-center">
         {/* Navigation Links */}
-        <nav className="hidden lg:flex gap-1 items-center">
+        <nav className="hidden lg:flex gap-0.5 items-center">
           <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="#hero">
               <Home className="ml-1 h-4 w-4" />
@@ -57,11 +57,11 @@ export const Header = () => {
         </nav>
 
         {/* Action Buttons */}
-        <div className="hidden lg:flex gap-2 items-center">
-          <Button 
-            variant="default" 
-            size="default" 
-            className="font-bold shadow-lg transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground"
+        <div className="hidden lg:flex gap-1 items-center">
+          <Button
+            variant="default"
+            size="default"
+            className="px-3 font-bold shadow-lg transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground"
             asChild
           >
             <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
