@@ -49,12 +49,16 @@ jobs:
           # keep static files served from the root
           cp -f dist/robots.txt ./robots.txt 2>/dev/null || true
           cp -f dist/sitemap.xml ./sitemap.xml 2>/dev/null || true
+          # GitHub Pages מגיש מהשורש — בלי זה ה-favicon מחזיר 404
+          cp -f dist/favicon.png ./favicon.png 2>/dev/null || true
+          cp -f dist/favicon.ico ./favicon.ico 2>/dev/null || true
+          cp -f dist/apple-touch-icon.png ./apple-touch-icon.png 2>/dev/null || true
 
       - name: Commit built assets
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A assets 404.html robots.txt sitemap.xml
+          git add -A assets 404.html robots.txt sitemap.xml favicon.png favicon.ico apple-touch-icon.png
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
