@@ -48,7 +48,7 @@ export const Header = () => {
               קבצי עזר
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
+          <Button variant="ghost" size="sm" className="hidden xl:inline-flex text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
             <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer">
               <Package className="ml-1 h-4 w-4" />
               temp softwer
@@ -71,14 +71,12 @@ export const Header = () => {
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאנדרואיד">
             <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאנדרואיד">
-              <Smartphone className="ml-1 h-4 w-4" />
-              אנדרואיד
+              <Smartphone className="h-4 w-4" />
             </a>
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאייפון">
             <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאייפון">
-              <Apple className="ml-1 h-4 w-4" />
-              אייפון
+              <Apple className="h-4 w-4" />
             </a>
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild>
@@ -103,7 +101,7 @@ export const Header = () => {
         </Button>
 
         {/* Logo & Brand */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <div className="flex flex-col gap-0.5 text-left">
             <span className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight text-accent">
               Tech Therapy
@@ -112,13 +110,13 @@ export const Header = () => {
               ייעוץ · אוטומציה · IT
             </p>
           </div>
-          <div className="relative group">
+          <div className="relative group shrink-0">
             <div className="absolute inset-0 rounded-lg blur-lg transition-all duration-500 group-hover:blur-xl bg-primary/20"></div>
             <div className="relative z-10 p-1.5 rounded-lg border border-primary/30 bg-background/80">
-              <img 
-                src={logo} 
-                alt="Tech Therapy Computers לוגו" 
-                className="h-10 w-10 md:h-12 md:w-12 rounded-md transition-transform duration-300 group-hover:scale-105"
+              <img
+                src={logo}
+                alt="Tech Therapy Computers לוגו"
+                className="h-10 w-10 md:h-12 md:w-12 rounded-md transition-transform duration-300 group-hover:scale-105 shrink-0"
               />
             </div>
           </div>
