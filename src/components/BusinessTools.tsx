@@ -1,3 +1,4 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -44,8 +45,6 @@ const businessSizes = [
 export const BusinessTools = () => {
   return (
     <section id="business-tools" className="py-20 relative overflow-hidden bg-background">
-      <div className="absolute inset-0 grid-pattern"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
@@ -56,7 +55,7 @@ export const BusinessTools = () => {
             כלים חכמים לעסקים <span className="text-accent">קטנים וגדולים</span>
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-            אנחנו מתאימים את הטכנולוגיה בדיוק לצרכים שלך — בלי פתרונות מיותרים ובלי להתפשר על מה שחשוב.
+            אני מתאים את הטכנולוגיה בדיוק לצרכים שלך — בלי פתרונות מיותרים ובלי להתפשר על מה שחשוב.
           </p>
         </div>
         
@@ -94,15 +93,15 @@ export const BusinessTools = () => {
         
         <div className="max-w-4xl mx-auto text-center p-8 md:p-12 rounded-3xl bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/20">
           <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
-            אנחנו פה כדי לייעל
+            אני פה כדי לייעל
           </h3>
           <p className="text-foreground/60 mb-8 max-w-2xl mx-auto leading-relaxed">
             בין אם אתה עסק קטן שרוצה לחסוך שעות יקרות, ובין אם אתה ארגון שצריך תשתית יציבה — נבנה יחד את הפתרון המדויק בשבילך.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button asChild size="lg">
-              <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
-                דברו איתנו בוואטסאפ
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
+                דברו איתי בוואטסאפ
               </a>
             </Button>
             <Button asChild size="lg" variant="outline">

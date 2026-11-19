@@ -1,10 +1,11 @@
-# Technical SEO round 2
+# Content, conversions and light design — round 3
 
-- [x] Add public-route prerendering and GitHub Pages deployment integration without replacing the source entry.
-- [x] Add homepage crawler content, structured data, page metadata and dashboard noindex.
-- [x] Add AI crawler rules and llms.txt.
-- [x] Verify generated pages and exclusion rules; document deployment checks.
+- [x] Update business-focused hero, first-person copy and contextual WhatsApp messages.
+- [x] Add IT maintenance page, navigation, schema and discovery links.
+- [x] Clean homepage section backgrounds and verify mobile controls and anchors.
+- [x] Normalize prerender canonicals and run all script tests plus desktop/mobile browser checks.
+- [ ] Publish the new IT maintenance static directory automatically: blocked by the explicit prohibition on deployment workflow edits; its existing staging list omits this directory.
 
-Verification: eight automated tests pass; Puppeteer captured all four running public pages into temporary HTML files; browser checks confirmed page metadata, homepage content without JavaScript and dashboard-only noindex. GitHub Actions against production dist and the live site's HTTP status must be checked after deployment.
+Constraint: do not edit deployment workflow, diagnostic/dashboard logic, chatbot or cloud functions. The unchanged deployment workflow does not stage the new IT maintenance directory; live static publication of that directory requires a later authorized workflow change.
 
-After deployment: confirm four `Prerendered` messages in the action log and four route-directory index.html files in the repository. Request each public URL with redirects followed and verify final HTTP 200, then inspect raw page source for its H1, description and canonical. Verify /llms.txt and /robots.txt publicly.
+Verified: all 13 script tests passed; homepage, maintenance and AI pages checked at 1280px and 375px with no horizontal overflow or visible buttons shorter than 44px. Cross-page About anchors land below the header. All five prerendered HTML files have trailing-slash canonical and og:url; only maintenance retains its own FAQPage and Service schemas. Homepage FAQ JSON-LD exactly matches visible answers.

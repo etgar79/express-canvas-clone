@@ -1,19 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { MessageCircle, ArrowLeft, Heart, Terminal } from "lucide-react";
-import { useState, useEffect } from "react";
+import { MessageCircle, Heart, Sparkles, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 
 export const Hero = () => {
-  const [currentWord, setCurrentWord] = useState(0);
-  const words = ["לתמוך", "להדריך", "להטמיע", "ללוות"];
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWord((prev) => (prev + 1) % words.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden bg-background">
       {/* Soft gradient background */}
@@ -33,31 +23,22 @@ export const Hero = () => {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in leading-tight tracking-tight">
-              <span className="text-foreground">אנחנו כאן</span>{" "}
-              <span 
-                key={currentWord} 
-                className="inline-block animate-word-slide-up text-accent"
-              >
-                {words[currentWord]}
-              </span>
+              <span className="text-foreground">תמיכת IT ו-AI לעסקים</span>
               <br />
-              <span className="text-foreground/90">את הטכנולוגיה בעסק שלך</span>
+              <span className="text-foreground/90">ישירות מול המומחה, בלי מוקד</span>
             </h1>
             
             <p className="text-lg md:text-xl mb-10 leading-relaxed text-foreground/60 animate-fade-in max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
-              טכנאי מחשבים מקצועי בפרדס חנה, שירותי AI וייעוץ IT אישי - כי טכנולוגיה צריכה לשרת אתכם, לא להפך
+              תחזוקת IT שוטפת, הטמעת AI ואוטומציות לעסקים בפרדס חנה, חדרה, בנימינה, זכרון יעקב וקיסריה. כי טכנולוגיה צריכה לשרת אתכם, לא להפך
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Button
                 size="lg"
                 className="text-lg px-8 py-6 rounded-xl font-bold transition-all duration-300 hover:scale-105 bg-accent text-accent-foreground shadow-lg"
                 asChild
               >
-                <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="ml-2 h-5 w-5" />
-                  בואו נדבר
-                </a>
+                <Link to="/ai-services"><Sparkles className="ml-2 h-5 w-5" />AI לעסק שלי</Link>
               </Button>
               <Button
                 size="lg"
@@ -65,22 +46,23 @@ export const Hero = () => {
                 className="text-lg px-8 py-6 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 transition-all duration-300 hover:scale-105 text-foreground font-semibold"
                 asChild
               >
-                <Link to="/diagnostics">
-                  <Terminal className="ml-2 h-5 w-5" />
-                  אבחון תקלות חינם
-                </Link>
+                <Link to="/it-maintenance"><Briefcase className="ml-2 h-5 w-5" />תחזוקת IT לעסק</Link>
+              </Button>
+              <Button size="lg" variant="outline" className="min-h-11 text-lg px-8 py-6 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
+                <a href={whatsappUrl('fault')} target="_blank" rel="noopener noreferrer"><MessageCircle className="ml-2 h-5 w-5" />יש לי תקלה עכשיו</a>
               </Button>
             </div>
+            <Link to="/diagnostics" className="inline-flex items-center min-h-11 mt-3 text-sm text-muted-foreground underline underline-offset-4">או נסו את מאבחן התקלות החינמי</Link>
             
             {/* Stats row */}
-            <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="grid grid-cols-3 gap-2 sm:gap-8 mt-16 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.6s' }}>
               {[
                 { value: "10+", label: "שנות ניסיון" },
                 { value: "50+", label: "לקוחות מרוצים" },
                 { value: "מענה מהיר", label: "בוואטסאפ" },
               ].map((stat, i) => (
-                <div key={i} className="text-center p-4 rounded-xl border border-foreground/10 bg-foreground/5">
-                  <div className="text-2xl md:text-3xl font-bold text-accent">{stat.value}</div>
+                <div key={i} className="min-w-0 text-center p-2 sm:p-4 rounded-xl border border-foreground/10 bg-foreground/5">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-accent">{stat.value}</div>
                   <div className="text-sm text-foreground/50 mt-1">{stat.label}</div>
                 </div>
               ))}

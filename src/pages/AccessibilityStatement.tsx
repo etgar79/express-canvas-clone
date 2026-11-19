@@ -1,3 +1,4 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
@@ -31,14 +32,15 @@ const AccessibilityStatement = () => {
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute("href", "https://1979.co.il/accessibility");
+    canonical.setAttribute("href", "https://1979.co.il/accessibility/");
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", "https://1979.co.il/accessibility/");
   }, []);
 
   return (
     <div className="min-h-screen" dir="rtl">
       <SkipLink />
       <Header />
-      <main id="main-content" className="pt-[72px]">
+      <main id="main-content" className="pt-[132px] lg:pt-[72px]">
         <section className="py-16 relative">
           <div className="container px-4 max-w-4xl mx-auto">
             <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
@@ -48,7 +50,7 @@ const AccessibilityStatement = () => {
               הצהרת <span className="text-accent">נגישות</span>
             </h1>
             <p className="text-lg text-foreground/70 mb-10 leading-relaxed">
-              ב-Tech Therapy מחויבים להנגשת שירותינו ולאפשר גיש שוויוני לכל אדם, לרבות אנשים עם מוגבלות. כחלק ממחויבות זו, אתר זה נבנה ומתוחזק בהתאם לדרישות חוק שוויון זכויות לאנשים עם מוגבלות (תיקון: הנגשת שירותי אינטרנט), התשע"ד-2014 ולתקנות הנגישות שהותקנו מכוחו.
+              ב-Tech Therapy אני מחויב להנגשת שירותיי ולאפשר גיש שוויוני לכל אדם, לרבות אנשים עם מוגבלות. כחלק ממחויבות זו, אתר זה נבנה ומתוחזק בהתאם לדרישות חוק שוויון זכויות לאנשים עם מוגבלות (תיקון: הנגשת שירותי אינטרנט), התשע"ד-2014 ולתקנות הנגישות שהותקנו מכוחו.
             </p>
 
             <Card className="p-8 border border-border bg-card shadow-sm rounded-2xl mb-8">
@@ -76,7 +78,7 @@ const AccessibilityStatement = () => {
             <Card className="p-8 border border-border bg-card shadow-sm rounded-2xl mb-8">
               <h2 className="text-2xl font-bold mb-4 text-foreground">תאימות לתקנים</h2>
               <p className="text-foreground/70 leading-relaxed">
-                האתר נבנה בהתאם להנחיות WCAG 2.1 ברמת AA של ארגון W3C, ומיושמות בו דרישות תקנות הנגישות הישראליות (תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירותי אינטרנט), התשע\"ה-2015). עם זאת, ייתכן שיימצאו באתר דפים או רכיבים שטרם הונגשו במלואם; אנו פועלים באופן שוטף לשפר ולהרחיב את הנגישות באתר.
+                האתר נבנה בהתאם להנחיות WCAG 2.1 ברמת AA של ארגון W3C, ומיושמות בו דרישות תקנות הנגישות הישראליות (תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירותי אינטרנט), התשע\"ה-2015). עם זאת, ייתכן שיימצאו באתר דפים או רכיבים שטרם הונגשו במלואם; אני פועל באופן שוטף לשפר ולהרחיב את הנגישות באתר.
               </p>
             </Card>
 
@@ -91,7 +93,7 @@ const AccessibilityStatement = () => {
                   <span className="text-xs text-foreground/50">טלפון</span>
                   <span className="font-semibold text-foreground">054-536-8629</span>
                 </a>
-                <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-4 rounded-xl border border-accent/15 bg-card hover:border-accent/30 transition-colors text-center">
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-4 rounded-xl border border-accent/15 bg-card hover:border-accent/30 transition-colors text-center">
                   <MessageCircle className="h-6 w-6 text-accent" />
                   <span className="text-xs text-foreground/50">וואטסאפ</span>
                   <span className="font-semibold text-foreground">שלחו הודעה</span>

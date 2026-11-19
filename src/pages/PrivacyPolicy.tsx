@@ -1,3 +1,4 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
@@ -33,7 +34,8 @@ const PrivacyPolicy = () => {
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute("href", "https://1979.co.il/privacy");
+    canonical.setAttribute("href", "https://1979.co.il/privacy/");
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", "https://1979.co.il/privacy/");
   }, []);
 
   const sections: { title: string; body: string[]; list?: string[] }[] = [
@@ -60,26 +62,26 @@ const PrivacyPolicy = () => {
         "אבחון תקלות ותמיכה מרחוק לפי בקשתך.",
         "שיפור האתר, השירותים והתוכן.",
         "עמידה בדרישות חוק ושמירה על אבטחת המידע.",
-        "איננו מבצעים פרסום ממוקד ואיננו מוכרים או משכירים מידע אישי לצדדים שלישיים.",
+        "אינני מבצע פרסום ממוקד ואינני מוכר או משכיר מידע אישי לצדדים שלישיים.",
       ],
     },
     {
       title: "העברת מידע לצדדים שלישיים",
       body: [
-        "לצורך הפעלת האתר והשירותים אנו נעזרים בספקי תשתית ותוכנה. מידע עשוי לעבור אליהם רק במידה הנדרשת לתפעול השירות:",
+        "לצורך הפעלת האתר והשירותים אני נעזר בספקי תשתית ותוכנה. מידע עשוי לעבור אליהם רק במידה הנדרשת לתפעול השירות:",
       ],
       list: [
-        "WhatsApp / Meta – כאשר אתה בוחר לפנות אלינו בוואטסאפ, ההודעה כפופה גם למדיניות הפרטיות של WhatsApp.",
+        "WhatsApp / Meta – כאשר אתה בוחר לפנות אליי בוואטסאפ, ההודעה כפופה גם למדיניות הפרטיות של WhatsApp.",
         "שירותי ענן ואחסון נתונים (Supabase / Lovable Cloud) – אחסון מאובטח של פניות ונתוני שירות.",
         "שירותי Google (לרבות Google Sheets / Google Apps Script) – ניהול פניות ורשומות שירות פנימיות.",
         "ספקי מודלי AI – עיבוד השאלות שנשלחות בצ'אט לצורך יצירת תשובה.",
-        "מסירת מידע נדרשת על פי דין, צו בית משפט או להגנה על זכויותינו החוקיות.",
+        "מסירת מידע נדרשת על פי דין, צו בית משפט או להגנה על זכויותיי החוקיות.",
       ],
     },
     {
       title: "אבטחת מידע ותקופת שמירה",
       body: [
-        "המידע נשמר בסביבות מאובטחות עם הצפנת תעבורה (HTTPS), הרשאות גישה מוגבלות לבעל העסק בלבד ומדיניות סיסמאות. אנו נוקטים באמצעים סבירים ומקובלים להגנה על המידע, אך אין באפשרותנו להבטיח חסינות מוחלטת מפני חדירה בלתי מורשית.",
+        "המידע נשמר בסביבות מאובטחות עם הצפנת תעבורה (HTTPS), הרשאות גישה מוגבלות לבעל העסק בלבד ומדיניות סיסמאות. אני נוקט באמצעים סבירים ומקובלים להגנה על המידע, אך אין באפשרותי להבטיח חסינות מוחלטת מפני חדירה בלתי מורשית.",
         "פניות ונתוני שירות נשמרים לתקופה הנדרשת לצורך מתן השירות ולמשך עד 24 חודשים לאחר סיום הטיפול, או לתקופה ארוכה יותר אם קיימת חובה חוקית (למשל דרישות מיסוי). לאחר מכן המידע נמחק או עובר אנונימיזציה.",
       ],
     },
@@ -93,8 +95,8 @@ const PrivacyPolicy = () => {
     {
       title: "זכות עיון, תיקון ומחיקה",
       body: [
-        "בהתאם לחוק הגנת הפרטיות, התשמ\"א-1981 ולתיקון 13 לחוק (שנכנס לתוקף באוגוסט 2025), אתה זכאי לעיין במידע האישי שנאסף עליך, לבקש את תיקונו אם אינו נכון או מעודכן, ולבקש את מחיקתו. ניתן לפנות בבקשה בכל אחת מדרכי ההתקשרות המפורטות בהמשך; נטפל בבקשה בתוך 30 ימים.",
-        "כמו כן ניתן לבטל בכל עת הסכמה לקבלת הודעות שירות או עדכונים מאיתנו.",
+        "בהתאם לחוק הגנת הפרטיות, התשמ\"א-1981 ולתיקון 13 לחוק (שנכנס לתוקף באוגוסט 2025), אתה זכאי לעיין במידע האישי שנאסף עליך, לבקש את תיקונו אם אינו נכון או מעודכן, ולבקש את מחיקתו. ניתן לפנות בבקשה בכל אחת מדרכי ההתקשרות המפורטות בהמשך; אטפל בבקשה בתוך 30 ימים.",
+        "כמו כן ניתן לבטל בכל עת הסכמה לקבלת הודעות שירות או עדכונים ממני.",
       ],
     },
     {
@@ -112,7 +114,7 @@ const PrivacyPolicy = () => {
     {
       title: "שינויים במדיניות",
       body: [
-        "אנו עשויים לעדכן מדיניות זו מעת לעת. גרסה מעודכנת תפורסם בעמוד זה בצירוף תאריך העדכון האחרון.",
+        "אני עשוי לעדכן מדיניות זו מעת לעת. גרסה מעודכנת תפורסם בעמוד זה בצירוף תאריך העדכון האחרון.",
       ],
     },
   ];
@@ -121,7 +123,7 @@ const PrivacyPolicy = () => {
     <div className="min-h-screen" dir="rtl">
       <SkipLink />
       <Header />
-      <main id="main-content" className="pt-[72px]">
+      <main id="main-content" className="pt-[132px] lg:pt-[72px]">
         <section className="py-16 relative">
           <div className="container px-4 max-w-4xl mx-auto">
             <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
@@ -165,7 +167,7 @@ const PrivacyPolicy = () => {
                     <span className="text-xs text-foreground/50">טלפון</span>
                     <span className="font-semibold text-foreground">054-536-8629</span>
                   </a>
-                  <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-4 rounded-xl border border-accent/15 bg-card hover:border-accent/30 transition-colors text-center">
+                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-4 rounded-xl border border-accent/15 bg-card hover:border-accent/30 transition-colors text-center">
                     <MessageCircle className="h-6 w-6 text-accent" aria-hidden="true" />
                     <span className="text-xs text-foreground/50">וואטסאפ</span>
                     <span className="font-semibold text-foreground">שלחו הודעה</span>

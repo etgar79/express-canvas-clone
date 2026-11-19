@@ -5,14 +5,26 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PRERENDER_ROUTES, startStaticServer } from './prerender.mjs';
 
-test('prerender includes exactly the four requested public routes', () => {
-  assert.deepEqual(PRERENDER_ROUTES, ['/ai-services', '/support', '/privacy', '/accessibility']);
+test('prerender includes exactly the five requested public routes', () => {
+  assert.deepEqual(PRERENDER_ROUTES, ['/ai-services', '/support', '/privacy', '/accessibility', '/it-maintenance']);
 });
 test('technician dashboard is never prerendered', () => {
   assert.equal(PRERENDER_ROUTES.includes('/tech-dashboard'), false);
 });
 test('diagnostics is never prerendered', () => {
   assert.equal(PRERENDER_ROUTES.includes('/diagnostics'), false);
+});
+test('every prerender route has a trailing-slash sitemap URL and maintenance has priority 0.9', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const sitemap = await readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
+  const llms = await readFile(new URL('../public/llms.txt', import.meta.url), 'utf8');
+  for (const route of PRERENDER_ROUTES) {
+    assert.ok(sitemap.includes(`<loc>https://1979.co.il${route}/</loc>`));
+    assert.ok(llms.includes(`](${route}/)`));
+  }
+  const maintenance = sitemap.match(/<url>\s*<loc>https:\/\/1979.co.il\/it-maintenance\/<\/loc>([\s\S]*?)<\/url>/);
+  assert.ok(maintenance);
+  assert.ok(maintenance[1].includes('<priority>0.9</priority>'));
 });
 test('generated route directories return HTTP 200 and missing assets return 404', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'seo-server-'));

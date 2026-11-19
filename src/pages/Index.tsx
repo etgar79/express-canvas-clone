@@ -16,8 +16,8 @@ const Index = () => {
     <div className="min-h-screen" dir="rtl">
       <SkipLink />
       <Header />
-      <main id="main-content" className="pt-[72px]">
-        <section id="hero">
+      <main id="main-content" className="pt-[132px] lg:pt-[72px]">
+        <section id="hero" className="scroll-mt-[132px] lg:scroll-mt-[72px]">
           <Hero />
         </section>
         <Services />

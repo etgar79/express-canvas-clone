@@ -49,7 +49,7 @@ const tools = [
   {
     icon: Bot,
     title: "בוט טכנאים",
-    description: "הבוט החכם שלנו לטכנאים - תשובות מהירות וכלים מקצועיים.",
+    description: "הבוט החכם שלי לטכנאים - תשובות מהירות וכלים מקצועיים.",
     href: "https://script.google.com/macros/s/AKfycbyD2n-9G0ncG_fEYvvN9ZzeJQqQ5QVdRBge4Jz1PCnRejUojUb33bUaTjfEbpo8dcLmDQ/exec",
     external: true,
     cta: "פתח את הבוט",
@@ -80,13 +80,14 @@ const Support = () => {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = "https://1979.co.il/support";
+    canonical.href = "https://1979.co.il/support/";
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", "https://1979.co.il/support/");
   }, []);
 
   return (
     <div className="min-h-screen" dir="rtl">
       <Header />
-      <main id="main-content" className="pt-[72px]">
+      <main id="main-content" className="pt-[132px] lg:pt-[72px]">
         <section className="py-20 relative overflow-hidden bg-background">
           <div className="absolute inset-0 grid-pattern"></div>
           <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>

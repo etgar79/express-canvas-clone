@@ -1,3 +1,4 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Card } from "@/components/ui/card";
 import { Shield, Zap, Heart, TrendingUp, MessageCircle, Award } from "lucide-react";
 
@@ -12,7 +13,7 @@ export const About = () => {
     {
       icon: Zap,
       title: "תגובה מהירה",
-      description: "תגובה תוך דקות לכל פנייה. אנחנו כאן כשצריך אותנו - בטלפון, בוואטסאפ או במקום.",
+      description: "תגובה תוך דקות לכל פנייה. אני כאן כשצריך אותי - בטלפון, בוואטסאפ או במקום.",
       stat: "< 30 דק׳"
     },
     {
@@ -24,43 +25,40 @@ export const About = () => {
     {
       icon: TrendingUp,
       title: "פתרונות מותאמים",
-      description: "לא מציעים פתרון אחד לכולם. כל פתרון נבנה במיוחד עבורכם, אחרי שיחה והבנה.",
+      description: "אני לא מציע פתרון אחד לכולם. כל פתרון נבנה במיוחד עבורכם, אחרי שיחה והבנה.",
       stat: "בהתאמה"
     }
   ];
 
   return (
-    <section id="about" className="py-20 relative overflow-hidden bg-muted">
-      <div className="absolute inset-0 grid-pattern"></div>
-      <div className="absolute top-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
-      
+    <section id="about" className="scroll-mt-[132px] lg:scroll-mt-[72px] py-20 relative overflow-hidden bg-muted">
+
       <div className="container px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
-            קצת עלינו
+            קצת עליי
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
             הכירו את <span className="text-accent">Tech Therapy</span>
           </h2>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
-            אנחנו מאמינים שטכנולוגיה צריכה להיות פשוטה, נגישה ומשרתת את האנשים שמשתמשים בה. 
-            לכן הקמנו את Tech Therapy - כדי לתת לעסקים ולפרטיים בפרדס חנה ובאיזור ליווי טכנולוגי אישי ואנושי.
+            אני מאמין שטכנולוגיה צריכה להיות פשוטה, נגישה ומשרתת את האנשים שמשתמשים בה.
+            לכן הקמתי את Tech Therapy - כדי לתת לעסקים ולפרטיים בפרדס חנה ובאיזור ליווי טכנולוגי אישי ואנושי.
           </p>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
-            עם למעלה מ-10 שנות ניסיון, אנחנו מלווים לקוחות בפרדס חנה והסביבה מהצעד הראשון ועד להטמעה מלאה,
+            עם למעלה מ-10 שנות ניסיון, אני מלווה לקוחות בפרדס חנה והסביבה מהצעד הראשון ועד להטמעה מלאה,
             עם סבלנות, מקצועיות והרבה אכפתיות.
           </p>
           <div className="inline-block p-6 rounded-2xl mt-4 border border-accent/15 bg-accent/5">
             <p className="text-xl md:text-2xl font-semibold text-accent">
-              ״הטכנולוגיה שלכם. המשימה שלנו.״
+              ״הטכנולוגיה שלכם. המשימה שלי.״
             </p>
           </div>
         </div>
 
         <div className="max-w-6xl mx-auto">
           <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 text-foreground">
-            למה בוחרים <span className="text-primary">בנו</span>?
+            למה לבחור <span className="text-primary">בי</span>?
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {advantages.map((advantage, index) => (
@@ -85,13 +83,13 @@ export const About = () => {
         </div>
 
         <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-2xl border border-border bg-card shadow-sm">
-          <h4 className="text-2xl font-bold mb-4 text-foreground">רוצים לשמוע איך נוכל לעזור?</h4>
+          <h4 className="text-2xl font-bold mb-4 text-foreground">רוצים לשמוע איך אוכל לעזור?</h4>
           <p className="text-lg text-foreground/50 mb-6">
-            שיחת היכרות קצרה וללא עלות - נשמע על העסק ונציע פתרון שמתאים בדיוק לכם
+            שיחת היכרות קצרה וללא עלות - אשמע על העסק ואציע פתרון שמתאים בדיוק לכם
           </p>
-          <a 
-            href="https://wa.me/972545368629" 
-            target="_blank" 
+          <a
+            href={whatsappUrl()}
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 bg-accent text-accent-foreground shadow-lg"
           >

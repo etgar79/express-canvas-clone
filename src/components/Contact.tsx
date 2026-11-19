@@ -1,22 +1,20 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MessageCircle, Clock } from "lucide-react";
 
 export const Contact = () => {
   return (
-    <section id="contact" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
-      <div className="absolute inset-0 hex-pattern"></div>
-      <div className="absolute top-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+    <section id="contact" className="scroll-mt-[132px] lg:scroll-mt-[72px] py-20 relative overflow-hidden bg-muted">
       
       <div className="container px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
-              דברו איתנו
+              דברו איתי
             </span>
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-              נשמח <span className="text-accent">לשמוע</span> מכם
+              אשמח <span className="text-accent">לשמוע</span> מכם
             </h2>
             <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
               טכנאי מחשבים ושירותי AI בפרדס חנה ובאיזור - צרו קשר בוואטסאפ, טלפון או מייל
@@ -40,7 +38,7 @@ export const Contact = () => {
                   </div>
                 </a>
 
-                <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-xl border border-accent/10 hover:border-accent/25 transition-colors bg-accent/5">
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-xl border border-accent/10 hover:border-accent/25 transition-colors bg-accent/5">
                   <div className="p-2 rounded-xl border border-accent/15 bg-accent/10">
                     <MessageCircle className="h-5 w-5 text-accent" />
                   </div>
@@ -56,7 +54,7 @@ export const Contact = () => {
                   </div>
                   <div>
                     <p className="text-xs text-foreground/40">אימייל</p>
-                    <p className="font-semibold text-foreground">שלחו לנו מייל</p>
+                    <p className="font-semibold text-foreground">שלחו לי מייל</p>
                   </div>
                 </a>
 
@@ -73,7 +71,7 @@ export const Contact = () => {
 
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Button asChild size="lg" className="w-full">
-                  <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
+                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="h-5 w-5 ml-2" />
                     שלחו הודעה בוואטסאפ
                   </a>
@@ -92,7 +90,7 @@ export const Contact = () => {
                   <p className="font-semibold text-accent text-sm">שעות פעילות</p>
                 </div>
                 <p className="text-foreground/50 text-sm">ראשון - חמישי: 9:00 - 18:00</p>
-                <p className="text-foreground/50 text-sm">בוואטסאפ: תמיד זמינים 💬</p>
+                <p className="text-foreground/50 text-sm">בוואטסאפ: תמיד זמין 💬</p>
               </div>
             </Card>
           </div>

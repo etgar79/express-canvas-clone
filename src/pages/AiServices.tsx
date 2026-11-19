@@ -1,3 +1,4 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
@@ -37,7 +38,8 @@ const AiServices = () => {
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute("href", "https://1979.co.il/ai-services");
+    canonical.setAttribute("href", "https://1979.co.il/ai-services/");
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", "https://1979.co.il/ai-services/");
   }, []);
 
   const services = [
@@ -86,7 +88,7 @@ const AiServices = () => {
     <div className="min-h-screen" dir="rtl">
       <SkipLink />
       <Header />
-      <main id="main-content" className="pt-[72px]">
+      <main id="main-content" className="pt-[132px] lg:pt-[72px]">
         {/* Hero */}
         <section className="bg-gradient-to-b from-background to-muted py-16 md:py-24">
           <div className="container mx-auto px-4 max-w-5xl text-center">
@@ -106,7 +108,7 @@ const AiServices = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button asChild size="lg">
-                <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
+                <a href={whatsappUrl('ai')} target="_blank" rel="noopener noreferrer">
                   דברו איתי בוואטסאפ
                 </a>
               </Button>
@@ -191,7 +193,7 @@ const AiServices = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button asChild size="lg" variant="secondary">
-                <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">
+                <a href={whatsappUrl('ai')} target="_blank" rel="noopener noreferrer">
                   וואטסאפ: 054-5368629
                 </a>
               </Button>

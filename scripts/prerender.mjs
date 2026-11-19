@@ -4,7 +4,7 @@ import { resolve, extname, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer';
 
-export const PRERENDER_ROUTES = ['/ai-services', '/support', '/privacy', '/accessibility'];
+export const PRERENDER_ROUTES = ['/ai-services', '/support', '/privacy', '/accessibility', '/it-maintenance'];
 
 // Serve only the built site; client-side routes initially receive its SPA entry.
 export async function startStaticServer(directory) {
@@ -70,14 +70,14 @@ export async function prerender({ input = 'dist', output = '.', origin: supplied
         const main = document.querySelector('#root main');
         return Boolean(main?.querySelector('h1')?.textContent?.trim())
           && (main?.textContent?.trim().length || 0) > 100
-          && document.querySelector('link[rel="canonical"]')?.getAttribute('href') === `https://1979.co.il${path}`
+          && document.querySelector('link[rel="canonical"]')?.getAttribute('href') === `https://1979.co.il${path}/`
           && Boolean(document.querySelector('meta[name="description"]')?.getAttribute('content'));
       }, { timeout: 30000 }, route);
       // Homepage-only schema must not accompany unrelated page content.
       await page.evaluate(() => {
         document.querySelectorAll('script[type="application/ld+json"]').forEach(script => {
           try {
-            if (JSON.parse(script.textContent || '{}')['@type'] === 'FAQPage') script.remove();
+            if (JSON.parse(script.textContent || '{}')['@type'] === 'FAQPage' && script.id !== 'it-maintenance-faq') script.remove();
           } catch { /* Keep other structured data unchanged. */ }
         });
         const title = document.title;

@@ -1,3 +1,4 @@
+import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Phone, Mail, MessageCircle, Terminal, Heart, Settings, Smartphone, Apple } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -19,7 +20,7 @@ export const Footer = () => {
               </div>
             </div>
             <p className="text-foreground/40 leading-relaxed max-w-md text-sm">
-              חברת ייעוץ והטמעת טכנולוגיה עם גישה אישית. אנחנו כאן כדי לעזור לעסק שלכם לצמוח עם הטכנולוגיה הנכונה.
+              ייעוץ והטמעת טכנולוגיה לעסקים, בגישה אישית
             </p>
           </div>
 
@@ -27,10 +28,12 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-bold text-foreground mb-4">ניווט</h4>
             <ul className="space-y-2">
-              <li><a href="#hero" className="text-foreground/40 hover:text-accent transition-colors text-sm">בית</a></li>
-              <li><a href="#services" className="text-foreground/40 hover:text-accent transition-colors text-sm">שירותים</a></li>
-              <li><a href="#about" className="text-foreground/40 hover:text-accent transition-colors text-sm">אודות</a></li>
-              <li><a href="#contact" className="text-foreground/40 hover:text-accent transition-colors text-sm">צור קשר</a></li>
+              <li><a href="/#hero" className="text-foreground/40 hover:text-accent transition-colors text-sm">בית</a></li>
+              <li><Link to="/ai-services" className="text-foreground/40 hover:text-accent transition-colors text-sm">AI לעסקים</Link></li>
+              <li><Link to="/it-maintenance" className="text-foreground/40 hover:text-accent transition-colors text-sm">תחזוקה לעסקים</Link></li>
+              <li><a href="/#services" className="text-foreground/40 hover:text-accent transition-colors text-sm">שירותים</a></li>
+              <li><a href="/#about" className="text-foreground/40 hover:text-accent transition-colors text-sm">אודות</a></li>
+              <li><a href="/#contact" className="text-foreground/40 hover:text-accent transition-colors text-sm">צור קשר</a></li>
               <li>
                 <Link to="/accessibility" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
                   הצהרת נגישות
@@ -71,7 +74,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <MessageCircle className="h-4 w-4 text-accent" />
-                <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">וואטסאפ</a>
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">וואטסאפ</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Mail className="h-4 w-4 text-accent" />
@@ -96,8 +99,8 @@ export const Footer = () => {
               © {currentYear} Tech Therapy Computers · נבנה עם <Heart className="h-3 w-3 text-accent" />
             </p>
             <div className="flex items-center gap-3">
-              <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer"
-                className="p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent hover:border-accent/30 transition-all">
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer"
+                aria-label="שלח הודעת וואטסאפ" className="min-h-11 min-w-11 inline-flex items-center justify-center p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent hover:border-accent/30 transition-all">
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>

@@ -7,10 +7,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { RouteRobots } from "@/components/RouteRobots";
+import { HashScroll } from "@/components/HashScroll";
 
 const Diagnostics = lazy(() => import("./pages/Diagnostics"));
 const TechDashboard = lazy(() => import("./pages/TechDashboard"));
 const AiServices = lazy(() => import("./pages/AiServices"));
+const ItMaintenance = lazy(() => import("./pages/ItMaintenance"));
 const Support = lazy(() => import("./pages/Support"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
@@ -54,6 +56,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <RouteRobots />
+        <HashScroll />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route
@@ -80,6 +83,7 @@ const App = () => (
               </Suspense>
             }
           />
+          <Route path="/it-maintenance" element={<Suspense fallback={<AppLoading />}><ItMaintenance /></Suspense>} />
           <Route
             path="/support"
             element={

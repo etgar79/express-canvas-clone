@@ -48,18 +48,15 @@ export const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-tech-light)' }}>
-      <div className="absolute inset-0 hex-pattern"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+    <section id="services" className="scroll-mt-[132px] lg:scroll-mt-[72px] py-20 relative overflow-hidden bg-muted">
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
-            מה אנחנו עושים
+            מה אני עושה
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            איך נוכל <span className="text-accent">לעזור</span> לכם?
+            איך אוכל <span className="text-accent">לעזור</span> לכם?
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
             שירותי AI, תיקוני מחשבים ופתרונות טכנולוגיים בפרדס חנה - עם גישה אישית לכל לקוח

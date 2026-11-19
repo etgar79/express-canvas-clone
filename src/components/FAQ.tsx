@@ -5,10 +5,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const faqs = [
+export const faqs = [
   {
     question: "איך עובדת התמיכה מרחוק?",
-    answer: "אנחנו מתחברים למחשב שלך דרך תוכנה מאובטחת (מוצפנת AES-256). אתה רואה את כל מה שאנחנו עושים ויכול לנתק בכל רגע. הכל מתועד."
+    answer: "אני מתחבר למחשב שלך דרך תוכנה מאובטחת (מוצפנת AES-256). אתה רואה את כל מה שאני עושה ויכול לנתק בכל רגע. הכל מתועד."
   },
   {
     question: "מה כולל שירות הייעוץ הטכנולוגי?",
@@ -19,25 +19,22 @@ const faqs = [
     answer: "תלוי בהיקף - משרד קטן: 1-2 ימים. ארגון בינוני: 3-5 ימים. כולל תכנון, התקנה, קונפיגורציה ובדיקות."
   },
   {
-    question: "האם אתם עובדים גם עם עסקים קטנים?",
-    answer: "בהחלט! יש לנו חבילות מותאמות לכל גודל עסק. מעסק של אדם אחד ועד ארגון של מאות עובדים."
+    question: "האם אתה עובד גם עם עסקים קטנים?",
+    answer: "בהחלט! יש לי חבילות מותאמות לכל גודל עסק. מעסק של אדם אחד ועד ארגון של מאות עובדים."
   },
   {
     question: "מה כוללות חבילות התחזוקה?",
     answer: "ניטור מערכות שוטף, עדכוני אבטחה, גיבויים אוטומטיים, תמיכה טלפונית ובוואטסאפ, וביקור טכנאי חודשי (בחבילות פרימיום)."
   },
   {
-    question: "מה המחירים שלכם?",
-    answer: "המחירים שלנו שקופים ותחרותיים. צרו איתנו קשר לשיחת ייעוץ חינם - נבין את הצרכים ונתאים הצעה."
+    question: "מה המחירים שלך?",
+    answer: "המחירים שלי שקופים ותחרותיים. צרו איתי קשר לשיחת ייעוץ חינם - אבין את הצרכים ואתאים הצעה."
   }
 ];
 
 export const FAQ = () => {
   return (
     <section className="py-20 relative overflow-hidden bg-background">
-      <div className="absolute inset-0 grid-pattern"></div>
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
@@ -45,10 +42,10 @@ export const FAQ = () => {
             שאלות ותשובות
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            שאלתם? <span className="text-accent">עונים</span>
+            שאלתם? <span className="text-accent">אני עונה</span>
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-            הנה תשובות לשאלות שהכי שואלים אותנו
+            הנה תשובות לשאלות שהכי שואלים אותי
           </p>
         </div>
         
