@@ -196,7 +196,7 @@ const AiServices = () => {
                 </a>
               </Button>
               <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <a href="mailto:etgar@1979.co.il">etgar@1979.co.il</a>
+                <a href="mailto:info@1979.co.il">info@1979.co.il</a>
               </Button>
             </div>
           </div>

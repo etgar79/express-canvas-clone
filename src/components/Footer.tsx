@@ -1,4 +1,4 @@
-import { Phone, Mail, MessageCircle, Facebook, Linkedin, Terminal, Heart, Settings, Smartphone, Apple } from "lucide-react";
+import { Phone, Mail, MessageCircle, Terminal, Heart, Settings, Smartphone, Apple } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
@@ -37,9 +37,9 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
-                  temp softwer
-                </a>
+                <Link to="/support" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                  ללקוחות קיימים
+                </Link>
               </li>
               <li>
                 <Link to="/privacy" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
@@ -99,12 +99,6 @@ export const Footer = () => {
               <a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer"
                 className="p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent hover:border-accent/30 transition-all">
                 <MessageCircle className="h-4 w-4" />
-              </a>
-              <a href="#" className="p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent hover:border-accent/30 transition-all">
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a href="#" className="p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent hover:border-accent/30 transition-all">
-                <Linkedin className="h-4 w-4" />
               </a>
             </div>
           </div>

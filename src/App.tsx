@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 const Diagnostics = lazy(() => import("./pages/Diagnostics"));
 const TechDashboard = lazy(() => import("./pages/TechDashboard"));
 const AiServices = lazy(() => import("./pages/AiServices"));
+const Support = lazy(() => import("./pages/Support"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
@@ -74,6 +75,14 @@ const App = () => (
             element={
               <Suspense fallback={<AppLoading />}>
                 <AiServices />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/support"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <Support />
               </Suspense>
             }
           />

@@ -77,7 +77,7 @@ export const Hero = () => {
               {[
                 { value: "10+", label: "שנות ניסיון" },
                 { value: "50+", label: "לקוחות מרוצים" },
-                { value: "24/7", label: "תמיד כאן בשבילך" },
+                { value: "מענה מהיר", label: "בוואטסאפ" },
               ].map((stat, i) => (
                 <div key={i} className="text-center p-4 rounded-xl border border-foreground/10 bg-foreground/5">
                   <div className="text-2xl md:text-3xl font-bold text-accent">{stat.value}</div>

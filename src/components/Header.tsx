@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Bot, FileText, Home, Briefcase, Users, Phone, Shield, Terminal, Menu, X, Smartphone, Apple, Package } from "lucide-react";
+import { Mail, Home, Briefcase, Users, Phone, Terminal, Menu, X, Smartphone, Apple, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -43,16 +43,10 @@ export const Header = () => {
             </Link>
           </Button>
           <Button variant="ghost" size="sm" className="text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer">
-              <FileText className="ml-1 h-4 w-4" />
-              קבצי עזר
-            </a>
-          </Button>
-          <Button variant="ghost" size="sm" className="hidden xl:inline-flex text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer">
-              <Package className="ml-1 h-4 w-4" />
-              temp softwer
-            </a>
+            <Link to="/support">
+              <UserCheck className="ml-1 h-4 w-4" />
+              ללקוחות קיימים
+            </Link>
           </Button>
         </nav>
 
@@ -77,12 +71,6 @@ export const Header = () => {
           <Button variant="ghost" size="sm" className="text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאייפון">
             <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאייפון">
               <Apple className="h-4 w-4" />
-            </a>
-          </Button>
-          <Button variant="ghost" size="sm" className="hidden xl:inline-flex text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="https://script.google.com/macros/s/AKfycbyD2n-9G0ncG_fEYvvN9ZzeJQqQ5QVdRBge4Jz1PCnRejUojUb33bUaTjfEbpo8dcLmDQ/exec" target="_blank" rel="noopener noreferrer">
-              <Bot className="ml-2 h-4 w-4" />
-              בוט טכנאים
             </a>
           </Button>
         </div>
@@ -144,10 +132,10 @@ export const Header = () => {
           </a>
         </Button>
         <Button variant="outline" size="sm" className="flex-1 text-xs border-primary/40" asChild>
-          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer">
-            <Package className="ml-1 h-4 w-4" />
-            temp softwer
-          </a>
+          <Link to="/support">
+            <UserCheck className="ml-1 h-4 w-4" />
+            ללקוחות קיימים
+          </Link>
         </Button>
       </div>
 
@@ -162,14 +150,10 @@ export const Header = () => {
             <Terminal className="inline ml-1 h-4 w-4" />
             מאבחן תקלות AI
           </Link>
-          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
-            <FileText className="inline ml-1 h-4 w-4" />
-            קבצי עזר
-          </a>
-          <a href="https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM" target="_blank" rel="noopener noreferrer" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
-            <Package className="inline ml-1 h-4 w-4" />
-            temp softwer
-          </a>
+          <Link to="/support" className="block py-2 px-4 text-foreground/70 hover:text-primary text-sm" onClick={() => setMobileMenuOpen(false)}>
+            <UserCheck className="inline ml-1 h-4 w-4" />
+            ללקוחות קיימים
+          </Link>
         </div>
       )}
     </header>
