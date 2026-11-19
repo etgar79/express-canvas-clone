@@ -1,16 +1,49 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /tech-dashboard
 
 User-agent: Bingbot
 Allow: /
+Disallow: /tech-dashboard
 
 User-agent: Twitterbot
 Allow: /
+Disallow: /tech-dashboard
 
 User-agent: facebookexternalhit
 Allow: /
+Disallow: /tech-dashboard
+
+User-agent: GPTBot
+Allow: /
+Disallow: /tech-dashboard
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /tech-dashboard
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /tech-dashboard
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /tech-dashboard
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /tech-dashboard
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /tech-dashboard
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /tech-dashboard
 
 User-agent: *
 Allow: /
+Disallow: /tech-dashboard
 
 Sitemap: https://1979.co.il/sitemap.xml
