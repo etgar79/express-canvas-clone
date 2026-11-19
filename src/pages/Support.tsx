@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Mail, Smartphone, Apple, FileText, Package, Bot, Terminal, UserCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const tools = [
   {
@@ -64,6 +65,24 @@ const tools = [
 ];
 
 const Support = () => {
+  useEffect(() => {
+    document.title = "ללקוחות קיימים | Tech Therapy - אתגר אהרוני";
+    let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!description) {
+      description = document.createElement("meta");
+      description.name = "description";
+      document.head.appendChild(description);
+    }
+    description.content = "כל הכלים ללקוחות Tech Therapy של אתגר אהרוני: תמיכה מרחוק, AnyDesk לאנדרואיד ולאייפון, קבצי עזר וכלים נוספים במקום אחד.";
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = "https://1979.co.il/support";
+  }, []);
+
   return (
     <div className="min-h-screen" dir="rtl">
       <Header />

@@ -7,6 +7,10 @@ on:
     paths-ignore:
       - 'assets/**'
       - '404.html'
+      - 'ai-services/**'
+      - 'support/**'
+      - 'privacy/**'
+      - 'accessibility/**'
   workflow_dispatch:
 
 permissions:
@@ -31,6 +35,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
 
       - name: Build
         run: npm run build
@@ -49,16 +55,31 @@ jobs:
           # keep static files served from the root
           cp -f dist/robots.txt ./robots.txt 2>/dev/null || true
           cp -f dist/sitemap.xml ./sitemap.xml 2>/dev/null || true
+          cp -f dist/llms.txt ./llms.txt
           # GitHub Pages מגיש מהשורש — בלי זה ה-favicon מחזיר 404
           cp -f dist/favicon.png ./favicon.png 2>/dev/null || true
           cp -f dist/favicon.ico ./favicon.ico 2>/dev/null || true
           cp -f dist/apple-touch-icon.png ./apple-touch-icon.png 2>/dev/null || true
+
+      - name: Install Puppeteer browser and system dependencies
+        continue-on-error: true
+        run: npx puppeteer browsers install chrome --install-deps
+
+      - name: Prerender public pages
+        continue-on-error: true
+        run: node scripts/prerender.mjs
 
       - name: Commit built assets
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A assets 404.html robots.txt sitemap.xml favicon.png favicon.ico apple-touch-icon.png
+          git add llms.txt
+          for directory in ai-services support privacy accessibility; do
+            if [ -d "$directory" ]; then
+              git add -A "$directory"
+            fi
+          done
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

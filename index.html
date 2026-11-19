@@ -26,12 +26,56 @@
       "url": "https://1979.co.il/",
       "telephone": "+972-54-536-8629",
       "email": "info@1979.co.il",
-      "areaServed": {
-        "@type": "City",
-        "name": "פרדס חנה"
+      "areaServed": ["פרדס חנה-כרכור", "חדרה", "בנימינה", "זכרון יעקב", "קיסריה"],
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+        "opens": "09:00",
+        "closes": "18:00"
       },
+      "founder": { "@type": "Person", "name": "אתגר אהרוני" },
+      "logo": "https://1979.co.il/apple-touch-icon.png",
+      "image": "https://1979.co.il/apple-touch-icon.png",
       "serviceType": ["תיקוני מחשבים", "שירותי AI", "ייעוץ IT", "אוטומציה", "תמיכה טכנית"],
       "priceRange": "$$"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "איך עובדת התמיכה מרחוק?",
+          "acceptedAnswer": { "@type": "Answer", "text": "אנחנו מתחברים למחשב שלך דרך תוכנה מאובטחת (מוצפנת AES-256). אתה רואה את כל מה שאנחנו עושים ויכול לנתק בכל רגע. הכל מתועד." }
+        },
+        {
+          "@type": "Question",
+          "name": "מה כולל שירות הייעוץ הטכנולוגי?",
+          "acceptedAnswer": { "@type": "Answer", "text": "מיפוי צרכים, בחירת מערכות מתאימות, תכנון תשתיות, הטמעה מלאה, הדרכת עובדים וליווי שוטף." }
+        },
+        {
+          "@type": "Question",
+          "name": "כמה זמן לוקח להקים תשתית רשת?",
+          "acceptedAnswer": { "@type": "Answer", "text": "תלוי בהיקף - משרד קטן: 1-2 ימים. ארגון בינוני: 3-5 ימים. כולל תכנון, התקנה, קונפיגורציה ובדיקות." }
+        },
+        {
+          "@type": "Question",
+          "name": "האם אתם עובדים גם עם עסקים קטנים?",
+          "acceptedAnswer": { "@type": "Answer", "text": "בהחלט! יש לנו חבילות מותאמות לכל גודל עסק. מעסק של אדם אחד ועד ארגון של מאות עובדים." }
+        },
+        {
+          "@type": "Question",
+          "name": "מה כוללות חבילות התחזוקה?",
+          "acceptedAnswer": { "@type": "Answer", "text": "ניטור מערכות שוטף, עדכוני אבטחה, גיבויים אוטומטיים, תמיכה טלפונית ובוואטסאפ, וביקור טכנאי חודשי (בחבילות פרימיום)." }
+        },
+        {
+          "@type": "Question",
+          "name": "מה המחירים שלכם?",
+          "acceptedAnswer": { "@type": "Answer", "text": "המחירים שלנו שקופים ותחרותיים. צרו איתנו קשר לשיחת ייעוץ חינם - נבין את הצרכים ונתאים הצעה." }
+        }
+      ]
     }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +84,22 @@
     <link rel="stylesheet" href="/assets/index.css" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main>
+        <h1>אנחנו כאן לתמוך את הטכנולוגיה בעסק שלך</h1>
+        <p>טכנאי מחשבים מקצועי בפרדס חנה, שירותי AI וייעוץ IT אישי - כי טכנולוגיה צריכה לשרת אתכם, לא להפך</p>
+        <ul>
+          <li>שירותי AI</li>
+          <li>תיקוני מחשבים</li>
+          <li>תמיכה בעסקים</li>
+          <li>אוטומציות</li>
+          <li>ייעוץ טכנולוגי</li>
+          <li>תחזוקה שוטפת</li>
+        </ul>
+        <p><a href="tel:+972545368629">054-536-8629</a></p>
+        <p><a href="https://wa.me/972545368629" target="_blank" rel="noopener noreferrer">בואו נדבר</a></p>
+      </main>
+    </div>
     <script type="module" src="/assets/index.js"></script>
   </body>
 </html>
