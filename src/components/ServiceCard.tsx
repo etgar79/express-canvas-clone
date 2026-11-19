@@ -44,13 +44,13 @@ export const ServiceCard = ({ icon: Icon, title, question, description, benefit 
                 <Icon className="h-7 w-7 text-accent" />
               </div>
             </div>
-            <h3 className="text-lg font-bold mb-3 text-center text-accent">{title}</h3>
+            <h3 className="text-lg font-bold mb-3 text-center text-accent-text">{title}</h3>
             <p className="text-foreground/60 leading-relaxed text-sm">{description}</p>
           </div>
           {benefit && (
             <div className="flex items-center gap-2 justify-center p-3 rounded-xl border border-accent/20 bg-accent/8 mt-3">
               <CheckCircle className="h-4 w-4 text-accent flex-shrink-0" />
-              <span className="text-sm font-semibold text-accent">{benefit}</span>
+              <span className="text-sm font-semibold text-accent-text">{benefit}</span>
             </div>
           )}
         </Card>

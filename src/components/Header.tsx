@@ -56,7 +56,7 @@ export const Header = () => {
           <Button
             variant="default"
             size="default"
-            className="min-h-11 px-3 font-bold shadow-lg transition-all duration-300 hover:scale-105 bg-primary text-primary-foreground"
+            className="min-h-11 px-3 font-bold shadow-lg transition-all duration-300 hover:shadow-xl bg-primary text-primary-foreground"
             asChild
           >
             <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
@@ -92,7 +92,7 @@ export const Header = () => {
         {/* Logo & Brand */}
         <div className="flex items-center gap-3 shrink-0">
           <div className="flex flex-col gap-0.5 text-left">
-            <span className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight text-accent">
+            <span className="text-lg md:text-xl lg:text-2xl font-extrabold leading-tight tracking-tight text-accent-text">
               Tech Therapy
             </span>
             <p className="text-xs md:text-sm text-foreground/50">
@@ -105,7 +105,7 @@ export const Header = () => {
               <img
                 src={logo}
                 alt="Tech Therapy Computers לוגו"
-                className="h-10 w-10 md:h-12 md:w-12 rounded-md transition-transform duration-300 group-hover:scale-105 shrink-0"
+                className="h-10 w-10 md:h-12 md:w-12 rounded-md transition-transform duration-300 motion-safe:group-hover:scale-105 shrink-0"
               />
             </div>
           </div>

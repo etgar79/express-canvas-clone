@@ -6,3 +6,5 @@
 - Public WhatsApp links use the shared context-aware URL helper, so encoded messages remain consistent across contact actions.
 - The maintenance page reuses the homepage FAQ data and scopes its Service and FAQPage scripts to its own lifecycle, so answers stay consistent and schema never leaks to other routes.
 - Router hash scrolling waits for rendered anchor targets, so homepage section links work after navigation from internal pages.
+- Deployment stages generated directories from PRERENDER_ROUTES; mirror them in static paths-ignore to prevent omitted pages and generated-output rebuilds.
+- Public small orange text uses accent-text, while decorative icons and backgrounds retain accent; this preserves branding with readable light-theme text.

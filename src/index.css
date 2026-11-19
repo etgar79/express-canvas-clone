@@ -31,6 +31,7 @@ All colors MUST be HSL.
 
     /* דגש - כתום זהוב חם */
     --accent: 30 90% 52%;
+    --accent-text: 30 90% 32%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 55%;
@@ -82,6 +83,7 @@ All colors MUST be HSL.
     --muted: 220 28% 12%;
     --muted-foreground: 35 10% 50%;
     --accent: 30 92% 55%;
+    --accent-text: 30 92% 55%;
     --accent-foreground: 220 40% 10%;
     --destructive: 0 80% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -313,5 +315,19 @@ html {
 
 .chip-pop-in {
   animation: chip-pop-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* Public content stays still when less motion is requested. */
+@media (prefers-reduced-motion: reduce) {
+  :where(header, main, footer, .whatsapp-float),
+  :where(header, main, footer) * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  :where(header, main, footer) [class*="scale-"]:hover {
+    transform: none !important;
+  }
 }
 

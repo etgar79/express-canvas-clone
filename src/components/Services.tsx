@@ -52,7 +52,7 @@ export const Services = () => {
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent-text text-sm mb-4">
             מה אני עושה
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">

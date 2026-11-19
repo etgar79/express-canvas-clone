@@ -7,7 +7,7 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-12 border-t border-border bg-muted">
+    <footer className="pt-12 pb-32 lg:pb-12 border-t border-border bg-muted">
       <div className="container px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Logo & Description */}
@@ -15,7 +15,7 @@ export const Footer = () => {
             <div className="flex items-center gap-3 mb-4">
               <img src={logo} alt="Tech Therapy" className="h-12 w-12 rounded-xl border border-accent/15" />
               <div>
-                <h3 className="text-xl font-bold text-accent">Tech Therapy</h3>
+                <h3 className="text-xl font-bold text-accent-text">Tech Therapy</h3>
                 <p className="text-foreground/40 text-sm">ייעוץ · אוטומציה · IT</p>
               </div>
             </div>
@@ -28,24 +28,24 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-bold text-foreground mb-4">ניווט</h4>
             <ul className="space-y-2">
-              <li><a href="/#hero" className="text-foreground/40 hover:text-accent transition-colors text-sm">בית</a></li>
-              <li><Link to="/ai-services" className="text-foreground/40 hover:text-accent transition-colors text-sm">AI לעסקים</Link></li>
-              <li><Link to="/it-maintenance" className="text-foreground/40 hover:text-accent transition-colors text-sm">תחזוקה לעסקים</Link></li>
-              <li><a href="/#services" className="text-foreground/40 hover:text-accent transition-colors text-sm">שירותים</a></li>
-              <li><a href="/#about" className="text-foreground/40 hover:text-accent transition-colors text-sm">אודות</a></li>
-              <li><a href="/#contact" className="text-foreground/40 hover:text-accent transition-colors text-sm">צור קשר</a></li>
+              <li><a href="/#hero" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">בית</a></li>
+              <li><Link to="/ai-services" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">AI לעסקים</Link></li>
+              <li><Link to="/it-maintenance" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">תחזוקה לעסקים</Link></li>
+              <li><a href="/#services" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">שירותים</a></li>
+              <li><a href="/#about" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">אודות</a></li>
+              <li><a href="/#contact" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">צור קשר</a></li>
               <li>
-                <Link to="/accessibility" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                <Link to="/accessibility" className="text-foreground/40 hover:text-accent-text transition-colors text-sm flex items-center gap-1">
                   הצהרת נגישות
                 </Link>
               </li>
               <li>
-                <Link to="/support" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                <Link to="/support" className="text-foreground/40 hover:text-accent-text transition-colors text-sm flex items-center gap-1">
                   ללקוחות קיימים
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-foreground/40 hover:text-accent transition-colors text-sm flex items-center gap-1">
+                <Link to="/privacy" className="text-foreground/40 hover:text-accent-text transition-colors text-sm flex items-center gap-1">
                   מדיניות פרטיות
                 </Link>
               </li>
@@ -70,23 +70,23 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-foreground/40">
                 <Phone className="h-4 w-4 text-accent" />
-                <a href="tel:+972545368629" className="hover:text-accent transition-colors text-sm">054-536-8629</a>
+                <a href="tel:+972545368629" className="hover:text-accent-text transition-colors text-sm">054-536-8629</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <MessageCircle className="h-4 w-4 text-accent" />
-                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">וואטסאפ</a>
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">וואטסאפ</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Mail className="h-4 w-4 text-accent" />
-                <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">תמיכה מרחוק</a>
+                <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">תמיכה מרחוק</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Smartphone className="h-4 w-4 text-accent" />
-                <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">תמיכה מרחוק לאנדרואיד</a>
+                <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">תמיכה מרחוק לאנדרואיד</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Apple className="h-4 w-4 text-accent" />
-                <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors text-sm">תמיכה מרחוק לאייפון</a>
+                <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">תמיכה מרחוק לאייפון</a>
               </li>
             </ul>
           </div>
@@ -100,7 +100,7 @@ export const Footer = () => {
             </p>
             <div className="flex items-center gap-3">
               <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer"
-                aria-label="שלח הודעת וואטסאפ" className="min-h-11 min-w-11 inline-flex items-center justify-center p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent hover:border-accent/30 transition-all">
+                aria-label="שלח הודעת וואטסאפ" className="min-h-11 min-w-11 inline-flex items-center justify-center p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent-text hover:border-accent/30 transition-all">
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>

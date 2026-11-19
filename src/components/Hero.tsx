@@ -17,8 +17,8 @@ export const Hero = () => {
       <div className="container px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
             {/* Warm welcome tag */}
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent/25 bg-accent/8 mb-8 text-sm text-accent animate-fade-in">
-              <Heart className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent/25 bg-accent/8 mb-8 text-sm text-accent-text animate-fade-in">
+              <Heart className="h-4 w-4 text-accent" />
               <span>שירותי AI וטכנאי מחשבים בפרדס חנה ובאיזור</span>
             </div>
             
@@ -32,25 +32,25 @@ export const Hero = () => {
               תחזוקת IT שוטפת, הטמעת AI ואוטומציות לעסקים בפרדס חנה, חדרה, בנימינה, זכרון יעקב וקיסריה. כי טכנולוגיה צריכה לשרת אתכם, לא להפך
             </p>
             
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="flex flex-col items-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Button
                 size="lg"
-                className="text-lg px-8 py-6 rounded-xl font-bold transition-all duration-300 hover:scale-105 bg-accent text-accent-foreground shadow-lg"
+                className="min-h-14 w-full sm:w-auto text-lg px-8 py-6 rounded-xl font-bold transition-shadow duration-300 hover:shadow-xl bg-accent text-accent-foreground shadow-lg"
                 asChild
               >
-                <Link to="/ai-services"><Sparkles className="ml-2 h-5 w-5" />AI לעסק שלי</Link>
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer"><MessageCircle className="ml-2 h-5 w-5" />דברו איתי בוואטסאפ</a>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-6 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 transition-all duration-300 hover:scale-105 text-foreground font-semibold"
-                asChild
-              >
-                <Link to="/it-maintenance"><Briefcase className="ml-2 h-5 w-5" />תחזוקת IT לעסק</Link>
-              </Button>
-              <Button size="lg" variant="outline" className="min-h-11 text-lg px-8 py-6 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
-                <a href={whatsappUrl('fault')} target="_blank" rel="noopener noreferrer"><MessageCircle className="ml-2 h-5 w-5" />יש לי תקלה עכשיו</a>
-              </Button>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl px-16 sm:px-0">
+                <Button variant="outline" className="h-11 w-full text-sm px-3 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
+                  <Link to="/ai-services"><Sparkles className="ml-2 h-4 w-4" />AI לעסק</Link>
+                </Button>
+                <Button variant="outline" className="h-11 w-full text-sm px-3 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
+                  <Link to="/it-maintenance"><Briefcase className="ml-2 h-4 w-4" />תחזוקת IT</Link>
+                </Button>
+                <Button variant="outline" className="h-11 w-full text-sm px-3 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
+                  <a href={whatsappUrl('fault')} target="_blank" rel="noopener noreferrer"><MessageCircle className="ml-2 h-4 w-4" />יש לי תקלה עכשיו</a>
+                </Button>
+              </div>
             </div>
             <Link to="/diagnostics" className="inline-flex items-center min-h-11 mt-3 text-sm text-muted-foreground underline underline-offset-4">או נסו את מאבחן התקלות החינמי</Link>
             
@@ -62,7 +62,7 @@ export const Hero = () => {
                 { value: "מענה מהיר", label: "בוואטסאפ" },
               ].map((stat, i) => (
                 <div key={i} className="min-w-0 text-center p-2 sm:p-4 rounded-xl border border-foreground/10 bg-foreground/5">
-                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-accent">{stat.value}</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-accent-text">{stat.value}</div>
                   <div className="text-sm text-foreground/50 mt-1">{stat.label}</div>
                 </div>
               ))}

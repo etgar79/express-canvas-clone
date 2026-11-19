@@ -11,6 +11,7 @@ on:
       - 'support/**'
       - 'privacy/**'
       - 'accessibility/**'
+      - 'it-maintenance/**'
   workflow_dispatch:
 
 permissions:
@@ -75,7 +76,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A assets 404.html robots.txt sitemap.xml favicon.png favicon.ico apple-touch-icon.png
           git add llms.txt
-          for directory in ai-services support privacy accessibility; do
+          for directory in $(node --input-type=module -e "import { PRERENDER_ROUTES } from './scripts/prerender.mjs'; console.log(PRERENDER_ROUTES.map(route => route.slice(1)).join(' '))"); do
             if [ -d "$directory" ]; then
               git add -A "$directory"
             fi

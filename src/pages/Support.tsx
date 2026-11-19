@@ -95,8 +95,8 @@ const Support = () => {
 
           <div className="container px-4 relative z-10">
             <div className="text-center mb-16">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
-                <UserCheck className="h-4 w-4" />
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent-text text-sm mb-4">
+                <UserCheck className="h-4 w-4 text-accent" />
                 ללקוחות קיימים
               </span>
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
@@ -123,14 +123,14 @@ const Support = () => {
                       href={tool.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 bg-accent text-accent-foreground shadow-lg"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:shadow-xl bg-accent text-accent-foreground shadow-lg"
                     >
                       {tool.cta}
                     </a>
                   ) : (
                     <Link
                       to={tool.href}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 bg-accent text-accent-foreground shadow-lg"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:shadow-xl bg-accent text-accent-foreground shadow-lg"
                     >
                       {tool.cta}
                     </Link>

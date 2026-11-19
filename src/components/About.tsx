@@ -35,7 +35,7 @@ export const About = () => {
 
       <div className="container px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent-text text-sm mb-4">
             קצת עליי
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
@@ -50,7 +50,7 @@ export const About = () => {
             עם סבלנות, מקצועיות והרבה אכפתיות.
           </p>
           <div className="inline-block p-6 rounded-2xl mt-4 border border-accent/15 bg-accent/5">
-            <p className="text-xl md:text-2xl font-semibold text-accent">
+            <p className="text-xl md:text-2xl font-semibold text-accent-text">
               ״הטכנולוגיה שלכם. המשימה שלי.״
             </p>
           </div>
@@ -70,7 +70,7 @@ export const About = () => {
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="text-lg font-bold text-foreground">{advantage.title}</h4>
-                      <span className="text-xs font-bold text-accent px-2.5 py-1 rounded-full border border-accent/20 bg-accent/8">
+                      <span className="text-xs font-bold text-accent-text px-2.5 py-1 rounded-full border border-accent/20 bg-accent/8">
                         {advantage.stat}
                       </span>
                     </div>
@@ -91,7 +91,7 @@ export const About = () => {
             href={whatsappUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 bg-accent text-accent-foreground shadow-lg"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:shadow-xl bg-accent text-accent-foreground shadow-lg"
           >
             <MessageCircle className="h-5 w-5" />
             בואו נדבר

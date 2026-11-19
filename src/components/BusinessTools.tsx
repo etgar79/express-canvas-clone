@@ -48,7 +48,7 @@ export const BusinessTools = () => {
       
       <div className="container px-4 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent-text text-sm mb-4">
             פתרונות לכל עסק
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
@@ -66,7 +66,7 @@ export const BusinessTools = () => {
               className="p-6 md:p-8 border border-border bg-card/50 backdrop-blur-sm rounded-2xl hover:border-accent/30 transition-all duration-300 group"
             >
               <div className="flex items-start gap-4 mb-4">
-                <div className="p-3 rounded-2xl border border-accent/15 bg-accent/8 group-hover:scale-105 transition-transform">
+                <div className="p-3 rounded-2xl border border-accent/15 bg-accent/8 motion-safe:group-hover:scale-105 transition-transform">
                   <size.icon className="h-7 w-7 text-accent" />
                 </div>
                 <div>

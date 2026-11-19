@@ -126,7 +126,7 @@ const PrivacyPolicy = () => {
       <main id="main-content" className="pt-[132px] lg:pt-[72px]">
         <section className="py-16 relative">
           <div className="container px-4 max-w-4xl mx-auto">
-            <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+            <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent-text text-sm mb-4">
               מדיניות פרטיות
             </span>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">

@@ -10,7 +10,7 @@ export const Contact = () => {
       <div className="container px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-sm mb-4">
+            <span className="inline-block px-4 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent-text text-sm mb-4">
               דברו איתי
             </span>
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
@@ -87,7 +87,7 @@ export const Contact = () => {
               <div className="mt-6 p-4 rounded-xl border border-accent/15 bg-accent/5">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-4 w-4 text-accent" />
-                  <p className="font-semibold text-accent text-sm">שעות פעילות</p>
+                  <p className="font-semibold text-accent-text text-sm">שעות פעילות</p>
                 </div>
                 <p className="text-foreground/50 text-sm">ראשון - חמישי: 9:00 - 18:00</p>
                 <p className="text-foreground/50 text-sm">בוואטסאפ: תמיד זמין 💬</p>
