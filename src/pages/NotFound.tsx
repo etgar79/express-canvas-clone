@@ -23,7 +23,7 @@ const NotFound = () => {
             </Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link to="/diagnostics">
+            <Link to="/diagnostics/">
               <Terminal className="ml-2 h-5 w-5" />
               מאבחן תקלות
             </Link>

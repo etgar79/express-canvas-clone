@@ -18,7 +18,7 @@ const canonicalUrl = "https://1979.co.il/it-maintenance/";
 
 const ItMaintenance = () => {
   useEffect(() => {
-    document.title = "תחזוקת IT לעסקים בפרדס חנה | אתגר אהרוני - Tech Therapy";
+    document.title = "תחזוקת IT לעסקים בפרדס חנה | אתגר אהרוני – Tech Therapy";
     let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!description) {
       description = document.createElement("meta");
@@ -39,6 +39,8 @@ const ItMaintenance = () => {
       { id: "it-maintenance-service", data: { "@context": "https://schema.org", "@type": "Service", name: "תחזוקת IT שוטפת לעסקים", serviceType: "תחזוקת IT לעסקים", url: canonicalUrl, provider: { "@type": "LocalBusiness", name: "Tech Therapy", url: "https://1979.co.il/", founder: { "@type": "Person", name: "אתגר אהרוני" } }, areaServed: ["פרדס חנה-כרכור", "חדרה", "בנימינה", "זכרון יעקב", "קיסריה"], description: included.join(", ") } },
     ];
     const elements = schemas.map(({ id, data }) => {
+      // Replace a prerendered copy before mounting the current schema.
+      document.getElementById(id)?.remove();
       const script = document.createElement("script");
       script.id = id;
       script.type = "application/ld+json";
@@ -67,7 +69,7 @@ const ItMaintenance = () => {
       <main id="main-content" className="pt-[132px] lg:pt-[72px]">
         <section className="bg-gradient-to-b from-background to-muted py-16 md:py-24">
           <div className="container px-4 max-w-5xl text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6"><MapPin className="h-4 w-4" aria-hidden="true" /><span className="text-sm">פרדס חנה כרכור והאזור</span></div>
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6"><MapPin className="h-4 w-4" aria-hidden="true" /><span className="text-sm">פרדס חנה-כרכור והאזור</span></div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">תחזוקת IT שוטפת לעסקים<br /><span className="text-primary">בפרדס חנה ובסביבה</span></h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">אני אתגר אהרוני, מייסד Tech Therapy. כל לקוח עובד ישירות מולי, בלי מוקד ובלי העברות. אני מכיר את העסק שלכם ויודע בדיוק מה אתם צריכים.</p>
           </div>
@@ -80,7 +82,7 @@ const ItMaintenance = () => {
         <section className="py-16 md:py-24 bg-muted"><div className="container px-4 max-w-5xl"><h2 className="text-3xl md:text-4xl font-bold text-center mb-10">למי זה מתאים?</h2><div className="grid sm:grid-cols-3 gap-8">{audiences.map(audience => <div key={audience.name} className="text-center"><audience.icon className="h-8 w-8 mx-auto text-primary mb-4" aria-hidden="true" /><h3 className="text-xl font-bold">{audience.name}</h3></div>)}</div></div></section>
         <section className="py-16 md:py-24 bg-background"><div className="container px-4 max-w-5xl"><h2 className="text-3xl md:text-4xl font-bold text-center mb-10">איך זה עובד?</h2><ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">{steps.map((step, index) => <li key={step} className="border-t border-border pt-5"><span className="text-3xl font-bold text-accent">{index + 1}</span><h3 className="text-lg font-semibold mt-3">{step}</h3></li>)}</ol></div></section>
         <section className="py-16 md:py-24 bg-muted"><div className="container px-4 max-w-3xl"><h2 className="text-3xl md:text-4xl font-bold text-center mb-10">שאלות ותשובות</h2><Accordion type="single" collapsible>{maintenanceFaqs.map((faq, index) => <AccordionItem key={faq.question} value={`faq-${index}`}><AccordionTrigger className="text-lg text-right min-h-11">{faq.question}</AccordionTrigger><AccordionContent className="text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent></AccordionItem>)}</Accordion></div></section>
-        <section className="py-16 md:py-20 bg-primary text-primary-foreground"><div className="container px-4 max-w-3xl text-center"><h2 className="text-3xl md:text-4xl font-bold mb-4">תחזוקת IT לעסק שלך</h2><p className="text-lg mb-8">שיחת היכרות ללא עלות — אשמע על העסק ואציע פתרון שמתאים בדיוק לכם.</p><div className="flex flex-wrap gap-4 justify-center"><Button asChild size="lg" variant="secondary" className="min-h-11"><a href={whatsappUrl('maintenance')} target="_blank" rel="noopener noreferrer"><MessageCircle className="h-5 w-5 ml-2" />דברו איתי בוואטסאפ</a></Button><Button asChild size="lg" variant="outline" className="min-h-11 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"><a href="tel:+972545368629"><Phone className="h-5 w-5 ml-2" />054-536-8629</a></Button></div></div></section>
+        <section className="py-16 md:py-20 bg-primary text-primary-foreground"><div className="container px-4 max-w-3xl text-center"><h2 className="text-3xl md:text-4xl font-bold mb-4">תחזוקת IT לעסק שלכם</h2><p className="text-lg mb-8">שיחת היכרות ללא עלות – אשמע על העסק ואציע פתרון שמתאים בדיוק לכם.</p><div className="flex flex-wrap gap-4 justify-center"><Button asChild size="lg" variant="secondary" className="min-h-11"><a href={whatsappUrl('maintenance')} target="_blank" rel="noopener noreferrer"><MessageCircle className="h-5 w-5 ml-2" />דברו איתי בוואטסאפ</a></Button><Button asChild size="lg" variant="outline" className="min-h-11 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"><a href="tel:+972545368629"><Phone className="h-5 w-5 ml-2" />054-536-8629</a></Button></div></div></section>
       </main>
       <Footer /><WhatsAppFloat /><AccessibilityMenu />
     </div>

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
@@ -12,6 +13,12 @@ import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import { SkipLink } from "@/components/SkipLink";
 
 const Index = () => {
+  useEffect(() => {
+    document.title = "Tech Therapy | תמיכת IT ו-AI לעסקים בפרדס חנה והסביבה – אתגר אהרוני";
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", document.title);
+    document.querySelector('link[rel="canonical"]')?.setAttribute("href", "https://1979.co.il/");
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", "https://1979.co.il/");
+  }, []);
   return (
     <div className="min-h-screen" dir="rtl">
       <SkipLink />

@@ -28,35 +28,35 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-bold text-foreground mb-4">ניווט</h4>
             <ul className="space-y-2">
-              <li><a href="/#hero" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">בית</a></li>
-              <li><Link to="/ai-services" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">AI לעסקים</Link></li>
-              <li><Link to="/it-maintenance" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">תחזוקה לעסקים</Link></li>
-              <li><a href="/#services" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">שירותים</a></li>
-              <li><a href="/#about" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">אודות</a></li>
-              <li><a href="/#contact" className="text-foreground/40 hover:text-accent-text transition-colors text-sm">צור קשר</a></li>
+              <li><a href="/#hero" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm">בית</a></li>
+              <li><Link to="/ai-services/" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm">AI לעסקים</Link></li>
+              <li><Link to="/it-maintenance/" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm">תחזוקה לעסקים</Link></li>
+              <li><a href="/#services" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm">שירותים</a></li>
+              <li><a href="/#about" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm">אודות</a></li>
+              <li><a href="/#contact" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm">צור קשר</a></li>
               <li>
-                <Link to="/accessibility" className="text-foreground/40 hover:text-accent-text transition-colors text-sm flex items-center gap-1">
+                <Link to="/accessibility/" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm gap-1">
                   הצהרת נגישות
                 </Link>
               </li>
               <li>
-                <Link to="/support" className="text-foreground/40 hover:text-accent-text transition-colors text-sm flex items-center gap-1">
+                <Link to="/support/" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm gap-1">
                   ללקוחות קיימים
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-foreground/40 hover:text-accent-text transition-colors text-sm flex items-center gap-1">
+                <Link to="/privacy/" className="min-h-6 py-0.5 inline-flex items-center text-foreground/40 hover:text-accent-text transition-colors text-sm gap-1">
                   מדיניות פרטיות
                 </Link>
               </li>
               <li>
-                <Link to="/diagnostics" className="text-primary/70 hover:text-primary transition-colors text-sm flex items-center gap-1">
+                <Link to="/diagnostics/" className="min-h-6 py-0.5 inline-flex items-center text-primary/70 hover:text-primary transition-colors text-sm gap-1">
                   <Terminal className="h-3 w-3" />
                   מאבחן תקלות
                 </Link>
               </li>
               <li>
-                <Link to="/tech-dashboard" className="text-foreground/30 hover:text-foreground/50 transition-colors text-xs flex items-center gap-1">
+                <Link to="/tech-dashboard" className="min-h-6 py-0.5 inline-flex items-center text-foreground/30 hover:text-foreground/50 transition-colors text-xs gap-1">
                   <Settings className="h-3 w-3" />
                   טכנאים
                 </Link>
@@ -70,23 +70,23 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-foreground/40">
                 <Phone className="h-4 w-4 text-accent" />
-                <a href="tel:+972545368629" className="hover:text-accent-text transition-colors text-sm">054-536-8629</a>
+                <a href="tel:+972545368629" className="min-h-6 py-0.5 inline-flex items-center hover:text-accent-text transition-colors text-sm">054-536-8629</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <MessageCircle className="h-4 w-4 text-accent" />
-                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">וואטסאפ</a>
+                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="min-h-6 py-0.5 inline-flex items-center hover:text-accent-text transition-colors text-sm">וואטסאפ</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Mail className="h-4 w-4 text-accent" />
-                <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">תמיכה מרחוק</a>
+                <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer" className="min-h-6 py-0.5 inline-flex items-center hover:text-accent-text transition-colors text-sm">תמיכה מרחוק</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Smartphone className="h-4 w-4 text-accent" />
-                <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">תמיכה מרחוק לאנדרואיד</a>
+                <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" className="min-h-6 py-0.5 inline-flex items-center hover:text-accent-text transition-colors text-sm">תמיכה מרחוק לאנדרואיד</a>
               </li>
               <li className="flex items-center gap-2 text-foreground/40">
                 <Apple className="h-4 w-4 text-accent" />
-                <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" className="hover:text-accent-text transition-colors text-sm">תמיכה מרחוק לאייפון</a>
+                <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" className="min-h-6 py-0.5 inline-flex items-center hover:text-accent-text transition-colors text-sm">תמיכה מרחוק לאייפון</a>
               </li>
             </ul>
           </div>
@@ -95,12 +95,12 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-foreground/8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-foreground/30 text-sm flex items-center gap-1">
+            <p className="text-foreground/30 text-sm gap-1">
               © {currentYear} Tech Therapy Computers · נבנה עם <Heart className="h-3 w-3 text-accent" />
             </p>
             <div className="flex items-center gap-3">
               <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer"
-                aria-label="שלח הודעת וואטסאפ" className="min-h-11 min-w-11 inline-flex items-center justify-center p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent-text hover:border-accent/30 transition-all">
+                aria-label="שלחו הודעת וואטסאפ" className="min-h-11 min-w-11 inline-flex items-center justify-center p-2 rounded-xl border border-foreground/10 text-foreground/40 hover:text-accent-text hover:border-accent/30 transition-all">
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>

@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 const AccessibilityStatement = () => {
   useEffect(() => {
-    document.title = "הצהרת נגישות | Tech Therapy - אתגר אהרוני";
+    document.title = "הצהרת נגישות | Tech Therapy – אתגר אהרוני";
 
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
@@ -23,7 +23,7 @@ const AccessibilityStatement = () => {
     };
     setMeta(
       "description",
-      "הצהרת נגישות של אתר Tech Therapy - אתגר אהרוני. האתר נבנה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (הנגשת שירותי אינטרנט)."
+      "הצהרת נגישות של אתר Tech Therapy – אתגר אהרוני. האתר נבנה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (הנגשת שירותי אינטרנט)."
     );
 
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -85,7 +85,7 @@ const AccessibilityStatement = () => {
             <Card className="p-8 border border-accent/15 bg-accent/5 shadow-sm rounded-2xl">
               <h2 className="text-2xl font-bold mb-4 text-foreground">דיווח על בעיית נגישות</h2>
               <p className="text-foreground/70 mb-6 leading-relaxed">
-                נתקלתם בקושי בגלישה באתר? נשמח לקבל את הדיווח ולטפל בו בהקדם. ניתן לפנות אלינו בדרכים הבאות:
+                נתקלתם בקושי בגלישה באתר? אשמח לקבל את הדיווח ולטפל בו בהקדם. ניתן לפנות אליי בדרכים הבאות:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <a href="tel:+972545368629" className="flex flex-col items-center gap-2 p-4 rounded-xl border border-accent/15 bg-card hover:border-accent/30 transition-colors text-center">

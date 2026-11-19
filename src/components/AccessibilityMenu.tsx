@@ -69,7 +69,7 @@ export const AccessibilityMenu = () => {
               תפריט נגישות
             </DialogTitle>
             <DialogDescription>
-              התאם את האתר לצרכיך: גודל טקסט, ניגודיות, הדגשת קישורים ומצב תצוגה.
+              התאימו את האתר לצרכים שלכם: גודל טקסט, ניגודיות, הדגשת קישורים ומצב תצוגה.
             </DialogDescription>
           </DialogHeader>
 
@@ -84,7 +84,7 @@ export const AccessibilityMenu = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setFontSize(Math.max(80, fontSize - 10))}
-                  aria-label="הקטן טקסט"
+                  aria-label="הקטינו טקסט"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -95,7 +95,7 @@ export const AccessibilityMenu = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setFontSize(Math.min(150, fontSize + 10))}
-                  aria-label="הגדל טקסט"
+                  aria-label="הגדילו טקסט"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -121,7 +121,7 @@ export const AccessibilityMenu = () => {
               aria-pressed={highlightLinks}
             >
               <Link2 className="h-4 w-4 ml-2" />
-              הדגש קישורים
+              הדגישו קישורים
             </Button>
 
             {/* Dark Mode */}
@@ -137,7 +137,7 @@ export const AccessibilityMenu = () => {
 
             {/* Reset */}
             <Button variant="secondary" className="w-full" onClick={resetAll}>
-              אפס הגדרות
+              אפסו הגדרות
             </Button>
           </div>
         </DialogContent>

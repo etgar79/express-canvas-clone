@@ -13,13 +13,13 @@ export const About = () => {
     {
       icon: Zap,
       title: "תגובה מהירה",
-      description: "תגובה תוך דקות לכל פנייה. אני כאן כשצריך אותי - בטלפון, בוואטסאפ או במקום.",
+      description: "מענה מהיר לכל פנייה בשעות הפעילות. אני כאן כשצריך אותי – בטלפון, בוואטסאפ או במקום.",
       stat: "< 30 דק׳"
     },
     {
       icon: Award,
       title: "ניסיון עשיר",
-      description: "למעלה מ-10 שנים של ליווי עסקים מכל הגדלים - מעסק של אדם אחד ועד ארגונים גדולים.",
+      description: "למעלה מ-10 שנים של ליווי עסקים מכל הגדלים – מעסק של אדם אחד ועד ארגונים גדולים.",
       stat: "10+ שנים"
     },
     {
@@ -43,7 +43,7 @@ export const About = () => {
           </h2>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
             אני מאמין שטכנולוגיה צריכה להיות פשוטה, נגישה ומשרתת את האנשים שמשתמשים בה.
-            לכן הקמתי את Tech Therapy - כדי לתת לעסקים ולפרטיים בפרדס חנה ובאיזור ליווי טכנולוגי אישי ואנושי.
+            לכן הקמתי את Tech Therapy – כדי לתת לעסקים ולפרטיים בפרדס חנה ובאזור ליווי טכנולוגי אישי ואנושי.
           </p>
           <p className="text-lg md:text-xl text-foreground/60 leading-relaxed mb-6">
             עם למעלה מ-10 שנות ניסיון, אני מלווה לקוחות בפרדס חנה והסביבה מהצעד הראשון ועד להטמעה מלאה,
@@ -85,7 +85,7 @@ export const About = () => {
         <div className="max-w-3xl mx-auto text-center mt-16 p-8 rounded-2xl border border-border bg-card shadow-sm">
           <h4 className="text-2xl font-bold mb-4 text-foreground">רוצים לשמוע איך אוכל לעזור?</h4>
           <p className="text-lg text-foreground/50 mb-6">
-            שיחת היכרות קצרה וללא עלות - אשמע על העסק ואציע פתרון שמתאים בדיוק לכם
+            שיחת היכרות קצרה וללא עלות – אשמע על העסק ואציע פתרון שמתאים בדיוק לכם
           </p>
           <a
             href={whatsappUrl()}

@@ -1,5 +1,5 @@
 import { ServiceCard } from "./ServiceCard";
-import { Monitor, Server, Bot, Wrench, Lightbulb, Building2, Sparkles } from "lucide-react";
+import { Monitor, Bot, Wrench, Lightbulb, Building2, Sparkles } from "lucide-react";
 
 export const Services = () => {
   const services = [
@@ -8,13 +8,14 @@ export const Services = () => {
       title: "שירותי AI",
       question: "רוצים לשלב בינה מלאכותית בעסק?",
       description: "ייעוץ והטמעת פתרונות AI לעסקים: צ'אטבוטים חכמים, אוטומציה מבוססת AI, יצירת תוכן, ניתוח נתונים והטמעת כלי בינה מלאכותית.",
-      benefit: "עסק חכם ומתקדם"
+      benefit: "עסק חכם ומתקדם",
+      href: "/ai-services/"
     },
     {
       icon: Monitor,
       title: "תיקוני מחשבים",
       question: "המחשב לא עובד כמו שצריך?",
-      description: "אבחון ותיקון מחשבים נייחים וניידים, התקנת מערכות הפעלה, שדרוגי חומרה ותוכנה, שחזור מידע ותחזוקה מונעת בפרדס חנה ובאיזור.",
+      description: "אבחון ותיקון מחשבים נייחים וניידים, התקנת מערכות הפעלה, שדרוגי חומרה ותוכנה, שחזור מידע ותחזוקה מונעת בפרדס חנה ובאזור.",
       benefit: "מחשבים אמינים ויציבים"
     },
     {
@@ -22,14 +23,16 @@ export const Services = () => {
       title: "תמיכה בעסקים",
       question: "העסק שלכם צריך גב טכנולוגי?",
       description: "תמיכת IT מקיפה לעסקים: ניהול תשתיות, שרתים, רשתות, גיבויים, Office 365 ופתרונות ענן מותאמים.",
-      benefit: "שקט נפשי לעסק"
+      benefit: "שקט נפשי לעסק",
+      href: "/it-maintenance/"
     },
     {
       icon: Bot,
       title: "אוטומציות",
       question: "רוצים שהטכנולוגיה תעבוד בשבילכם?",
       description: "אוטומציה של תהליכים עסקיים, חיבור מערכות, צ'אטבוטים, וייעול זרימות עבודה לחיסכון בזמן ומשאבים.",
-      benefit: "חיסכון בזמן ומשאבים"
+      benefit: "חיסכון בזמן ומשאבים",
+      href: "/ai-services/"
     },
     {
       icon: Lightbulb,
@@ -42,8 +45,9 @@ export const Services = () => {
       icon: Wrench,
       title: "תחזוקה שוטפת",
       question: "רוצים שמישהו ידאג לטכנולוגיה?",
-      description: "חבילות תחזוקה חודשיות: ניטור מערכות, עדכוני אבטחה, גיבויים, ותמיכה טכנית בזמינות מלאה בפרדס חנה ובסביבה.",
-      benefit: "ראש שקט מהטכנולוגיה"
+      description: "חבילות תחזוקה חודשיות: ניטור מערכות, עדכוני אבטחה, גיבויים, ותמיכה טכנית בזמינות גבוהה בפרדס חנה ובסביבה.",
+      benefit: "ראש שקט מהטכנולוגיה",
+      href: "/it-maintenance/"
     }
   ];
 
@@ -59,7 +63,7 @@ export const Services = () => {
             איך אוכל <span className="text-accent">לעזור</span> לכם?
           </h2>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-            שירותי AI, תיקוני מחשבים ופתרונות טכנולוגיים בפרדס חנה - עם גישה אישית לכל לקוח
+            שירותי AI, תיקוני מחשבים ופתרונות טכנולוגיים בפרדס חנה – עם גישה אישית לכל לקוח
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -71,6 +75,7 @@ export const Services = () => {
               question={service.question}
               description={service.description}
               benefit={service.benefit}
+              href={service.href}
             />
           ))}
         </div>

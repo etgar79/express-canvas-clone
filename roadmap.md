@@ -1,11 +1,12 @@
-# Deployment, conversions and accessibility — round 4
+# Polish and quality assurance — round 5
 
-- [x] Stage all prerender routes from the shared allowlist and ignore maintenance output in workflow triggers.
-- [x] Make general WhatsApp contact the primary hero action above three equal secondary actions.
-- [x] Improve small orange text contrast without changing orange icons, buttons or backgrounds.
-- [x] Respect reduced motion and replace public-button hover scaling with subtle emphasis.
-- [x] Reserve mobile footer space for floating controls; run script tests and desktop/mobile homepage checks.
+- [x] Normalize spelling, phone, cities, dashes and plural visitor copy; synchronize FAQ schema.
+- [x] Replace flipping service cards with static cards and service links; correct header active states and footer tap areas.
+- [x] Remove unsafe diagnostics sitemap entry and normalize public internal URLs.
+- [x] Preserve cached assets during deployment; run all tests and desktop/mobile checks.
 
-Constraint: no dashboard or diagnostic logic, chatbot or cloud function changes; deployment edits limited to the route staging loop and paths-ignore.
+Constraint: no dashboard, diagnostic logic, chatbot or cloud function edits; deployment change limited to asset copying.
 
-Verified: 15 script tests passed; desktop and 375px homepage checks passed with equal 44px secondary actions, no horizontal overflow, working maintenance navigation, no runtime errors, reduced-motion animations disabled and footer links clear of the WhatsApp control. Small accent text measured at least 4.86:1 in light mode and 6.59:1 in dark mode. Live GitHub Pages publication remains unverified until the updated workflow runs.
+Live GitHub Pages publication must be verified after the workflow runs.
+
+Verified: 18 script tests passed; homepage, maintenance, AI and support checked at 1280px and 375px without console errors or overflow, each with one H1. Footer links are at least 24px high. Six static service cards have six headings and four working detail links. Privacy, accessibility and 404 each have one H1. Maintenance FAQ schema matches expanded answers after replacing a stale prerendered schema. No asset cleanup by mtime was added, since Git does not preserve reliable file ages.

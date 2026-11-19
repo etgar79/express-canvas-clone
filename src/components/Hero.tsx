@@ -19,7 +19,7 @@ export const Hero = () => {
             {/* Warm welcome tag */}
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent/25 bg-accent/8 mb-8 text-sm text-accent-text animate-fade-in">
               <Heart className="h-4 w-4 text-accent" />
-              <span>שירותי AI וטכנאי מחשבים בפרדס חנה ובאיזור</span>
+              <span>שירותי AI וטכנאי מחשבים בפרדס חנה ובאזור</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in leading-tight tracking-tight">
@@ -29,7 +29,7 @@ export const Hero = () => {
             </h1>
             
             <p className="text-lg md:text-xl mb-10 leading-relaxed text-foreground/60 animate-fade-in max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
-              תחזוקת IT שוטפת, הטמעת AI ואוטומציות לעסקים בפרדס חנה, חדרה, בנימינה, זכרון יעקב וקיסריה. כי טכנולוגיה צריכה לשרת אתכם, לא להפך
+              תחזוקת IT שוטפת, הטמעת AI ואוטומציות לעסקים בפרדס חנה-כרכור, חדרה, בנימינה, זכרון יעקב וקיסריה. כי טכנולוגיה צריכה לשרת אתכם, לא להפך
             </p>
             
             <div className="flex flex-col items-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
@@ -42,17 +42,17 @@ export const Hero = () => {
               </Button>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl px-16 sm:px-0">
                 <Button variant="outline" className="h-11 w-full text-sm px-3 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
-                  <Link to="/ai-services"><Sparkles className="ml-2 h-4 w-4" />AI לעסק</Link>
+                  <Link to="/ai-services/"><Sparkles className="ml-2 h-4 w-4" />AI לעסק</Link>
                 </Button>
                 <Button variant="outline" className="h-11 w-full text-sm px-3 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
-                  <Link to="/it-maintenance"><Briefcase className="ml-2 h-4 w-4" />תחזוקת IT</Link>
+                  <Link to="/it-maintenance/"><Briefcase className="ml-2 h-4 w-4" />תחזוקת IT</Link>
                 </Button>
                 <Button variant="outline" className="h-11 w-full text-sm px-3 rounded-xl border-2 border-foreground/20 bg-transparent hover:bg-foreground/5 text-foreground font-semibold" asChild>
                   <a href={whatsappUrl('fault')} target="_blank" rel="noopener noreferrer"><MessageCircle className="ml-2 h-4 w-4" />יש לי תקלה עכשיו</a>
                 </Button>
               </div>
             </div>
-            <Link to="/diagnostics" className="inline-flex items-center min-h-11 mt-3 text-sm text-muted-foreground underline underline-offset-4">או נסו את מאבחן התקלות החינמי</Link>
+            <Link to="/diagnostics/" className="inline-flex items-center min-h-11 mt-3 text-sm text-muted-foreground underline underline-offset-4">או נסו את מאבחן התקלות החינמי</Link>
             
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-2 sm:gap-8 mt-16 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.6s' }}>

@@ -49,8 +49,8 @@ jobs:
 
       - name: Copy build output to repo root
         run: |
-          rm -rf assets
-          cp -r dist/assets ./assets
+          mkdir -p assets
+          cp -r dist/assets/. ./assets/
           # SPA fallback so deep links (/privacy, /accessibility) work
           cp index.html 404.html
           # keep static files served from the root

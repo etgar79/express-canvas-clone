@@ -8,3 +8,5 @@
 - Router hash scrolling waits for rendered anchor targets, so homepage section links work after navigation from internal pages.
 - Deployment stages generated directories from PRERENDER_ROUTES; mirror them in static paths-ignore to prevent omitted pages and generated-output rebuilds.
 - Public small orange text uses accent-text, while decorative icons and backgrounds retain accent; this preserves branding with readable light-theme text.
+- Deployment overlays current assets without deleting older chunks; cached entry scripts must retain their dependencies and Git timestamps cannot support safe age cleanup.
+- Service cards render a single static heading and optional service-page link; hidden duplicate content and flip-only interactions are avoided.

@@ -6,6 +6,19 @@ const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]));
 const business = schemas.find(schema => schema['@type'] === 'LocalBusiness');
 
+test('FAQ schema exactly matches the shared homepage and maintenance answers', async () => {
+  const source = await readFile(new URL('../src/components/FAQ.tsx', import.meta.url), 'utf8');
+  const faqs = [...source.matchAll(/question: "([^"]+)",\s*answer: "([^"]+)"/g)].map(([, question, answer]) => ({ question, answer }));
+  const schema = schemas.find(item => item['@type'] === 'FAQPage');
+  assert.equal(faqs.length, 6);
+  assert.deepEqual(schema.mainEntity.map(item => ({ question: item.name, answer: item.acceptedAnswer.text })), faqs);
+});
+
+test('API-loading diagnostics is omitted from the public sitemap', async () => {
+  const sitemap = await readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
+  assert.equal(sitemap.includes('/diagnostics'), false);
+});
+
 test('structured business hours are Sunday through Thursday, 09:00–18:00', () => {
   assert.deepEqual(business.openingHoursSpecification.dayOfWeek, ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']);
   assert.equal(business.openingHoursSpecification.opens, '09:00');

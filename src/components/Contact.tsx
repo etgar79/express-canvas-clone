@@ -17,7 +17,7 @@ export const Contact = () => {
               אשמח <span className="text-accent">לשמוע</span> מכם
             </h2>
             <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-              טכנאי מחשבים ושירותי AI בפרדס חנה ובאיזור - צרו קשר בוואטסאפ, טלפון או מייל
+              טכנאי מחשבים ושירותי AI בפרדס חנה ובאזור – צרו קשר בוואטסאפ, טלפון או מייל
             </p>
           </div>
 
@@ -89,8 +89,8 @@ export const Contact = () => {
                   <Clock className="h-4 w-4 text-accent" />
                   <p className="font-semibold text-accent-text text-sm">שעות פעילות</p>
                 </div>
-                <p className="text-foreground/50 text-sm">ראשון - חמישי: 9:00 - 18:00</p>
-                <p className="text-foreground/50 text-sm">בוואטסאפ: תמיד זמין 💬</p>
+                <p className="text-foreground/50 text-sm">ראשון – חמישי: 9:00 – 18:00</p>
+                <p className="text-foreground/50 text-sm">בוואטסאפ אפשר לכתוב בכל שעה</p>
               </div>
             </Card>
           </div>

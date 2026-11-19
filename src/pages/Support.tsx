@@ -9,10 +9,10 @@ const tools = [
   {
     icon: Mail,
     title: "תמיכה מרחוק",
-    description: "חיבור מרחוק למחשב שלך דרך תוכנה מאובטחת - אתה רואה הכל ויכול לנתק בכל רגע.",
+    description: "חיבור מרחוק למחשב שלכם דרך תוכנה מאובטחת – אתם רואים הכול ויכולים לנתק בכל רגע.",
     href: "https://898.tv/sos1979",
     external: true,
-    cta: "התחבר עכשיו",
+    cta: "התחברו עכשיו",
   },
   {
     icon: Smartphone,
@@ -33,10 +33,10 @@ const tools = [
   {
     icon: FileText,
     title: "קבצי עזר",
-    description: "מדריכים, טפסים וקבצי עזר שימושיים - הכל במקום אחד.",
+    description: "מדריכים, טפסים וקבצי עזר שימושיים – הכל במקום אחד.",
     href: "https://ilanmitzpe.sharepoint.com/:f:/g/test/IgA2xOcnJhq5SJzGV2NYP3YIAWn9D_mhz5CS76waDaHvUsI",
     external: true,
-    cta: "פתח את התיקייה",
+    cta: "פתחו את התיקייה",
   },
   {
     icon: Package,
@@ -44,21 +44,21 @@ const tools = [
     description: "תוכנות וכלים זמניים להורדה, לפי הצורך ובהתאמה אישית.",
     href: "https://ilanmitzpe.sharepoint.com/:f:/g/test/IgBkQ8-w-QnbRo_jt4-DeWD5AWP4ugZANXLok7VPr6UhYcM",
     external: true,
-    cta: "פתח את התיקייה",
+    cta: "פתחו את התיקייה",
   },
   {
     icon: Bot,
     title: "בוט טכנאים",
-    description: "הבוט החכם שלי לטכנאים - תשובות מהירות וכלים מקצועיים.",
+    description: "הבוט החכם שלי לטכנאים – תשובות מהירות וכלים מקצועיים.",
     href: "https://script.google.com/macros/s/AKfycbyD2n-9G0ncG_fEYvvN9ZzeJQqQ5QVdRBge4Jz1PCnRejUojUb33bUaTjfEbpo8dcLmDQ/exec",
     external: true,
-    cta: "פתח את הבוט",
+    cta: "פתחו את הבוט",
   },
   {
     icon: Terminal,
     title: "מאבחן תקלות",
-    description: "אבחון תקלות חכם מבוסס AI - מתארים את הבעיה ומקבלים כיוון לפתרון.",
-    href: "/diagnostics",
+    description: "אבחון תקלות חכם מבוסס AI – מתארים את הבעיה ומקבלים כיוון לפתרון.",
+    href: "/diagnostics/",
     external: false,
     cta: "לאבחון תקלות",
   },
@@ -66,7 +66,7 @@ const tools = [
 
 const Support = () => {
   useEffect(() => {
-    document.title = "ללקוחות קיימים | Tech Therapy - אתגר אהרוני";
+    document.title = "ללקוחות קיימים | Tech Therapy – אתגר אהרוני";
     let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!description) {
       description = document.createElement("meta");
@@ -100,10 +100,10 @@ const Support = () => {
                 ללקוחות קיימים
               </span>
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-                כל הכלים <span className="text-accent">שלך</span> במקום אחד
+                כל הכלים <span className="text-accent">שלכם</span> במקום אחד
               </h1>
               <p className="text-lg text-foreground/50 max-w-2xl mx-auto">
-                תמיכה מרחוק, קבצי עזר וכלים נוספים - הכל מרוכז כאן בשבילך
+                תמיכה מרחוק, קבצי עזר וכלים נוספים – הכל מרוכז כאן בשבילכם
               </p>
             </div>
 

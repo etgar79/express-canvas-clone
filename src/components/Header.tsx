@@ -2,49 +2,56 @@ import { whatsappUrl } from "@/lib/whatsapp.mjs";
 import { Button } from "@/components/ui/button";
 import { Mail, Home, Briefcase, Users, Phone, Sparkles, MessageCircle, Menu, X, Smartphone, Apple, UserCheck } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { pathname, hash } = useLocation();
+  const active = (href: string) => {
+    const [path, anchor] = href.split('#');
+    return pathname.replace(/\/$/, '') === path.replace(/\/$/, '') &&
+      (anchor ? hash === `#${anchor}` || (anchor === 'hero' && !hash) : true);
+  };
+  const navClass = (href: string) => `min-h-11 hover:text-primary hover:bg-primary/10 text-xs ${active(href) ? 'text-primary bg-primary/10' : 'text-foreground/70'}`;
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 backdrop-blur-xl border-b border-border bg-background/95">
       <div className="container px-3 py-3 flex justify-between items-center">
         {/* Navigation Links */}
         <nav className="hidden lg:flex gap-0.5 items-center">
-          <Button variant="ghost" size="sm" className="min-h-11 text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="/#hero">
+          <Button variant="ghost" size="sm" className={navClass("/#hero")} asChild>
+            <a href="/#hero" aria-current={active("/#hero") ? "page" : undefined}>
               <Home className="ml-1 h-4 w-4" />
               בית
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <Link to="/ai-services">
+          <Button variant="ghost" size="sm" className={navClass("/ai-services/")} asChild>
+            <Link to="/ai-services/" aria-current={active("/ai-services/") ? "page" : undefined}>
               <Sparkles className="ml-1 h-4 w-4" />
               AI לעסקים
             </Link>
           </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 text-primary/80 hover:text-primary hover:bg-primary/10 text-xs border border-primary/30" asChild>
-            <Link to="/it-maintenance">
+          <Button variant="ghost" size="sm" className={navClass("/it-maintenance/")} asChild>
+            <Link to="/it-maintenance/" aria-current={active("/it-maintenance/") ? "page" : undefined}>
               <Briefcase className="ml-1 h-4 w-4" />
               תחזוקה לעסקים
             </Link>
           </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="/#about">
+          <Button variant="ghost" size="sm" className={navClass("/#about")} asChild>
+            <a href="/#about" aria-current={active("/#about") ? "page" : undefined}>
               <Users className="ml-1 h-4 w-4" />
               אודות
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <a href="/#contact">
+          <Button variant="ghost" size="sm" className={navClass("/#contact")} asChild>
+            <a href="/#contact" aria-current={active("/#contact") ? "page" : undefined}>
               <Phone className="ml-1 h-4 w-4" />
               צור קשר
             </a>
           </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 text-foreground/70 hover:text-primary hover:bg-primary/10 text-xs" asChild>
-            <Link to="/support">
+          <Button variant="ghost" size="sm" className={navClass("/support/")} asChild>
+            <Link to="/support/" aria-current={active("/support/") ? "page" : undefined}>
               <UserCheck className="ml-1 h-4 w-4" />
               ללקוחות קיימים
             </Link>
@@ -62,16 +69,6 @@ export const Header = () => {
             <a href="https://898.tv/sos1979" target="_blank" rel="noopener noreferrer">
               <Mail className="ml-2 h-5 w-5" />
               תמיכה מרחוק
-            </a>
-          </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 min-w-11 text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאנדרואיד">
-            <a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאנדרואיד">
-              <Smartphone className="h-4 w-4" />
-            </a>
-          </Button>
-          <Button variant="ghost" size="sm" className="min-h-11 min-w-11 text-foreground/60 hover:text-primary hover:bg-primary/10 text-xs" asChild title="תמיכה מרחוק לאייפון">
-            <a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer" aria-label="תמיכה מרחוק לאייפון">
-              <Apple className="h-4 w-4" />
             </a>
           </Button>
         </div>
@@ -127,12 +124,12 @@ export const Header = () => {
         <nav id="mobile-menu" className="lg:hidden border-t border-border p-4 space-y-2 bg-background/95 max-h-[60vh] overflow-y-auto" aria-label="תפריט ניווט">
           {[
             { label: "בית", href: "/#hero" },
-            { label: "AI לעסקים", href: "/ai-services" },
-            { label: "תחזוקה לעסקים", href: "/it-maintenance" },
+            { label: "AI לעסקים", href: "/ai-services/" },
+            { label: "תחזוקה לעסקים", href: "/it-maintenance/" },
             { label: "אודות", href: "/#about" },
             { label: "צור קשר", href: "/#contact" },
-            { label: "ללקוחות קיימים", href: "/support" },
-          ].map(item => <Button key={item.href} variant="ghost" asChild className="min-h-11 w-full justify-start text-foreground/70"><a href={item.href} onClick={() => setMobileMenuOpen(false)}>{item.label}</a></Button>)}
+            { label: "ללקוחות קיימים", href: "/support/" },
+          ].map(item => <Button key={item.href} variant="ghost" asChild className={`w-full justify-start ${navClass(item.href)}`}><a aria-current={active(item.href) ? "page" : undefined} href={item.href} onClick={() => setMobileMenuOpen(false)}>{item.label}</a></Button>)}
           <div className="flex gap-2">
             <Button variant="outline" className="min-h-11 flex-1" asChild><a href="https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid" target="_blank" rel="noopener noreferrer"><Smartphone className="ml-1 h-4 w-4" />אנדרואיד</a></Button>
             <Button variant="outline" className="min-h-11 flex-1" asChild><a href="https://apps.apple.com/us/app/anydesk-remote-desktop/id1176131273" target="_blank" rel="noopener noreferrer"><Apple className="ml-1 h-4 w-4" />אייפון</a></Button>
