@@ -14,6 +14,7 @@ const TechDashboard = lazy(() => import("./pages/TechDashboard"));
 const AiServices = lazy(() => import("./pages/AiServices"));
 const ItMaintenance = lazy(() => import("./pages/ItMaintenance"));
 const Support = lazy(() => import("./pages/Support"));
+const Install = lazy(() => import("./pages/Install"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
@@ -84,6 +85,7 @@ const App = () => (
             }
           />
           <Route path="/it-maintenance" element={<Suspense fallback={<AppLoading />}><ItMaintenance /></Suspense>} />
+          <Route path="/install" element={<Suspense fallback={<AppLoading />}><Install /></Suspense>} />
           <Route
             path="/support"
             element={

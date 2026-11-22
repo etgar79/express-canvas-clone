@@ -11,7 +11,7 @@ export const RouteRobots = () => {
       meta.name = "robots";
       document.head.appendChild(meta);
     }
-    meta.content = pathname.replace(/\/$/, "") === "/tech-dashboard" ? "noindex, nofollow" : "index, follow";
+    meta.content = ["/tech-dashboard", "/install"].includes(pathname.replace(/\/$/, "")) ? "noindex, nofollow" : "index, follow";
   }, [pathname]);
 
   return null;

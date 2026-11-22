@@ -60,6 +60,7 @@ export const Footer = () => {
                   <Settings className="h-3 w-3" />
                   טכנאים
                 </Link>
+                <Link to="/install/" className="min-h-6 py-0.5 inline-flex items-center text-foreground/30 hover:text-foreground/50 transition-colors text-xs mr-3">Action1</Link>
               </li>
             </ul>
           </div>

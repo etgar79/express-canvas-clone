@@ -1,11 +1,19 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
-import { Mail, Smartphone, Apple, FileText, Package, Bot, Terminal, UserCheck } from "lucide-react";
+import { Mail, Smartphone, Apple, FileText, Package, Bot, Terminal, UserCheck, LockKeyhole } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
 const tools = [
+  {
+    icon: LockKeyhole,
+    title: "התקנת Action1 (לטכנאי)",
+    description: "התקנת סוכן Action1 – גישה מוגנת בסיסמה.",
+    href: "/install/",
+    external: false,
+    cta: "התקנת Action1",
+  },
   {
     icon: Mail,
     title: "תמיכה מרחוק",
