@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      action1_install_attempts: {
+        Row: {
+          attempted_at: string
+          blocked_until: string | null
+          id: number
+          ip_hash: string
+          result: string
+        }
+        Insert: {
+          attempted_at?: string
+          blocked_until?: string | null
+          id?: never
+          ip_hash: string
+          result: string
+        }
+        Update: {
+          attempted_at?: string
+          blocked_until?: string | null
+          id?: never
+          ip_hash?: string
+          result?: string
+        }
+        Relationships: []
+      }
       alert_settings: {
         Row: {
           alert_type: string
@@ -355,7 +379,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      record_action1_install_attempt: {
+        Args: { p_ip_hash: string; p_success: boolean }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
