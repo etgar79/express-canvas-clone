@@ -6,6 +6,7 @@ for (const [context, message] of [
   ['general', 'היי אתגר, הגעתי מהאתר ואשמח לשוחח'],
   ['fault', 'היי אתגר, יש לי תקלה ואשמח לעזרה'],
   ['ai', 'היי אתגר, אשמח לשמוע על AI לעסק שלי'],
+  ['crm', 'היי אתגר, אשמח לשמוע על CRM מותאם לעסק שלי'],
   ['maintenance', 'היי אתגר, אשמח לשמוע על תחזוקת IT לעסק'],
 ]) {
   test(`WhatsApp ${context} action carries the specified encoded message`, () => {

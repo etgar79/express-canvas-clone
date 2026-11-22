@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { Brain, Bot, Workflow, GraduationCap, MessageSquare, Sparkles, MapPin, CheckCircle2 } from "lucide-react";
+import { Brain, Bot, Workflow, GraduationCap, MessageSquare, Database, MapPin, CheckCircle2 } from "lucide-react";
 
 const AiServices = () => {
   useEffect(() => {
@@ -68,11 +68,6 @@ const AiServices = () => {
       title: "הטמעת AI בארגון",
       desc: "ליווי צוותים ועובדים בהטמעת כלי AI יומיומיים – מהבחירה, דרך ההדרכה ועד הליווי השוטף.",
     },
-    {
-      icon: Sparkles,
-      title: "יצירת תוכן עם AI",
-      desc: "טקסטים, תמונות, סרטונים ומצגות שנוצרים במהירות עם AI – ושומרים על הקול שלכם.",
-    },
   ];
 
   const benefits = [
@@ -128,9 +123,26 @@ const AiServices = () => {
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
               פתרונות AI מעשיים שמייצרים ערך אמיתי – מהיום הראשון.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((s) => (
-                <Card key={s.title} className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="mb-6 grid gap-8 border-primary bg-primary p-8 text-primary-foreground md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-10">
+              <div>
+                <p className="mb-3 text-sm font-medium">פתרון מותאם אישית</p>
+                <h3 className="mb-4 text-2xl font-bold md:text-3xl">מערכת CRM בהתאמה אישית</h3>
+                <p className="mb-6 max-w-3xl text-lg leading-relaxed">
+                  מערכת שנבנית סביב העסק שלכם – ולא להפך: לקוחות, פניות, משימות והצעות מחיר במקום אחד, עם אוטומציות ו-AI שחוסכים עבודה ידנית.
+                </p>
+                <Button asChild size="lg" className="h-auto min-h-11 w-full whitespace-normal bg-primary-foreground px-5 py-3 text-primary hover:bg-primary-foreground/90 md:w-auto">
+                  <a href={whatsappUrl('crm')} target="_blank" rel="noopener noreferrer">
+                    ספרו לי מה העסק צריך
+                  </a>
+                </Button>
+              </div>
+              <div aria-hidden="true" className="flex h-24 w-24 items-center justify-center rounded-full bg-primary-foreground/10 md:h-32 md:w-32">
+                <Database className="h-12 w-12 md:h-16 md:w-16" />
+              </div>
+            </Card>
+            <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-6">
+              {services.map((s, index) => (
+                <Card key={s.title} className={`p-6 hover:shadow-lg transition-shadow md:col-span-2 ${index === 3 ? "lg:col-start-2" : ""} ${index === 4 ? "md:col-start-2 lg:col-start-auto" : ""}`}>
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                     <s.icon className="w-6 h-6" />
                   </div>

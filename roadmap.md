@@ -1,5 +1,10 @@
 # Password-protected Action1 installation
 
+## AI services section polish
+
+- [x] Add featured CRM card and balance the remaining five services.
+- [x] Update AI service listing and verify prerendered HTML, all script tests and 1280px/375px browser layouts (21 passed, 2 existing database tests skipped; no browser console errors; one H1 and CRM H3 present).
+
 - [x] Add private attempt storage and atomic concurrency-safe limiter.
 - [x] Add secret-backed installation function, page and discreet support/footer links.
 - [x] Verify security rules, database limiter and page behavior.
