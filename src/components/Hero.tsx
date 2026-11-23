@@ -28,14 +28,17 @@ export const Hero = () => {
               <span className="text-foreground/90">ישירות מול המומחה, בלי מוקד</span>
             </h1>
             
-            <p className="text-lg md:text-xl mb-10 leading-relaxed text-foreground/60 animate-fade-in max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
+            <p className="text-lg md:text-xl mb-4 leading-relaxed text-foreground/60 animate-fade-in max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
               תחזוקת IT שוטפת, הטמעת AI ואוטומציות לעסקים בפרדס חנה-כרכור, חדרה, בנימינה, זכרון יעקב וקיסריה. כי טכנולוגיה צריכה לשרת אתכם, לא להפך
+            </p>
+            <p className="text-xl md:text-2xl font-bold mb-10 text-accent-text animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              מהפכת ה-AI מגיעה ישירות אליכם
             </p>
             
             <div className="flex flex-col items-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Button
                 size="lg"
-                className="min-h-14 w-full sm:w-auto text-lg px-8 py-6 rounded-xl font-bold transition-shadow duration-300 hover:shadow-xl bg-accent text-accent-foreground shadow-lg"
+                className="btn-shine min-h-14 w-full sm:w-auto text-lg px-8 py-6 rounded-xl font-bold transition-shadow duration-300 hover:shadow-xl bg-accent text-accent-foreground"
                 asChild
               >
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer"><MessageCircle className="ml-2 h-5 w-5" />דברו איתי בוואטסאפ</a>

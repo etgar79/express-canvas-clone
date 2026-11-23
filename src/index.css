@@ -153,6 +153,48 @@ All colors MUST be HSL.
     0 1px 4px hsl(30 90% 52% / 0.05);
 }
 
+/* Sparkling shine sweep for the primary CTA */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    0 0 0 1px hsl(var(--accent) / 0.4),
+    0 6px 24px hsl(var(--accent) / 0.45),
+    0 2px 8px hsl(var(--accent) / 0.3);
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    hsl(0 0% 100% / 0.55) 45%,
+    hsl(0 0% 100% / 0.85) 50%,
+    hsl(0 0% 100% / 0.55) 55%,
+    transparent 80%
+  );
+  transform: translateX(150%);
+  animation: shine-sweep 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shine-sweep {
+  0% { transform: translateX(150%); }
+  45% { transform: translateX(-150%); }
+  100% { transform: translateX(-150%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-shine::after {
+    animation: none;
+    display: none;
+  }
+}
+
 /* Skip link — accessibility */
 .skip-link {
   position: fixed;
