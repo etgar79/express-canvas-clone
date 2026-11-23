@@ -96,13 +96,16 @@ const AiServices = () => {
               <br />
               בפרדס חנה ובסביבה
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-3xl mx-auto leading-relaxed">
               אני <strong className="text-foreground">אתגר אהרוני</strong>, מייסד{" "}
               <strong className="text-foreground">Tech Therapy</strong>, ועוזר לעסקים ולפרטיים בפרדס חנה
               ובאזור לרתום את כוח ה-AI לטובתם – בצורה אנושית, פשוטה ומותאמת אישית.
             </p>
+            <p className="text-xl md:text-2xl font-bold mb-8 text-accent-text">
+              מהפכת ה-AI מגיעה ישירות אליכם
+            </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="btn-shine min-h-14 whitespace-normal bg-accent px-8 py-4 text-lg font-bold text-foreground hover:bg-accent/90 dark:text-accent-foreground">
                 <a href={whatsappUrl('ai')} target="_blank" rel="noopener noreferrer">
                   דברו איתי בוואטסאפ
                 </a>
